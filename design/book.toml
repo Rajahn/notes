@@ -1,0 +1,11 @@
+[book]
+title = "可解释决策规则的建模与持续改进：设计说明书"
+language = "zh"
+src = "src"
+
+[preprocessor.katex]
+after = ["links"]
+
+[output.html]
+mathjax-support = false
+no-section-label = true
