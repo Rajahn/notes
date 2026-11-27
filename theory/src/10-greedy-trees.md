@@ -58,9 +58,9 @@
 ```
 Grow(s):                       # s 是到达这个节点的案例集合
     若 满足停止条件(s)：返回叶子，标签 = 使 s 内代价之和最小的结论
-    对每个候选分裂 t，算"不纯度下降" Δ(s, t)
-    取 Δ 最大的 t*，把 s 分成 s_1, …, s_V
-    返回 内部节点(t*, Grow(s_1), …, Grow(s_V))
+    对每个候选分裂 σ，算"不纯度下降" Δ(σ, s)
+    取 Δ 最大的 σ*，把 s 分成 s_1, …, s_V
+    返回 内部节点(σ*, Grow(s_1), …, Grow(s_V))
 ```
 
 **贪心**之处在于：每个节点只按"这一步分完后有多纯"挑问题，挑定不回头（0.5.8 节）。每个节点有 $m$ 个是/否谓词时，评估一次分裂要扫一遍节点里的案例，同一层的节点合起来恰好是全部 $n$ 个案例，所以**每一层的工作量是 $O(mn)$**，深度为 $D$ 的树是 $O(mnD)$。和动态规划的 $3^m\cdot m\cdot n$（0.5.7 节）相比，这是从指数到线性。
@@ -292,9 +292,9 @@ $$
 
 **向前看 $k$ 步**：给每个候选分裂打分时，不用它自己的下降，而用"它之后再最优地分 $k-1$ 层"的结果。两步向前看在异或上：先问 $u$，两边各再问 $v$，零错误，于是选中 $u$。在 $a=1$ 的节点用代价评分：先 $b$ 后在两边各挑最好的第二问，$b=0$ 一侧问 $p$，代价降到 1；先 $p$ 后在 $p=0$ 一侧问 $b$，也是 1。两步之后的收益看得见了。
 
-**代价**：设每个节点评估一个谓词要扫一遍案例。贪心一个节点做 $m$ 次评估，工作量 $mn$。两步向前看对每个候选 $t$，还要在两个子节点里各试 $m-1$ 个谓词，两个子节点的案例数加起来是 $n$，所以工作量约为 $m\cdot(m-1)\cdot n+mn\approx m^2n$。一般地，记 $c_k n$ 为 $k$ 步向前看的工作量，$c_k=m(1+c_{k-1})$，$c_1=m$，所以 $c_k\approx m^k$。$m=50$ 时，两步是贪心的 50 倍，三步是 2500 倍。0.5.9 节的束搜索是另一种折中。
+**代价**：设每个节点评估一个谓词要扫一遍案例。贪心一个节点做 $m$ 次评估，工作量 $mn$。两步向前看对每个候选分裂，还要在两个子节点里各试 $m-1$ 个谓词，两个子节点的案例数加起来是 $n$，所以工作量约为 $m\cdot(m-1)\cdot n+mn\approx m^2n$。一般地，记 $c_k n$ 为 $k$ 步向前看的工作量，$c_k=m(1+c_{k-1})$，$c_1=m$，所以 $c_k\approx m^k$。$m=50$ 时，两步是贪心的 50 倍，三步是 2500 倍。0.5.9 节的束搜索是另一种折中。
 
-向前看也不总是好事。Murthy 与 Salzberg（1995）的实验发现，一步向前看在多数数据集上没有带来显著改进，有时还更差：看得越远，在训练集上挑选的候选越多，挑选带来的乐观（命题 1.2）也越大。Esmeir 与 Markovitch（2007）用"有多少计算时间就向前看多深"的随时算法，在异或类的难问题上取得了明显改进。
+向前看也不总是好事。Murthy 与 Salzberg（1995）的实验发现，多看一层的向前看在多数数据集上没有带来显著改进，有时还更差：看得越远，在训练集上挑选的候选越多，挑选带来的乐观（命题 1.2）也越大。Esmeir 与 Markovitch（2007）用"有多少计算时间就向前看多深"的随时算法，在异或类的难问题上取得了明显改进。
 
 ### 小结
 
@@ -316,7 +316,7 @@ $$
 
 1. 案例少时，分出剪枝集让生长集更小，树更差；
 2. 剪枝集参与了挑选，它上面的错误率对最终的树偏乐观（命题 1.2），需要另一份数据报告成绩（第 4 章）；
-3. 剪枝集里没有覆盖到的分支，错误"不增加"，总会被剪掉，结果可能过度剪枝。Esposito、Malerba 与 Semeraro（1997）的比较研究显示了这种倾向。
+3. 剪枝集里没有覆盖到的分支，错误"不增加"，总会被剪掉，结果可能过度剪枝。Elomaa 与 Kääriäinen（2001）对这种行为做了分析，Esposito、Malerba 与 Semeraro（1997）比较了它与其他剪枝方法。
 
 ### 小结
 
@@ -339,7 +339,10 @@ $$
 **定义 10.5（代价复杂度）** 记
 
 $$
-R(t)=\frac1n\min_{\ell}\sum_{i\in t}c(y_i,\ell),\qquad R(T)=\sum_{t\in\operatorname{leaves}(T)}R(t),
+\begin{aligned}
+R(t)&=\frac1n\min_{\ell}\sum_{i\in t}c(y_i,\ell),\\
+R(T)&=\sum_{t\in\operatorname{leaves}(T)}R(t),
+\end{aligned}
 $$
 
 对 $\alpha\ge0$，
@@ -373,7 +376,10 @@ $$
 **证明（第一遍可以跳过）.** 设 $t$ 的孩子是 $v_1,\dots,v_V$。最小值之和不超过和的最小值：
 
 $$
-R(t)=\frac1n\min_\ell\sum_v\sum_{i\in v}c(y_i,\ell)\ge\sum_v\frac1n\min_\ell\sum_{i\in v}c(y_i,\ell)=\sum_vR(v),
+\begin{aligned}
+R(t)&=\frac1n\min_\ell\sum_v\sum_{i\in v}c(y_i,\ell)\\
+&\ge\sum_v\frac1n\min_\ell\sum_{i\in v}c(y_i,\ell)=\sum_vR(v),
+\end{aligned}
 $$
 
 对树的高度归纳，$R(v)\ge R(T_v)$，相加得 $R(t)\ge R(T_t)$。$\square$
@@ -394,7 +400,7 @@ $$
 证明反复用一个**可加性**：设 $t$ 是 $T_{\max}$ 的内部节点，孩子为 $v_1,\dots,v_V$。分支 $T_{\max,t}$ 的剪枝子树，除了单个叶子 $\{t\}$ 之外，与"给每个孩子 $v$ 选一个 $T_{\max,v}$ 的剪枝子树 $T'_v$"一一对应，而且（叶子集合是各 $T'_v$ 叶子的不交并）
 
 $$
-R_\alpha(T')=\sum_vR_\alpha(T'_v). \tag{★}
+R_\alpha(T')=\sum_vR_\alpha(T'_v). \tag{A}
 $$
 
 **定理 10.4（最小最优剪枝子树存在且唯一）** 对每个 $\alpha\ge0$，$T(\alpha)$ 存在且唯一。
@@ -405,8 +411,8 @@ $$
 
 1. **构造.** 对 $T_{\max}$ 的每个节点 $t$，记 $m_t$ 为 $T_{\max,t}$ 的剪枝子树中 $R_\alpha$ 的最小值。自下而上定义 $S_t$：$t$ 是 $T_{\max}$ 的叶子时 $S_t=\{t\}$；否则，若 $R(t)+\alpha\le\sum_vm_v$，令 $S_t=\{t\}$，不然令 $S_t$ 为"$t$ 下面接上各 $S_v$"。
 2. **要证**（对 $t$ 的高度归纳）：（i）$R_\alpha(S_t)=m_t$；（ii）$T_{\max,t}$ 的每个达到 $m_t$ 的剪枝子树 $T'$ 都满足 $S_t\preceq T'$。叶子显然。
-3. **（i）.** 候选只有两类：$\{t\}$，值为 $R(t)+\alpha$；其余的由（★）值为 $\sum_vR_\alpha(T'_v)\ge\sum_vm_v$，并由归纳假设（i），接上各 $S_v$ 时取到 $\sum_vm_v$。所以 $m_t=\min\{R(t)+\alpha,\sum_vm_v\}$，$S_t$ 取到它。
-4. **（ii）.** 若 $S_t=\{t\}$，它是任何剪枝子树的剪枝子树，成立。否则 $R(t)+\alpha>\sum_vm_v=m_t$，所以最优的 $T'$ 不是 $\{t\}$，由（★）$T'$ 由各 $T'_v$ 拼成，且 $\sum_vR_\alpha(T'_v)=m_t=\sum_vm_v$。每项 $R_\alpha(T'_v)\ge m_v$，和相等，所以每项都相等，即每个 $T'_v$ 在 $T_{\max,v}$ 上最优。由归纳假设（ii），$S_v\preceq T'_v$，拼起来 $S_t\preceq T'$。
+3. **（i）.** 候选只有两类：$\{t\}$，值为 $R(t)+\alpha$；其余的由式（A）值为 $\sum_vR_\alpha(T'_v)\ge\sum_vm_v$，并由归纳假设（i），接上各 $S_v$ 时取到 $\sum_vm_v$。所以 $m_t=\min\{R(t)+\alpha,\sum_vm_v\}$，$S_t$ 取到它。
+4. **（ii）.** 若 $S_t=\{t\}$，它是任何剪枝子树的剪枝子树，成立。否则 $R(t)+\alpha>\sum_vm_v=m_t$，所以最优的 $T'$ 不是 $\{t\}$，由式（A）$T'$ 由各 $T'_v$ 拼成，且 $\sum_vR_\alpha(T'_v)=m_t=\sum_vm_v$。每项 $R_\alpha(T'_v)\ge m_v$，和相等，所以每项都相等，即每个 $T'_v$ 在 $T_{\max,v}$ 上最优。由归纳假设（ii），$S_v\preceq T'_v$，拼起来 $S_t\preceq T'$。
 5. 取 $t$ 为根，$T(\alpha)=S_{\text{根}}$ 满足定义 10.6。若另有一棵也满足，两者互为剪枝子树，所以相同。$\square$
 
 证明没有用到引理 10.3，只用了代价按叶子相加。所以同样的构造对剪枝集上的代价也成立（10.7 节）。它还给出算法：对一个固定的 $\alpha$，自下而上扫一遍就得到 $T(\alpha)$。
@@ -419,7 +425,7 @@ $$
 #### 证明（第一遍可以跳过）
 
 1. 按定理 10.4 的构造，$T(\alpha)$ 在节点 $t$ 处的分支就是 $S_t$。$t$ 是内部节点，说明 $S_t\ne\{t\}$，即 $R(t)+\alpha>m_t=R(S_t)+\alpha\lvert\operatorname{leaves}(S_t)\rvert$，移项除以 $\lvert\operatorname{leaves}(S_t)\rvert-1>0$ 即 $g(t)>\alpha$。
-2. 对高度归纳证明：每个节点有 $m_t=R_\alpha(T_t)$，且 $S_t$ 是从 $T_t$ 剪掉其中所有 $g=\alpha$ 的节点得到的树。叶子显然。内部节点 $t$：由归纳假设和（★），$\sum_vm_v=\sum_vR_\alpha(T_v)=R_\alpha(T_t)$。而 $g(t)\ge\alpha$ 等价于 $R(t)+\alpha\ge R_\alpha(T_t)$，所以 $m_t=R_\alpha(T_t)$；构造在等号时（即 $g(t)=\alpha$）取 $S_t=\{t\}$，否则接上各 $S_v$。两种情况都是"剪掉 $T_t$ 中 $g=\alpha$ 的节点"。$\square$
+2. 对高度归纳证明：每个节点有 $m_t=R_\alpha(T_t)$，且 $S_t$ 是从 $T_t$ 剪掉其中所有 $g=\alpha$ 的节点得到的树。叶子显然。内部节点 $t$：由归纳假设和式（A），$\sum_vm_v=\sum_vR_\alpha(T_v)=R_\alpha(T_t)$。而 $g(t)\ge\alpha$ 等价于 $R(t)+\alpha\ge R_\alpha(T_t)$，所以 $m_t=R_\alpha(T_t)$；构造在等号时（即 $g(t)=\alpha$）取 $S_t=\{t\}$，否则接上各 $S_v$。两种情况都是"剪掉 $T_t$ 中 $g=\alpha$ 的节点"。$\square$
 
 **定理 10.6（嵌套）** 若 $\alpha_1<\alpha_2$，则 $T(\alpha_2)\preceq T(\alpha_1)$。
 
@@ -427,7 +433,7 @@ $$
 
 **思路**：罚分越大，"保留分支"相对"做叶子"越吃亏，所以一个节点在大的 $\alpha$ 下不剪，在小的 $\alpha$ 下也不会剪。
 
-1. 记 $d_t(\alpha)=\sum_vm_v(\alpha)-R(t)-\alpha$。由（★），它等于 $T_{\max,t}$ 中除 $\{t\}$ 以外的剪枝子树 $T'$ 上 $R(T')-R(t)+\alpha(\lvert\operatorname{leaves}(T')\rvert-1)$ 的最小值。每一项随 $\alpha$ 增加（系数 $\lvert\operatorname{leaves}(T')\rvert-1\ge1$），最小值也随 $\alpha$ 不减。
+1. 记 $d_t(\alpha)=\sum_vm_v(\alpha)-R(t)-\alpha$。由式（A），它等于 $T_{\max,t}$ 中除 $\{t\}$ 以外的剪枝子树 $T'$ 上 $R(T')-R(t)+\alpha(\lvert\operatorname{leaves}(T')\rvert-1)$ 的最小值。每一项随 $\alpha$ 增加（系数 $\lvert\operatorname{leaves}(T')\rvert-1\ge1$），最小值也随 $\alpha$ 不减。
 2. 构造中 $S_t(\alpha)=\{t\}$ 当且仅当 $d_t(\alpha)\ge0$。
 3. 对高度归纳证明 $S_t(\alpha_2)\preceq S_t(\alpha_1)$。若 $S_t(\alpha_2)=\{t\}$，成立。否则 $d_t(\alpha_2)<0$，由第 1 步 $d_t(\alpha_1)\le d_t(\alpha_2)<0$，所以 $S_t(\alpha_1)$ 也不是叶子，两者都由孩子的 $S_v$ 拼成；由归纳假设 $S_v(\alpha_2)\preceq S_v(\alpha_1)$，拼起来成立。取 $t$ 为根。$\square$
 
@@ -479,7 +485,7 @@ C4.5 不留剪枝集，也不做交叉验证，而是在训练集上"悲观地"�
 2. 上置信限被当作点估计使用，"25%"没有覆盖率的含义，只是一个调节剪枝力度的旋钮，换一个值决定就翻转。
 3. 不同节点的估计被直接相加比较，没有考虑它们共用数据。
 
-Quinlan 自己也说明这是启发式。它的好处是快、不浪费数据，在很多数据集上效果与交叉验证相当（Esposito 等 1997；Mingers 1989 比较了更早的几种方法）。在本书的设定下，宁可把"25%"看成一个需要用留出数据选择的参数。
+Quinlan（1993）自己也承认这套推理违背了抽样与置信限的统计含义，只能当作启发式。它的好处是快、不浪费数据，因而被广泛使用；各剪枝方法的实验比较见 Mingers（1989）与 Esposito 等（1997）。在本书的设定下，宁可把"25%"看成一个需要用留出数据选择的参数。
 
 ### 小结
 
@@ -501,7 +507,7 @@ $$
 \lambda=\frac{\min(p_L,p_R)-(1-q)}{\min(p_L,p_R)},
 $$
 
-$p_L,p_R$ 是主要分裂两边的比例。
+$p_L,p_R$ 是主要分裂两边的比例（这里的 $\lambda$ 沿用 CART 的记号，与罚分系数无关）。
 
 **怎么读**：$\min(p_L,p_R)$ 是"不看任何东西、一律送往大的一边"会送错的比例；$1-q$ 是用替代问题送错的比例。$\lambda>0$ 才比瞎猜好。预测时，主要问题未知就用 $\lambda$ 最大的、已知的替代问题，全部未知就送往大的一边。
 
@@ -616,7 +622,10 @@ $T_1$ 恰好是贝叶斯最优规则，真实风险 0.1848；$T_0$ 多出的那�
 既然方差大，就平均很多棵树。平均能降多少方差，取决于各棵树有多相关。设 $B$ 个预测值 $Z_1,\dots,Z_B$ 方差都是 $\sigma^2$，两两相关系数都是 $\rho$，则
 
 $$
-\operatorname{Var}\Big[\frac1B\sum_{b=1}^BZ_b\Big]=\frac1{B^2}\Big[B\sigma^2+B(B-1)\rho\sigma^2\Big]=\rho\sigma^2+\frac{1-\rho}{B}\sigma^2 .
+\begin{aligned}
+\operatorname{Var}\Big[\frac1B\sum_{b=1}^BZ_b\Big]&=\frac1{B^2}\Big[B\sigma^2+B(B-1)\rho\sigma^2\Big]\\
+&=\rho\sigma^2+\frac{1-\rho}{B}\sigma^2 .
+\end{aligned}
 $$
 
 **怎么读**：方括号里是 $B$ 个方差加上 $B(B-1)$ 个协方差。树越多，第二项越小，但第一项 $\rho\sigma^2$ 降不下去。**代入**：$\rho=0.5$、$B=50$ 时方差降到原来的 $0.5+0.01=0.51$；若能把相关降到 $0.2$，就降到 $0.216$。在同一份数据的重抽样上长的树高度相关，这正是随机森林要打破的东西（Hastie 等 2009，15.2 节）。
@@ -731,7 +740,7 @@ $\alpha_2=0.075\le0.1<\alpha_3=1/6$，由定理 10.7 交付 $T_2$，即规则乙
 <details>
 <summary>练习 10.6</summary>
 
-把定理 10.4 中的 $R(t)$ 换成"节点 $t$ 做叶子时在剪枝集上的错误数"（叶子标签仍由生长集决定），$\alpha=0$。证明只用了（★）式的可加性，仍然成立：构造 $S_t$ 在"做叶子的错误 $\le$ 孩子最优之和"时做叶子，这正是自下而上减错剪枝的判断（孩子已先被剪成最优）。所以结果是剪枝集错误最小的剪枝子树中最小的那棵。注意引理 10.3 在剪枝集上不成立（分裂可能让剪枝集错误增加），但证明不需要它。
+把定理 10.4 中的 $R(t)$ 换成"节点 $t$ 做叶子时在剪枝集上的错误数"（叶子标签仍由生长集决定），$\alpha=0$。证明只用了式（A）的可加性，仍然成立：构造 $S_t$ 在"做叶子的错误 $\le$ 孩子最优之和"时做叶子，这正是自下而上减错剪枝的判断（孩子已先被剪成最优）。所以结果是剪枝集错误最小的剪枝子树中最小的那棵。注意引理 10.3 在剪枝集上不成立（分裂可能让剪枝集错误增加），但证明不需要它。
 
 </details>
 
@@ -791,6 +800,7 @@ $\alpha_2=0.075\le0.1<\alpha_3=1/6$，由定理 10.7 交付 $T_2$，即规则乙
 - J. Ross Quinlan. Improved Use of Continuous Attributes in C4.5. *Journal of Artificial Intelligence Research*, 4, 1996. 数值阈值的描述长度修正。
 - Usama Fayyad, Keki Irani. On the Handling of Continuous-Valued Attributes in Decision Tree Generation. *Machine Learning*, 8(1), 1992. 最优切点在边界点上。
 - John Mingers. An Empirical Comparison of Pruning Methods for Decision Tree Induction. *Machine Learning*, 4(2), 1989. 早期剪枝方法的比较。
+- Tapio Elomaa, Matti Kääriäinen. An Analysis of Reduced Error Pruning. *Journal of Artificial Intelligence Research*, 15, 2001. 减错剪枝的理论分析。
 - Floriana Esposito, Donato Malerba, Giovanni Semeraro. A Comparative Analysis of Methods for Pruning Decision Trees. *IEEE Transactions on Pattern Analysis and Machine Intelligence*, 19(5), 1997. 各剪枝方法的系统比较。
 - Sreerama Murthy, Steven Salzberg. Lookahead and Pathology in Decision Tree Induction. *IJCAI*, 1995. 向前看未必更好。
 - Saher Esmeir, Shaul Markovitch. Anytime Learning of Decision Trees. *Journal of Machine Learning Research*, 8, 2007. 按计算预算向前看。
