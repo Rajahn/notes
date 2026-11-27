@@ -530,7 +530,10 @@ $$
 **定义 14.6（Fayyad–Irani 的 MDL 停止准则）** 区间内有 $N$ 个案例、$k$ 种结论，切点 $T$ 把它分成两部分，分别有 $k_1$、$k_2$ 种结论；$\mathrm{Ent}$ 表示结论的经验熵（比特）。当且仅当
 
 $$
-\mathrm{Gain}(T)>\frac{\log_2(N-1)}{N}+\frac{\beta}{N},\qquad \beta=\log_2(3^k-2)-\big[k\,\mathrm{Ent}-k_1\mathrm{Ent}_1-k_2\mathrm{Ent}_2\big]
+\begin{aligned}
+&\mathrm{Gain}(T)>\frac{\log_2(N-1)}{N}+\frac{\beta}{N},\\
+&\beta=\log_2(3^k-2)-\big[k\,\mathrm{Ent}-k_1\mathrm{Ent}_1-k_2\mathrm{Ent}_2\big]
+\end{aligned}
 $$
 
 时接受这个切点。
