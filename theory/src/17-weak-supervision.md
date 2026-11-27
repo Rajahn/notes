@@ -117,15 +117,17 @@
 $$
 \begin{aligned}
 \operatorname{cov}_j&=\frac1n\sum_{i=1}^n\mathbf{1}[\Lambda_{ij}\ne0],\\
-\operatorname{ovl}_j&=\frac1n\sum_{i=1}^n\mathbf{1}\big[\Lambda_{ij}\ne0,\ \exists k\ne j:\Lambda_{ik}\ne0\big],\\
-\operatorname{cft}_j&=\frac1n\sum_{i=1}^n\mathbf{1}\big[\Lambda_{ij}\ne0,\ \exists k\ne j:\Lambda_{ik}=-\Lambda_{ij}\big].
+\operatorname{ovl}_j&=\frac1n\sum_{i=1}^n\mathbf{1}\big[\Lambda_{ij}\ne0,\\
+&\qquad\qquad\exists k\ne j:\Lambda_{ik}\ne0\big],\\
+\operatorname{cft}_j&=\frac1n\sum_{i=1}^n\mathbf{1}\big[\Lambda_{ij}\ne0,\\
+&\qquad\qquad\exists k\ne j:\Lambda_{ik}=-\Lambda_{ij}\big].
 \end{aligned}
 $$
 
 在有金标签 $y_i$ 的开发集 $V$ 上，**经验精度**是它投票的案例里投对的比例：
 
 $$
-\widehat{\operatorname{acc}}_j=\frac{\sum_{i\in V}\mathbf{1}[\Lambda_{ij}=y_i]}{\sum_{i\in V}\mathbf{1}[\Lambda_{ij}\ne0]} .
+\widehat{\operatorname{acc}}_j=\dfrac{\sum_{i\in V}\mathbf{1}[\Lambda_{ij}=y_i]}{\sum_{i\in V}\mathbf{1}[\Lambda_{ij}\ne0]} .
 $$
 
 **怎么读**：覆盖率是"它说话的比例"；重叠率是"它说话时，至少还有一个别的函数也说话"的比例；冲突率是"它说话时，至少有一个别的函数说了相反的话"的比例。显然冲突率 $\le$ 重叠率 $\le$ 覆盖率。经验精度的分母只数它投了票的案例，弃权不算错。前三个量不需要金标签，可以在全部未标注案例上算；经验精度只能在开发集上算。
@@ -172,7 +174,7 @@ $$
 ### 两个缺陷
 
 1. **一视同仁**：$\lambda_2$ 的一票和 $\lambda_3$ 的一票分量相同，尽管前者准得多。
-2. **只给硬结论**：案例 1 有四票 S、案例 12 只有 $+2$ 的净票数，多数投票都只输出"S"，丢掉了"把握有多大"的信息。
+2. **只给硬结论**：案例 1 的净票数是 $+4$、案例 12 只有 $+1$，多数投票都只输出"S"，丢掉了"把握有多大"的信息。
 
 两个缺陷都指向同一个方向：需要一个模型，说清楚每个函数"多准"，并据此算出每个案例"有多大可能是 S"。
 
@@ -196,7 +198,7 @@ $$
 \Pr(\lambda_1=v_1,\dots,\lambda_m=v_m\mid Y=y)=\prod_{j=1}^m\theta_j(v_j\mid y).
 $$
 
-数据编程论文（Ratner、De Sa、Wu、Selsam 与 Ré 2016）使用的是更少参数的**对称参数化**：每个函数有**投票倾向** $\beta_j$ 和**精度** $\alpha_j$，都与 $y$ 无关，
+数据编程论文（Ratner、De Sa、Wu、Selsam 与 Ré 2016）使用的是更少参数的**对称参数化**（原文还取 $\pi=1/2$）：每个函数有**投票倾向** $\beta_j$ 和**精度** $\alpha_j$，都与 $y$ 无关，
 
 $$
 \theta_j(v\mid y)=\begin{cases}\beta_j\alpha_j,&v=y,\\ \beta_j(1-\alpha_j),&v=-y,\\ 1-\beta_j,&v=0.\end{cases}
@@ -211,7 +213,10 @@ $$
 **命题 17.1（后验对数几率）** 在对称参数化下，已知 $\pi,\alpha_j,\beta_j$ 时，
 
 $$
-\ln\frac{\Pr(Y=+1\mid\lambda)}{\Pr(Y=-1\mid\lambda)}=\ln\frac{\pi}{1-\pi}+\sum_{j=1}^m\lambda_j\,w_j,\qquad w_j=\ln\frac{\alpha_j}{1-\alpha_j}.
+\begin{aligned}
+\ln\frac{\Pr(Y=+1\mid\lambda)}{\Pr(Y=-1\mid\lambda)}&=\ln\frac{\pi}{1-\pi}+\sum_{j=1}^m\lambda_j\,w_j,\\
+w_j&=\ln\frac{\alpha_j}{1-\alpha_j}.
+\end{aligned}
 $$
 
 **怎么读**：左边是"S 对 B 的对数几率"。右边是先验的对数几率，加上每个投票的函数贡献 $\pm w_j$，弃权的函数贡献 0。$w_j$ 只取决于精度：$\alpha=0.5$ 时 $w=0$（和抛硬币一样，不提供信息），$\alpha=0.92$ 时 $w=\ln(0.92/0.08)\approx2.44$。投票倾向 $\beta_j$ 不出现：弃权多少不影响一张票的分量。多数投票是 $\pi=1/2$ 且所有 $\alpha_j$ 相等（并大于 $1/2$）的特例。
@@ -223,7 +228,10 @@ $$
 1. 由贝叶斯公式（命题 0.1.2），两种结论的后验之比等于先验之比乘以似然之比：
 
 $$
-\frac{\Pr(Y=+1\mid\lambda)}{\Pr(Y=-1\mid\lambda)}=\frac{\pi}{1-\pi}\prod_{j=1}^m\frac{\theta_j(\lambda_j\mid+1)}{\theta_j(\lambda_j\mid-1)} .
+\begin{aligned}
+\frac{\Pr(Y=+1\mid\lambda)}{\Pr(Y=-1\mid\lambda)}
+&=\frac{\pi}{1-\pi}\prod_{j=1}^m\frac{\theta_j(\lambda_j\mid+1)}{\theta_j(\lambda_j\mid-1)} .
+\end{aligned}
 $$
 
    乘积来自条件独立。
@@ -246,7 +254,7 @@ $$
 
 ### 一批更大的数据
 
-只用三个双极函数：$\lambda_2$（业务规则）、$\lambda_4$（旧模型，这里假设它总是投票）、$\lambda_5$（语言模型）。为了教学，下面的 1000 个案例是按已知参数随机生成的：$\pi=0.4$；$(\beta,\alpha)$ 分别是 $(0.35,0.92)$、$(1,0.72)$、$(0.8,0.85)$。这样可以把估计结果和真值对照。标签模型只看到前两列。
+只用三个双极函数：$\lambda_2$（业务规则）、$\lambda_4$（旧模型，这里假设它总是投票）、$\lambda_5$（语言模型）。为了教学，下面的 1000 个案例是按已知参数随机生成的：$\pi=0.4$；$(\beta,\alpha)$ 分别是 $(0.35,0.92)$、$(1,0.72)$、$(0.8,0.85)$。这样可以把估计结果和真值对照。标签模型只看到投票模式和案例数，看不到"其中 S"一列。
 
 | $(\lambda_2,\lambda_4,\lambda_5)$ | 案例数 | 其中 S | | $(\lambda_2,\lambda_4,\lambda_5)$ | 案例数 | 其中 S |
 |---|---|---|---|---|---|---|
@@ -279,7 +287,10 @@ $$
 **证明（第一遍可以跳过）.** 在对称参数化下，$\theta_j(\lambda_j\mid y)$ 等于 $1-\beta_j$（弃权时）或 $\beta_j$ 乘一个只含 $\alpha_j$ 的因子（投票时），这个分解对两个 $y$ 相同。所以
 
 $$
-\Pr(\lambda)=\prod_j\beta_j^{\mathbf{1}[\lambda_j\ne0]}(1-\beta_j)^{\mathbf{1}[\lambda_j=0]}\cdot g(\lambda;\pi,\alpha),
+\begin{aligned}
+\Pr(\lambda)&=\prod_j\beta_j^{\mathbf{1}[\lambda_j\ne0]}(1-\beta_j)^{\mathbf{1}[\lambda_j=0]}\\
+&\qquad\cdot g(\lambda;\pi,\alpha),
+\end{aligned}
 $$
 
 其中 $g$ 不含 $\beta$。对数似然分成两部分之和，$\beta_j$ 只出现在 $\sum_i\big(\mathbf{1}[\Lambda_{ij}\ne0]\ln\beta_j+\mathbf{1}[\Lambda_{ij}=0]\ln(1-\beta_j)\big)$ 里。由命题 0.3.2（两个类别的情形），它在 $\beta_j=\operatorname{cov}_j$ 处最大。$\square$
@@ -294,7 +305,10 @@ $$
 - **M 步**：把 $q_i$ 当作"案例 $i$ 有 $q_i$ 份是 S、$1-q_i$ 份是 B"，重新数：
 
 $$
-\pi\leftarrow\frac1n\sum_iq_i,\qquad\alpha_j\leftarrow\frac{\sum_{i:\Lambda_{ij}\ne0}\big(q_i\mathbf{1}[\Lambda_{ij}=+1]+(1-q_i)\mathbf{1}[\Lambda_{ij}=-1]\big)}{\sum_i\mathbf{1}[\Lambda_{ij}\ne0]} .
+\begin{aligned}
+\pi&\leftarrow\frac1n\sum_iq_i,\\
+\alpha_j&\leftarrow\frac{\sum_{i:\Lambda_{ij}=+1}q_i+\sum_{i:\Lambda_{ij}=-1}(1-q_i)}{\sum_i\mathbf{1}[\Lambda_{ij}\ne0]} .
+\end{aligned}
 $$
 
 **怎么读**：M 步就是"如果知道真实结论，精度怎么数"的加权版：函数 $j$ 投 S 的案例，按它是 S 的概率 $q_i$ 算"投对了多少份"；投 B 的按 $1-q_i$ 算。为什么这样数正好是 M 步的最优解：把 $q_i$ 当作权重后，$\alpha_j$ 只出现在一个两类别的加权对数似然里，由命题 0.3.2 取加权比例。
@@ -308,7 +322,10 @@ $$
 1. 对一个案例，记 $p_\vartheta(\lambda,y)$ 为联合概率。对 $\{-1,+1\}$ 上任意分布 $r$（$r(y)>0$），
 
 $$
-\ln p_\vartheta(\lambda)=\ln\sum_yr(y)\frac{p_\vartheta(\lambda,y)}{r(y)}\ge\sum_yr(y)\ln\frac{p_\vartheta(\lambda,y)}{r(y)} .
+\begin{aligned}
+\ln p_\vartheta(\lambda)&=\ln\sum_yr(y)\frac{p_\vartheta(\lambda,y)}{r(y)}\\
+&\ge\sum_yr(y)\ln\frac{p_\vartheta(\lambda,y)}{r(y)} .
+\end{aligned}
 $$
 
    不等号是琴生不等式（定理 0.1.8）用于凸函数 $-\ln$。
@@ -375,7 +392,7 @@ print(round(pi, 3), [round(a, 3) for a in alpha], [round(b, 3) for b in beta])
 
 ### 小结
 
-这一节说的是：标签模型的似然把看不见的 $Y$ 加和掉；投票倾向的最大似然估计就是覆盖率（命题 17.2）；EM 交替"按当前参数算后验"和"按后验加权数精度"，每轮不降低似然（命题 17.3）；在例子里，它不用金标签就把精度估到了几个百分点以内。
+这一节说的是：标签模型的似然把看不见的 $Y$ 加和掉；投票倾向的最大似然估计就是覆盖率（命题 17.2）；EM 交替"按当前参数算后验"和"按后验加权数精度"，每轮不降低似然（命题 17.3）；在例子里，它不用金标签就把精度估到了与经验值相差不到 0.07。
 
 ---
 
@@ -435,7 +452,10 @@ $$
 3. 两个函数、$\pi=1/2$：在对称参数化下，对 $u,v\in\{\pm1\}$，$\Pr(\lambda_j=u\mid Y=y)=\frac{\beta_j}2\big(1+\frac{a_j}{\beta_j}uy\big)$。于是
 
 $$
-\Pr(\lambda_1=u,\lambda_2=v)=\frac12\sum_{y=\pm1}\frac{\beta_1\beta_2}4\Big(1+\frac{a_1}{\beta_1}uy\Big)\Big(1+\frac{a_2}{\beta_2}vy\Big)=\frac{\beta_1\beta_2}4\Big(1+\frac{a_1a_2}{\beta_1\beta_2}uv\Big),
+\begin{aligned}
+\Pr(\lambda_1=u,\lambda_2=v)&=\frac12\sum_{y=\pm1}\frac{\beta_1\beta_2}4\Big(1+\frac{a_1}{\beta_1}uy\Big)\Big(1+\frac{a_2}{\beta_2}vy\Big)\\
+&=\frac{\beta_1\beta_2}4\Big(1+\frac{a_1a_2}{\beta_1\beta_2}uv\Big),
+\end{aligned}
 $$
 
    含 $y$ 一次方的项在两个 $y$ 上抵消。含弃权的格子只依赖于 $\beta$ 和一个 $a$ 的一次项，同样抵消。所以分布只通过 $a_1a_2$ 依赖于精度：$(a_1,a_2)$ 换成 $(ca_1,a_2/c)$（保持 $\lvert a_j\rvert\le\beta_j$）不改变任何概率。$\square$
@@ -447,7 +467,10 @@ $$
 从上一节的表算 $\sum_i\Lambda_{i2}\Lambda_{i4}$：$(+,+,\cdot)$ 共 94 个记 $+1$，$(+,-,\cdot)$ 共 60 个记 $-1$，$(-,+,\cdot)$ 共 66 个记 $-1$，$(-,-,\cdot)$ 共 148 个记 $+1$，和为 116，$M_{24}=0.116$。同理 $M_{25}=0.140$，$M_{45}=0.270$。于是
 
 $$
-\lvert a_2\rvert=\sqrt{\frac{0.116\times0.140}{0.270}}\approx0.245,\qquad\lvert a_4\rvert\approx0.473,\qquad\lvert a_5\rvert\approx0.571 .
+\begin{aligned}
+\lvert a_2\rvert&=\sqrt{\frac{0.116\times0.140}{0.270}}\approx0.245,\\
+\lvert a_4\rvert&\approx0.473,\qquad\lvert a_5\rvert\approx0.571 .
+\end{aligned}
 $$
 
 三个 $M$ 都为正，所以 $a$ 同号；取和为正，全为正。换成精度：$\alpha_2=\frac12(1+0.245/0.368)\approx0.833$，$\alpha_4\approx0.736$，$\alpha_5\approx0.865$。与 EM 的 $(0.828,0.731,0.886)$ 和经验值 $(0.897,0.724,0.848)$ 相近，而计算只用了三次乘除和开方。
@@ -456,7 +479,7 @@ $$
 
 ### 矩阵补全：MeTaL 的做法
 
-MeTaL（Ratner、Hancock、Dunnmon、Sala、Pandey 与 Ré 2019）把同一个思想推广到多类别和已知依赖结构。把标注函数输出的指示向量记为 $\lambda$，它的协方差矩阵 $\Sigma_O$ 可以从数据估计；把 $\lambda$ 和 $Y$ 拼在一起的协方差矩阵的逆，在"给定 $Y$ 条件独立"的函数对上为零。由分块矩阵求逆，$\Sigma_O^{-1}$ 等于一个在这些位置为零的矩阵加上一个秩一矩阵 $zz^\top$，$z$ 与 $\lambda$ 和 $Y$ 的协方差成正比。于是在已知为零的位置上 $(\Sigma_O^{-1})_{ij}=z_iz_j$，这正是"三个方程三个未知数"的矩阵版本：用这些位置把 $zz^\top$ 补全，再从 $z$ 读出每个函数的条件概率。符号歧义同样存在，同样用"函数平均好于随机"消除。
+MeTaL（Ratner、Hancock、Dunnmon、Sala、Pandey 与 Ré 2019）把同一个思想推广到多类别和已知依赖结构。把标注函数输出的指示向量记为 $\lambda$，它的协方差矩阵 $\Sigma_O$ 可以从数据估计；把 $\lambda$ 和 $Y$ 拼在一起的协方差矩阵的逆，在"给定 $Y$ 条件独立"的函数对上为零。由分块矩阵求逆，$\Sigma_O^{-1}$ 等于一个在这些位置为零的矩阵加上一个秩一矩阵 $zz^\top$，其中 $z$ 正比于 $\Sigma_O^{-1}\Sigma_{OY}$，$\Sigma_{OY}$ 是 $\lambda$ 与 $Y$ 的协方差。于是在已知为零的位置上 $(\Sigma_O^{-1})_{ij}=z_iz_j$，这正是"三个方程三个未知数"的矩阵版本：用这些位置把 $zz^\top$ 补全，再由 $z$ 还原 $\Sigma_{OY}$，读出每个函数的条件概率。符号歧义同样存在，同样用"函数平均好于随机"消除。
 
 ### 小结
 
@@ -547,14 +570,17 @@ $$
 - 标签模型的概率，按 $1/4$ 切：0.276；
 - 每种投票模式按真实的 S 比例、以 $1/4$ 切（这三个函数下能做到的最好）：0.251。
 
-按理论应该更好的 $1/4$ 门槛，实际反而更差。差距主要来自 $(-,+,0)$ 和 $(-,-,+)$ 两种模式（另一部分见练习 17.6）：EM 低估了 $\lambda_2$ 的精度（0.828，实际 0.897），给它们的 S 概率是 0.269 和 0.279，略高于 $1/4$，而实际比例只有 $1/9$ 和 $1/17$。**代价敏感的决策直接依赖概率的数值，概率标签不校准，门槛就放错位置**。概率标签的校准只能在金标准集上检查（第 7 章的可靠性图）。
+按理论应该更好的 $1/4$ 门槛，实际反而更差。差距主要来自 $(-,+,0)$ 和 $(-,-,+)$ 两种模式（另一部分见练习 17.6）：EM 低估了 $\lambda_2$ 的精度（0.828，实际 0.897）、高估了 $\lambda_5$ 的精度（0.886，实际 0.848），给它们的 S 概率是 0.269 和 0.279，略高于 $1/4$，而实际比例只有 $1/9$ 和 $1/17$。**代价敏感的决策直接依赖概率的数值，概率标签不校准，门槛就放错位置**。概率标签的校准只能在金标准集上检查（第 7 章的可靠性图）。
 
 ### 噪声感知损失估计的是什么
 
 **命题 17.7** 设 $(X,\Lambda,Y)$ 来自某个联合分布，损失取值于 $[0,C]$，概率标签是 $\Lambda$ 的函数 $q(\cdot\mid\Lambda)$。记 $p(\cdot\mid X,\Lambda)=\Pr(Y=\cdot\mid X,\Lambda)$，$d_{\mathrm{TV}}(q,p)=\frac12\sum_y\lvert q(y)-p(y)\rvert$。则对任意 $h$，
 
 $$
-\Big\lvert\,\mathbb{E}\Big[\sum_yq(y\mid\Lambda)\,\ell(h(X),y)\Big]-R(h)\Big\rvert\le C\,\mathbb{E}\big[d_{\mathrm{TV}}\big(q(\cdot\mid\Lambda),\,p(\cdot\mid X,\Lambda)\big)\big].
+\begin{aligned}
+&\Big\lvert\,\mathbb{E}\Big[\sum_yq(y\mid\Lambda)\,\ell(h(X),y)\Big]-R(h)\Big\rvert\\
+&\qquad\le C\,\mathbb{E}\big[d_{\mathrm{TV}}\big(q(\cdot\mid\Lambda),\,p(\cdot\mid X,\Lambda)\big)\big].
+\end{aligned}
 $$
 
 特别地，若 $q(\cdot\mid\Lambda)=\Pr(Y=\cdot\mid\Lambda)$ 且给定 $\Lambda$ 时 $Y$ 与 $X$ 条件独立，则噪声感知损失的期望恰好等于风险。
@@ -584,7 +610,7 @@ $$
 
 弱监督之外，另一类利用未标注案例的方法叫**半监督学习**。最简单的是**自训练**：先用少量金标签训练一个模型；让它给未标注案例打**伪标签**；把置信度最高的一批加入训练集，重新训练；反复几轮（这个想法很早就有，Yarowsky 1995 在词义消歧上的工作是著名的例子）。
 
-它的主要风险是**确认偏差**：模型在某类案例上系统性地错（比如把"有点软"一律判 S，而这类案例实际多数是 B），这些错误恰恰会以高置信度被当作伪标签加入，下一轮模型在这类案例上更自信，错误被固化而不是被纠正。深度网络中的伪标签方法对此有专门的讨论和缓解办法（Arazo 等人 2020），例如混合增强、限制每轮加入的比例。和弱监督对照：自训练的"标注函数"只有一个，就是模型自己，没有任何独立的来源可以和它分歧，所以 17.6 节的可识别性无从谈起。
+它的主要风险是**确认偏差**：模型在某类案例上系统性地错（比如把"有点软"一律判 S，而这类案例实际多数是 B），这些错误恰恰会以高置信度被当作伪标签加入，下一轮模型在这类案例上更自信，错误被固化而不是被纠正。深度网络中的伪标签方法对此有专门的讨论和缓解办法（Arazo 等人 2020），例如混合增强（mixup）、保证每一批训练数据里有足够多的真标签案例。和弱监督对照：自训练的"标注函数"只有一个，就是模型自己，没有任何独立的来源可以和它分歧，所以 17.6 节的可识别性无从谈起。
 
 ### 协同训练
 
@@ -606,7 +632,7 @@ $$
 
 售后系统里还有一种常见的数据形态：被复核确认为卖家责任的案例有记录（正例），其余案例都没有结论，其中既有 S 也有 B。这叫**正例–未标注学习**（PU 学习）。
 
-记 $s=1$ 表示"案例被标为正例"。Elkan 与 Noto（2008）的关键假设是：**正例是完全随机地被标出的**，即 $\Pr(s=1\mid x,y=1)=c$ 是常数，与 $x$ 无关；负例从不被标出。
+这里沿用 Elkan 与 Noto 的记法：$y=1$ 表示 S，$y=0$ 表示 B；$s=1$ 表示"案例被标为正例"。Elkan 与 Noto（2008）的关键假设是：**正例是完全随机地被标出的**，即 $\Pr(s=1\mid x,y=1)=c$ 是常数，与 $x$ 无关；负例从不被标出。
 
 **命题 17.8** 在上述假设下，$\Pr(s=1\mid x)=c\cdot\Pr(y=1\mid x)$。
 
@@ -670,7 +696,7 @@ $\lambda_5$ 已经说明，一段提示词加一个语言模型就是一个标�
 
 **代入例子**：如果事实就是"业务规则怎么投、旧模型怎么投、语言模型怎么投"，在 0-1 代价下最好的规则正是标签模型的判定：1000 个案例上判对 852 个，而用金标签能做到 854 个；在代价矩阵下它照搬 $1/4$ 门槛，平均代价 0.276，而不是可以做到的 0.251。规则在概率标签上的"拟合度"可以很高，但这只是对标签模型的**保真度**（第 1 章 1.13 节），不是准确率。
 
-规则学习真正能增加价值的情形是：它用到的事实与标注函数**不同**（例如标注函数读描述，规则用照片审核、签收时间等结构化事实），于是它可以泛化到函数弃权的案例上，并用别的事实修正函数的系统性错误。即使如此，它也会学到标签模型的偏差，例如 17.9 节那两种被高估的投票模式。判断它是否真的更好，仍然只能靠测试集。
+规则学习真正能增加价值的情形是：它用到的事实与标注函数**不同**（例如标注函数只读描述文字和照片审核结果，规则还能用商品品类、冷链温度记录、买家历史等结构化事实），于是它可以泛化到函数弃权的案例上，并用别的事实修正函数的系统性错误。即使如此，它也会学到标签模型的偏差，例如 17.9 节那两种被高估的投票模式。判断它是否真的更好，仍然只能靠测试集。
 
 ### 小结
 
@@ -744,7 +770,7 @@ $$
 
 - 标注函数对案例投票或弃权（定义 17.1）；覆盖率、重叠率、冲突率不需要金标签，经验精度需要开发集，且小开发集上极不可靠（定义 17.3）。
 - 多数投票不区分精度也不给概率（定义 17.4）。条件独立标签模型（定义 17.5）下，后验对数几率是以 $\ln\frac{\alpha_j}{1-\alpha_j}$ 为权重的投票（命题 17.1）。
-- 对称参数化下投票倾向的最大似然估计就是覆盖率（命题 17.2）；EM 每轮不降低似然（命题 17.3），在例子里不用金标签把精度估到几个百分点以内。
+- 对称参数化下投票倾向的最大似然估计就是覆盖率（命题 17.2）；EM 每轮不降低似然（命题 17.3），在例子里不用金标签把精度估到与经验值相差不到 0.07。
 - 条件独立且对称时 $\mathbb{E}[\lambda_i\lambda_j]=a_ia_j$（命题 17.4）；三个函数确定精度到只差整体符号，两个在类别均衡时不够（定理 17.5）；MeTaL 把它写成矩阵补全。
 - 共享来源的函数会被重复计数，并让一致被误认为高精度（命题 17.6）；依赖结构可以无监督地学习，也可以按来源分组。
 - 数据编程是带弃权、来源是程序的 Dawid–Skene 模型。
