@@ -173,8 +173,10 @@ $$
 $P=(0.5,0.5)$，$Q=(0.9,0.1)$：
 
 $$
-\mathrm{KL}(P\Vert Q)=0.5\ln\tfrac{0.5}{0.9}+0.5\ln\tfrac{0.5}{0.1}\approx0.511,\qquad
-\mathrm{KL}(Q\Vert P)=0.9\ln1.8+0.1\ln0.2\approx0.368 .
+\begin{aligned}
+\mathrm{KL}(P\Vert Q)&=0.5\ln\tfrac{0.5}{0.9}+0.5\ln\tfrac{0.5}{0.1}\approx0.511,\\
+\mathrm{KL}(Q\Vert P)&=0.9\ln1.8+0.1\ln0.2\approx0.368 .
+\end{aligned}
 $$
 
 两个方向不等，所以 KL 不是通常意义的距离（3.6.2 节第二条性质）。$\mathrm{KL}(P\Vert Q)$ 重罚"$P$ 常见而 $Q$ 认为罕见"的结果。
@@ -375,8 +377,10 @@ $$
 第 3 章 3.6.5 节引用的 Maurer（2004）界（代价取值于 $[0,1]$，$n\ge8$）原本是：以至少 $1-\delta$ 的概率，对所有 $Q$，
 
 $$
-\mathrm{kl}\big(\hat R_Q\Vert R_Q\big)\le\frac{\mathrm{KL}(Q\Vert P)+\ln(2\sqrt n/\delta)}{n},\qquad
-\mathrm{kl}(q\Vert p)=q\ln\frac qp+(1-q)\ln\frac{1-q}{1-p},
+\begin{aligned}
+&\mathrm{kl}\big(\hat R_Q\Vert R_Q\big)\le\frac{\mathrm{KL}(Q\Vert P)+\ln(2\sqrt n/\delta)}{n},\\
+&\mathrm{kl}(q\Vert p)=q\ln\frac qp+(1-q)\ln\frac{1-q}{1-p},
+\end{aligned}
 $$
 
 $\hat R_Q$、$R_Q$ 是按 $Q$ 平均的训练与真实风险，$\mathrm{kl}$ 是两个伯努利分布的 KL 散度。要从"在 KL 意义下接近"得到"真实错误率最多高多少"，需要 Pinsker 不等式。

@@ -4,24 +4,24 @@
 
 # 卷零　数学与计算预备
 
-- [0.1　概率论]()
-- [0.2　集中不等式]()
-- [0.3　统计推断]()
-- [0.4　信息论]()
-- [0.5　优化]()
-- [0.6　计算复杂性]()
-- [0.7　逻辑]()
-- [0.8　离散结构]()
+- [0.1　概率论](00-1-probability.md)
+- [0.2　集中不等式](00-2-concentration.md)
+- [0.3　统计推断](00-3-inference.md)
+- [0.4　信息论](00-4-information.md)
+- [0.5　优化](00-5-optimization.md)
+- [0.6　计算复杂性](00-6-complexity.md)
+- [0.7　逻辑](00-7-logic.md)
+- [0.8　离散结构](00-8-discrete.md)
 
 # 卷一　统计学习理论
 
 - [第 1 章　学习问题的形式化](01-learning-problem.md)
 - [第 2 章　PAC 学习](02-pac-learning.md)
 - [第 3 章　结构风险最小化与复杂度控制](03-complexity-control.md)
-- [第 4 章　模型评估与选择]()
-- [第 5 章　自适应数据分析]()
-- [第 6 章　分布偏移与捷径学习]()
-- [第 7 章　不确定性与弃权]()
+- [第 4 章　模型评估与选择](04-model-selection.md)
+- [第 5 章　自适应数据分析](05-adaptive-analysis.md)
+- [第 6 章　分布偏移与捷径学习](06-distribution-shift.md)
+- [第 7 章　不确定性与弃权](07-uncertainty-abstention.md)
 
 # 卷二　可解释的符号模型
 
