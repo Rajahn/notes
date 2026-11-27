@@ -401,7 +401,7 @@ $$
 
 1. **新事实的线索。** 22.2.4 节找 $r$、$s$ 时，我们读的是原始材料。教师的理由提供了更直接的线索：如果碰撞组里判 B 的理由反复写到"买家放置多日才开箱""未及时冷藏"，这就是候选事实。
 2. **中间事实的标签。** 理由里写"描述提到霉斑，可以认定腐烂"，就给了事实 $b$ 一个标签，可以用来训练或检查事实读取器。
-3. **路径对照。** 规则对每个案例有一条生效路径（第 8 章 8.12 节）。教师理由里提到的考虑和规则路径不一致的案例，值得人工看一看。
+3. **路径对照。** 规则对每个案例有一条生效路径（第 8 章 8.5.2 节）。教师理由里提到的考虑和规则路径不一致的案例，值得人工看一看。
 
 ### 22.5.3 风险：理由不一定是原因
 
@@ -584,7 +584,7 @@ $$
 | 可核查性 | 只用定义过的事实 | 可能用到没定义、夹带结论的说法 |
 | 训练成绩是否诚实 | 偏乐观（命题 1.2） | 没看标签时无偏；看过标签后无保证 |
 
-两条路线可以结合：让教师先写规则，从它的规则和理由里**收集候选事实**，把这些事实加入清单；再按路线甲学规则；最后在审计样本上检验。教师的描述在这里只起"提出候选"的作用，不起"决定规则"的作用。
+两条路线可以结合：让教师先写规则，从它的规则和理由里**收集候选事实**，把这些事实加入清单；再按路线甲学规则；最后在审计样本上检验。教师的描述在这里只起"提出候选"的作用，不起"决定规则"的作用。这和第 14 章 14.8.3 节让语言模型提出特征的做法一致，那里关于目标泄漏、假设空间扩张和反复使用验证集的警告同样适用。
 
 ### 小结
 
@@ -879,4 +879,5 @@ $$
 - Alon Jacovi, Yoav Goldberg. Towards Faithfully Interpretable NLP Systems: How Should We Define and Evaluate Faithfulness? *ACL*, 2020. 忠实性与可信度的区分。
 - Yizhong Wang, Yeganeh Kordi, Swaroop Mishra, Alisa Liu, Noah Smith, Daniel Khashabi, Hannaneh Hajishirzi. Self-Instruct: Aligning Language Models with Self-Generated Instructions. *ACL*, 2023. 让模型生成训练数据并过滤的代表性工作。
 - Fabrizio Gilardi, Meysam Alizadeh, Maël Kubli. ChatGPT Outperforms Crowd Workers for Text-Annotation Tasks. *PNAS*, 120(30), 2023. 把语言模型当作标注者，与众包标注比较。
+- Xuezhi Wang, Jason Wei, Dale Schuurmans, Quoc Le, Ed Chi, Sharan Narang, Aakanksha Chowdhery, Denny Zhou. Self-Consistency Improves Chain of Thought Reasoning in Language Models. *ICLR*, 2023. 多次采样推理过程再投票的自一致性方法。
 - Ilia Shumailov, Zakhar Shumaylov, Yiren Zhao, Nicolas Papernot, Ross Anderson, Yarin Gal. AI Models Collapse When Trained on Recursively Generated Data. *Nature*, 631, 2024. 反复用生成数据训练导致分布尾部消失。
