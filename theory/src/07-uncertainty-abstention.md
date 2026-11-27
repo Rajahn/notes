@@ -92,7 +92,7 @@ $$
 
 ### 小结
 
-这一节说的是：偶然不确定性是在当前事实下结论本来就会变，只能靠增加事实减小；认知不确定性来自数据有限，靠更多数据减小；语言模型读事实时还有第三层读取不确定性，校准以后可以用全期望公式和前两层合起来。
+这一节说的是：偶然不确定性靠增加事实减小，认知不确定性靠更多数据减小；语言模型读事实还有第三层读取不确定性，校准后可以用全期望公式和前两层合起来。
 
 ---
 
@@ -141,7 +141,10 @@ $$
 **怎么读**：各箱"实际比例与平均预测之差"的绝对值，按箱里的案例数加权平均。例子中每个取值自成一箱：
 
 $$
-\mathrm{ECE}=\frac{60\times0.05+40\times0.05+20\times0+30\times0.10+50\times0.14}{200}=\frac{15}{200}=0.075 .
+\begin{aligned}
+\mathrm{ECE}&=\frac{60\times0.05+40\times0.05+20\times0+30\times0.10+50\times0.14}{200}\\
+&=\frac{15}{200}=0.075 .
+\end{aligned}
 $$
 
 平均而言，模型的概率偏离实际 7.5 个百分点。
@@ -156,7 +159,7 @@ $$
 
 ### 小结
 
-这一节说的是：校准是"说 $v$ 的案例里正好有 $v$ 成立"；可靠性图把它画出来，比对角线平是过度自信；期望校准误差是各箱偏差的加权平均，但它依赖分箱、样本少时偏高，而且一个毫无区分力的模型也能让它为 0。
+这一节说的是：校准是"说 $v$ 的案例里正好有 $v$ 成立"，可靠性图比对角线平是过度自信；期望校准误差依赖分箱、样本少时偏高，毫无区分力的模型也能让它为 0。
 
 ---
 
@@ -216,7 +219,11 @@ $$
 **命题 7.3（Brier 分数的 Murphy 分解）** 设预测只取有限个值 $f_1,\dots,f_J$。记取值 $f_j$ 的案例有 $n_j$ 个，其中 $Y=1$ 的比例为 $\bar y_j$；全体的比例为 $\bar y$。则
 
 $$
-\mathrm{BS}=\underbrace{\frac1n\sum_jn_j(f_j-\bar y_j)^2}_{\text{可靠性 REL}}-\underbrace{\frac1n\sum_jn_j(\bar y_j-\bar y)^2}_{\text{分辨力 RES}}+\underbrace{\bar y(1-\bar y)}_{\text{不确定性 UNC}}.
+\begin{aligned}
+\mathrm{BS}={}&\underbrace{\frac1n\sum_jn_j(f_j-\bar y_j)^2}_{\text{可靠性 REL}}\\
+&-\underbrace{\frac1n\sum_jn_j(\bar y_j-\bar y)^2}_{\text{分辨力 RES}}\\
+&+\underbrace{\bar y(1-\bar y)}_{\text{不确定性 UNC}}.
+\end{aligned}
 $$
 
 **怎么读**：可靠性项是"各组预测与实际之差"平方的加权平均，相当于 ECE 的平方版本，越小越好；分辨力项是"各组实际比例离总比例多远"，衡量模型把案例分得开不开，越大越好；不确定性项只依赖数据。代入例子：
@@ -237,7 +244,7 @@ $0.00765-0.05663+0.24698=0.198$，正是 Brier 分数。永远说 0.445 的模�
 
 ### 小结
 
-这一节说的是：恰当评分规则让"如实报告"成为最优策略；Brier 分数和对数损失都是严格恰当的，证明分别靠配方和 KL 散度非负；ECE 不是恰当的；Brier 分数可以精确拆成可靠性、分辨力、不确定性三项，分别对应"说到做到""分得开""问题本身多难"。
+这一节说的是：恰当评分规则让"如实报告"成为最优；Brier 分数和对数损失都严格恰当，ECE 不是；Brier 分数可拆成可靠性、分辨力、不确定性三项。
 
 ---
 
@@ -271,7 +278,7 @@ $$
 
 ### 小结
 
-这一节说的是：再校准在单独的校准数据上拟合一个单调修正函数；温度缩放只有一个参数、不改变最可能的结论，Platt 缩放多一个平移参数，保序回归最灵活但最吃数据；评估再校准的效果必须换一批数据。
+这一节说的是：再校准在单独的校准数据上拟合单调修正函数；温度缩放一个参数，Platt 缩放两个，保序回归最灵活也最吃数据；评估效果必须换一批数据。
 
 ---
 
@@ -304,7 +311,7 @@ $$
 
 ### 小结
 
-这一节说的是：从语言模型拿概率有词元概率、口头报告、多次采样三种方式，没有一种天生校准，必须逐个问题核实；读取阈值应由下游代价决定，并且只对校准后的概率成立。
+这一节说的是：语言模型的三种概率都不天生校准，要逐个问题核实；读取阈值由下游代价决定，只对校准后的概率成立。
 
 ---
 
@@ -340,10 +347,10 @@ $$
 
 **做决定时用后验预测就够了**（平均代价对它是线性的）：0.4 超过门槛 0.25，判 S。认知不确定性在这里不改变决定，但决定"值不值得再收集案例"，后面讲信息价值时会回到这一点。
 
-**把两种不确定性拆开。** 对新案例是否为 S，预测方差可以分解为
+**把两种不确定性拆开。** 记 $\bar\theta=\mathbb{E}[\theta\mid S]$。对新案例是否为 S，预测方差可以分解为
 
 $$
-\bar\theta(1-\bar\theta)=\mathbb{E}\big[\theta(1-\theta)\mid S\big]+\operatorname{Var}[\theta\mid S],\qquad\bar\theta=\mathbb{E}[\theta\mid S].
+\bar\theta(1-\bar\theta)=\mathbb{E}\big[\theta(1-\theta)\mid S\big]+\operatorname{Var}[\theta\mid S].
 $$
 
 **怎么读**：左边是总的不确定；右边第一项是"知道 $\theta$ 以后结果还剩多少随机性"的平均，即偶然部分；第二项是"$\theta$ 本身有多不确定"，即认知部分。它是全方差公式 $\operatorname{Var}[Y]=\mathbb{E}[\operatorname{Var}(Y\mid\theta)]+\operatorname{Var}(\mathbb{E}[Y\mid\theta])$ 在 $Y\in\{0,1\}$ 上的形式。代入数字：
@@ -365,7 +372,7 @@ $\mathrm{Beta}(2,3)$ 的 95% 可信区间约为 $[0.068,0.806]$；$\mathrm{Beta}
 
 ### 小结
 
-这一节说的是：Beta 先验加二项数据得到 Beta 后验，相当于把真实计数加到"假想计数"上；决策用后验预测；预测方差可以拆成偶然部分和认知部分，后者随数据增多而缩小；可信区间是关于参数的信念，置信区间是关于程序的频率，不要混淆。
+这一节说的是：Beta 先验加二项数据得到 Beta 后验；决策用后验预测；预测方差可拆成偶然与认知两部分，后者随数据增多而缩小；可信区间是关于参数的信念，置信区间是关于程序的频率。
 
 ---
 
@@ -472,7 +479,11 @@ $$
 **证明（第一遍可以跳过）.** 更新 $u$ 时，提议 $Q\big((u,v)\to(u',v)\big)=\pi(u'\mid v)$。接受概率里的比值为
 
 $$
-\frac{\pi(u',v)\,\pi(u\mid v)}{\pi(u,v)\,\pi(u'\mid v)}=\frac{\pi(u'\mid v)\pi(v)\,\pi(u\mid v)}{\pi(u\mid v)\pi(v)\,\pi(u'\mid v)}=1,
+\begin{aligned}
+\frac{\pi(u',v)\,\pi(u\mid v)}{\pi(u,v)\,\pi(u'\mid v)}
+&=\frac{\pi(u'\mid v)\pi(v)\,\pi(u\mid v)}{\pi(u\mid v)\pi(v)\,\pi(u'\mid v)}\\
+&=1,
+\end{aligned}
 $$
 
 这里用了 $\pi(u,v)=\pi(u\mid v)\pi(v)$。由命题 7.6，每次更新都保持 $\pi$ 平稳，轮流做也保持。$\square$
@@ -489,7 +500,7 @@ $$
 
 ### 小结
 
-这一节说的是：后验的归一化常数算不出来时，MCMC 只用后验之比构造一条以后验为平稳分布的链；细致平衡推出平稳，Metropolis–Hastings 的接受概率正是为满足细致平衡设计的；Gibbs 采样是接受率为 1 的特例；实际使用时要扔掉预烧、关注混合与有效样本数，并用多条链诊断。
+这一节说的是：MCMC 只用后验之比构造一条以后验为平稳分布的链；Metropolis–Hastings 的接受概率是为满足细致平衡设计的，Gibbs 采样是它的特例；使用时要扔掉预烧、关注有效样本数、用多条链诊断。
 
 ---
 
@@ -504,8 +515,11 @@ Chow 规则（第 1 章命题 1.7）假设知道 $\eta(x)$。实际中只有一�
 **定义 7.8（选择性分类器、覆盖率、选择性风险）** **选择性分类器**是一对 $(f,g)$，其中 $g:\mathcal{X}\to\{0,1\}$ 是**选择函数**：$g(x)=1$ 时输出 $f(x)$，$g(x)=0$ 时弃权。常用 $g(x)=\mathbf{1}[\kappa(x)\ge\tau]$。它的**覆盖率**和**选择性风险**分别为
 
 $$
-\operatorname{cov}(g)=\Pr\big(g(X)=1\big),\qquad
-R_{\mathrm{sel}}(f,g)=\frac{\mathbb{E}\big[c(Y,f(X))\,g(X)\big]}{\operatorname{cov}(g)}=\mathbb{E}\big[c(Y,f(X))\mid g(X)=1\big].
+\begin{aligned}
+\operatorname{cov}(g)&=\Pr\big(g(X)=1\big),\\
+R_{\mathrm{sel}}(f,g)&=\frac{\mathbb{E}\big[c(Y,f(X))\,g(X)\big]}{\operatorname{cov}(g)}\\
+&=\mathbb{E}\big[c(Y,f(X))\mid g(X)=1\big].
+\end{aligned}
 $$
 
 **怎么读**：覆盖率是自动处理的比例；选择性风险是"只看自动处理的那部分"时的平均代价。弃权代价为 $d$ 时，每个案例的平均总代价是 $\operatorname{cov}(g)\,R_{\mathrm{sel}}(f,g)+d\,\big(1-\operatorname{cov}(g)\big)$。
@@ -534,10 +548,10 @@ $$
 
 Chow 规则是 0-1 代价下的结论。一般代价矩阵怎么办？
 
-**命题 7.8（带代价矩阵的弃权规则）** 设代价为 $c(y,\hat y)$，弃权代价为常数 $d$。则知道 $\eta(x)$ 时的最优动作为
+**命题 7.8（带代价矩阵的弃权规则）** 设代价为 $c(y,\hat y)$，弃权代价为常数 $d$。记 $\bar c(x,\hat y)=\sum_k\eta_k(x)\,c(k,\hat y)$ 为判 $\hat y$ 的平均代价，$\bar c(x,\bot)=d$。则知道 $\eta(x)$ 时的最优动作为
 
 $$
-\arg\min\Big\{\;\min_{\hat y\in\mathcal{Y}}\sum_k\eta_k(x)\,c(k,\hat y),\;\;d\;\Big\},
+h^*(x)\in\arg\min_{a\in\mathcal{Y}\cup\{\bot\}}\bar c(x,a),
 $$
 
 即在"每个结论的平均代价"和"弃权代价"中取最小者对应的动作。
@@ -630,10 +644,10 @@ SGR 的候选门槛取自样本本身，处理"门槛依赖数据"需要原文�
 | 去向 | 案例数 | 比例 | 说明 |
 |---|---|---|---|
 | 缺事实转人工 | 80 | 8% | 按缺的是哪个事实再细分 |
-| 选择性转人工 | 220 | 22% | 门槛 $\tau=0.85$ |
-| 自动处理 | 700 | 70% | 判错 21 个，经验风险 3%；校准集上的 95% 上界 4.4% |
+| 选择性转人工 | 300 | 30% | 门槛 $\tau=0.85$ |
+| 自动处理 | 620 | 62% | 判错 19 个，经验风险 3.1%；校准集上的 95% 上界 4.4% |
 
-0-1 代价、$d=0.3$ 时每案例总代价为 $(21+0.3\times300)/1000=0.111$。
+0-1 代价、$d=0.3$ 时每案例总代价为 $(19+0.3\times380)/1000=0.133$。
 
 **一个容易忽略的条件**：定理 7.9 的保证针对"通过了缺事实过滤"的案例。校准集必须走完全相同的流水线（同样的提示词和读取阈值），否则条件分布与将来不同，保证不成立。
 
@@ -702,7 +716,10 @@ $$
 3. **用可交换性。** $W$ 是 $n+1$ 个值的对称函数（打乱顺序不变）。由可交换性，对每个 $i$，$\Pr(V_i\le W)$ 都相同，所以
 
 $$
-\Pr(V_{n+1}\le W)=\frac1{n+1}\sum_{i=1}^{n+1}\Pr(V_i\le W)=\frac{\mathbb{E}\big[\#\{i:V_i\le W\}\big]}{n+1}.
+\begin{aligned}
+\Pr(V_{n+1}\le W)&=\frac1{n+1}\sum_{i=1}^{n+1}\Pr(V_i\le W)\\
+&=\frac{\mathbb{E}\big[\#\{i:V_i\le W\}\big]}{n+1}.
+\end{aligned}
 $$
 
 4. **数个数。** 不超过第 $k$ 小值的至少有 $k$ 个（有并列时更多），所以 $\#\{i:V_i\le W\}\ge k$，$\Pr(V_{n+1}\le W)\ge k/(n+1)$。没有并列时恰好 $k$ 个，等号成立。这就证明了引理 7.10。
@@ -730,7 +747,10 @@ $\alpha=0.2$ 时 $k_\alpha=16$，$\hat t=0.50$，要求概率不低于 0.5；$\a
 **怎样用在系统里**：集合只有一个结论时自动处理；有两个以上时转人工，因为数据支持不止一种结论；集合为空说明这个案例和校准数据都不像，也转人工并单独记录。这时
 
 $$
-\Pr\big(\text{自动处理且判错}\big)=\Pr\big(\lvert C(X)\rvert=1,\;Y\notin C(X)\big)\le\Pr\big(Y\notin C(X)\big)\le\alpha .
+\begin{aligned}
+\Pr\big(\text{自动处理且判错}\big)&=\Pr\big(\lvert C(X)\rvert=1,\;Y\notin C(X)\big)\\
+&\le\Pr\big(Y\notin C(X)\big)\le\alpha .
+\end{aligned}
 $$
 
 **注意这是联合概率**：自动处理部分内部的错误率最多是 $\alpha/\Pr(\lvert C(X)\rvert=1)$，覆盖率低时可能远大于 $\alpha$。要直接控制选择性风险，用 7.9 节的方法。
@@ -791,9 +811,10 @@ $$
 取 $C_\lambda(x)=\{y:s(x,y)\le\lambda\}$，$L_i(\lambda)=\mathbf{1}[Y_i\notin C_\lambda(X_i)]=\mathbf{1}[s_i>\lambda]$。它对 $\lambda$ 不增、右连续，$B=1$。条件变为
 
 $$
-\frac{\#\{i\le n:s_i>\lambda\}+1}{n+1}\le\alpha
-\quad\Longleftrightarrow\quad
-\#\{i\le n:s_i\le\lambda\}\ge(n+1)(1-\alpha).
+\begin{aligned}
+&\frac{\#\{i\le n:s_i>\lambda\}+1}{n+1}\le\alpha\\
+\Longleftrightarrow\quad&\#\{i\le n:s_i\le\lambda\}\ge(n+1)(1-\alpha).
+\end{aligned}
 $$
 
 满足它的最小 $\lambda$ 正是第 $\lceil(n+1)(1-\alpha)\rceil$ 小的分数，与 7.10.3 节一致。
