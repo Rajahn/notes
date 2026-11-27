@@ -59,7 +59,7 @@
 
 Gelman 和 Loken 把这种情形叫作"**分岔小径的花园**"：分析的每一步都有岔路，走哪条取决于眼前的数据。他们强调：
 
-> 即使只做了一次分析、没有刻意"试很多次挑最好的"，只要"数据不同时会做不同的分析"，这次分析的 p 值就不再有名义上的意义。
+> 即使只做了一次分析，只要"数据不同时会做不同的分析"，这次分析的 p 值就不再有名义上的意义。
 
 因为 p 值要对**所有可能的数据**计算，而数据不同时分析也不同。看着数据做的取舍叫**研究者自由度**，例如剔除哪些案例、何时停止收集、报告哪个指标。Simmons、Nelson 和 Simonsohn 的模拟显示，组合几个常见的自由度，原假设成立时得到 $p<0.05$ 的比例就能超过一半。在 5.1.1 节的系统里，提示词写法、提出哪些候选、采纳门槛、何时停止都是自由度，语言模型让每一种都很便宜。
 
@@ -141,7 +141,7 @@ $$
 
 ### 5.3.3 联合界为什么管不住
 
-$k$ 条随机规则是事先生成的，联合界管住了它们：$k=100$、$n=1000$ 时，以 95% 的把握它们的留出准确率同时离 0.5 不超过 $\sqrt{\ln4000/2000}\approx0.064$，模拟里最好一条 0.539，在范围内。
+$k$ 条随机规则是事先生成的，联合界管住了它们：$k=100$、$n=1000$ 时，以 95% 的把握它们同时离 0.5 不超过 $\sqrt{\ln4000/2000}\approx0.064$（模拟里最好一条 0.539）。
 
 出问题的是**最终规则**：它不是 $k$ 条中的任何一条，而由"哪些被记下"决定，共 $2^k$ 种可能。把它们都算进联合界，$\ln\lvert\mathcal{H}\rvert=k\ln2$，余量约 $\sqrt{k\ln2/(2n)}$，正是 $\sqrt{k/n}$ 的量级。
 
@@ -205,7 +205,7 @@ $$
 
 ## 5.5 差分隐私：让每个案例的影响都很小
 
-交互记录界数"回答有多少种"。另一条思路问"回答对单个案例有多敏感"：换掉任何一个案例回答都几乎不变，分析者就没法针对具体案例过拟合。这来自原本用于保护个人数据的**差分隐私**。
+另一条思路问"回答对单个案例有多敏感"：换掉任何一个案例回答都几乎不变，分析者就没法针对具体案例过拟合。这来自原本用于保护个人数据的**差分隐私**。
 
 ### 5.5.1 定义与拉普拉斯机制
 
@@ -237,7 +237,7 @@ $$
 
 **证明**（1、2，输出有限时）. （1）$\Pr(f(M(S))\in E)=\Pr(M(S)\in f^{-1}(E))$，对右边用定义。（2）输出序列的概率是 $\prod_j\Pr(a_j\mid a_1,\dots,a_{j-1})$，每个因子在换数据时最多放大 $e^\gamma$ 倍，乘积最多 $e^{k\gamma}$ 倍；对 $E$ 中的序列求和。$\square$
 
-**后处理是关键**：分析者看了回答后做的一切都是后处理，所以只要回答机制是差分隐私的，**无论分析者怎样自适应，整个过程都是**。
+**后处理是关键**：分析者看了回答后做的一切都是后处理，所以只要回答机制是差分隐私的，**无论分析者怎样自适应都一样**。
 
 ### 5.5.3 差分隐私蕴含泛化
 
@@ -256,7 +256,7 @@ $$
 1. 记 $S=(z_1,\dots,z_n)$，$z'\sim\mathcal{D}$ 独立，$S^{(i)}$ 为把 $z_i$ 换成 $z'$ 的数据集。只需证每个 $i$ 都有 $\mathbb{E}[q_{M(S)}(z_i)]\le e^\gamma\mathbb{E}[q_{M(S)}(z')]$，右边等于 $e^\gamma\mathbb{E}[q(\mathcal{D})]$；再对 $i$ 平均即得右半边。
 2. 对取值于 $[0,1]$ 的 $W$，$\mathbb{E}[W]=\int_0^1\Pr(W>s)\,ds$，所以只需对每个 $s$ 比较概率。
 3. 固定 $S$、$z'$、$s$，"输出的查询在 $z_i$ 上大于 $s$"是输出的一个集合；$S$ 与 $S^{(i)}$ 只差一个案例，由定义 5.3，$M(S)$ 落入它的概率至多是 $M(S^{(i)})$ 的 $e^\gamma$ 倍。对 $S,z'$ 平均：$\Pr(q_{M(S)}(z_i)>s)\le e^\gamma\Pr(q_{M(S^{(i)})}(z_i)>s)$。
-4. $S^{(i)}$ 是 $n$ 个独立同分布案例，$z_i$ 不在其中、与它独立、也服从 $\mathcal{D}$，所以 $(S^{(i)},z_i)$ 与 $(S,z')$ 同分布，右边等于 $e^\gamma\Pr(q_{M(S)}(z')>s)$。对 $s$ 积分即得第 1 步。
+4. $S^{(i)}$ 是 $n$ 个独立同分布案例，$z_i$ 与它独立、也服从 $\mathcal{D}$，所以 $(S^{(i)},z_i)$ 与 $(S,z')$ 同分布，右边等于 $e^\gamma\Pr(q_{M(S)}(z')>s)$。对 $s$ 积分即得第 1 步。
 5. 左半边把 $S$ 与 $S^{(i)}$ 的角色对调。$\square$
 
 **定理 5.6（差分隐私蕴含泛化；只陈述）** 存在与问题无关的常数 $c_1,c_2$：若输出统计查询的算法 $M$ 是 $\gamma$-差分隐私的（或满足放宽版本），且 $n\ge c_1\ln(1/\delta)/\gamma^2$，则 $q=M(S)$ 满足 $\Pr\big(\lvert q(S)-q(\mathcal{D})\rvert\ge c_2\gamma\big)\le\delta$。
@@ -281,7 +281,7 @@ Dwork 等人在 *Science* 上提出的**可重复使用的留出集**利用了�
 - 抽 $\eta\sim\mathrm{Lap}(4\sigma)$。若 $\lvert q(S_{\mathrm{ho}})-q(S_{\mathrm{tr}})\rvert>\hat T+\eta$，回答 $q(S_{\mathrm{ho}})+\zeta$（$\zeta\sim\mathrm{Lap}(\sigma)$），预算减 1，重抽 $\xi$ 更新 $\hat T$。
 - 否则回答 $q(S_{\mathrm{tr}})$。
 
-**怎么读**：$T$ 是"差多少算过拟合"，如 0.04；阈值和比较都加噪声，使"是否超过阈值"这个比特也受保护；$B$ 是最多透露几次留出值。噪声尺度的倍数按原文写法，不同文献略有出入。
+**怎么读**：$T$ 是"差多少算过拟合"，如 0.04；阈值和比较都加噪声，使"是否超过阈值"也受保护；$B$ 是最多透露几次留出值。噪声倍数按原文写法，各文献略有出入。
 
 ### 5.6.2 一个模拟
 
@@ -297,7 +297,7 @@ Dwork 等人在 *Science* 上提出的**可重复使用的留出集**利用了�
 **怎么读**：
 
 - 如实回答时第（2）步用留出集挑了特征，**留出集本身被过拟合**：留出 56%，新数据 50%。
-- Thresholdout 下分类器的实际留出准确率只有 50%–51%：第（2）步的回答多是训练值，挑特征几乎没用到留出集。
+- Thresholdout 下实际留出准确率只有 50%–51%：第（2）步的回答多是训练值，挑特征几乎没用到留出集。
 - 报告值不总是更接近 50%（$m=10$ 时与如实回答相同），波动也较大（标准差 0.02–0.04）：它只保证"误差约不超过 $T$"，好处是误差**不随查询次数增长**。每次约 380 个查询超过阈值，要设预算，$B$ 至少这么大。
 
 ### 5.6.3 它保证什么，预算是什么意思
@@ -573,7 +573,7 @@ $\ln(2k/\delta)=\ln2000\approx7.60$。自适应：$\sqrt{(50\times0.693+7.60)/40
 <details>
 <summary>练习 5.8</summary>
 
-A：$b\approx51.7$，$k=100$，余量 $\sqrt{(35.8+\ln4000)/2000}\approx0.149$。B：每批 $b\approx12.9$，$k=25$，余量 $\sqrt{(8.96+\ln1000)/500}\approx0.178$。A 更小。分批的好处不在这个界上：每批开始时有干净的数据，可对当前版本做一次非自适应的检查，及时发现假改进；一份数据"用坏"只影响一段；旧批并入设计集后提出方能读这些案例。实践中常按比特预算而非固定轮数轮换。
+A：$b\approx51.7$，$k=100$，余量 $\sqrt{(35.8+\ln4000)/2000}\approx0.149$。B：每批 $b\approx12.9$，$k=25$，余量 $\sqrt{(8.96+\ln1000)/500}\approx0.178$。A 更小。分批的好处不在这个界上：每批开始时有干净数据，可对当前版本做一次非自适应的检查，及时发现假改进；数据"用坏"只影响一段；旧批并入设计集后可供提出方阅读。
 
 </details>
 
@@ -587,7 +587,7 @@ A：$b\approx51.7$，$k=100$，余量 $\sqrt{(35.8+\ln4000)/2000}\approx0.149$�
 <details>
 <summary>练习 5.10</summary>
 
-参考要点：字段包括时间戳、发起方、查询对象（提示词或规则的版本哈希）、数据集与批次、查询类型、**返回给发起方的内容**（精确值、取整值、仅采纳决定）、机制参数。按数据集数记录条数得 $k$；按返回内容的取值个数得每条比特数，累加得 $b$；数据集标识用来确认测试集只出现一次。报告模板：数据分割与大小；每份数据的 $k$、$b$ 及余量；采纳与停止规则及是否登记；测试集的唯一一次评估与区间；偏离计划之处。
+参考要点：字段包括时间戳、发起方、查询对象（版本哈希）、数据集与批次、**返回给发起方的内容**（精确值、取整值、仅采纳决定）、机制参数。按数据集数记录条数得 $k$；按返回内容的取值个数得每条比特数，累加得 $b$；数据集标识确认测试集只出现一次。报告：数据分割；每份数据的 $k$、$b$ 及余量；采纳与停止规则是否登记；测试集的唯一一次评估；偏离计划之处。
 
 </details>
 
@@ -615,7 +615,7 @@ A：$b\approx51.7$，$k=100$，余量 $\sqrt{(35.8+\ln4000)/2000}\approx0.149$�
 - Andrew Gelman, Eric Loken. The Statistical Crisis in Science. *American Scientist*, 102(6), 2014. 分岔小径的花园。
 - Joseph Simmons, Leif Nelson, Uri Simonsohn. False-Positive Psychology. *Psychological Science*, 22(11), 2011. 研究者自由度。
 - Cynthia Dwork, Frank McSherry, Kobbi Nissim, Adam Smith. Calibrating Noise to Sensitivity in Private Data Analysis. *TCC*, 2006. 差分隐私与拉普拉斯机制。
-- Cynthia Dwork, Vitaly Feldman, Moritz Hardt, Toniann Pitassi, Omer Reingold, Aaron Roth. Preserving Statistical Validity in Adaptive Data Analysis. *STOC*, 2015. 差分隐私蕴含自适应泛化；同组作者 Generalization in Adaptive Data Analysis and Holdout Reuse. *NIPS*, 2015，描述长度论证与 Thresholdout 的分析；The Reusable Holdout. *Science*, 349(6248), 2015，面向一般读者。
+- Cynthia Dwork, Vitaly Feldman, Moritz Hardt, Toniann Pitassi, Omer Reingold, Aaron Roth. Preserving Statistical Validity in Adaptive Data Analysis. *STOC*, 2015（差分隐私蕴含自适应泛化）；Generalization in Adaptive Data Analysis and Holdout Reuse. *NIPS*, 2015（描述长度论证与 Thresholdout 的分析）；The Reusable Holdout: Preserving Validity in Adaptive Data Analysis. *Science*, 349(6248), 2015（面向一般读者）。
 - Avrim Blum, Moritz Hardt. The Ladder: A Reliable Leaderboard for Machine Learning Competitions. *ICML*, 2015. Ladder 与排行榜攻击。
 - Raef Bassily, Kobbi Nissim, Adam Smith, Thomas Steinke, Uri Stemmer, Jonathan Ullman. Algorithmic Stability for Adaptive Data Analysis. *STOC*, 2016. 改进的"差分隐私蕴含泛化"。
 - Moritz Hardt, Jonathan Ullman. Preventing False Discovery in Interactive Data Analysis Is Hard. *FOCS*, 2014；Thomas Steinke, Jonathan Ullman. Interactive Fingerprinting Codes and the Hardness of Preventing False Discovery. *COLT*, 2015. 下界。
@@ -623,4 +623,4 @@ A：$b\approx51.7$，$k=100$，余量 $\sqrt{(35.8+\ln4000)/2000}\approx0.149$�
 - Jason Lee, Dennis Sun, Yuekai Sun, Jonathan Taylor. Exact Post-Selection Inference, with Application to the Lasso. *Annals of Statistics*, 44(3), 2016. 选择事件为多面体时的条件推断。
 - William Fithian, Dennis Sun, Jonathan Taylor. Optimal Inference After Model Selection. arXiv:1410.2597, 2014. 数据雕刻。
 - Brian Nosek, Charles Ebersole, Alexander DeHaven, David Mellor. The Preregistration Revolution. *PNAS*, 115(11), 2018. 预先登记。
-- Rebecca Roelofs 等. A Meta-Analysis of Overfitting in Machine Learning. *NeurIPS*, 2019. 竞赛中留出集反复使用的实际过拟合通常较小。
+- Rebecca Roelofs 等. A Meta-Analysis of Overfitting in Machine Learning. *NeurIPS*, 2019. 竞赛中留出集复用的实际过拟合通常较小。
