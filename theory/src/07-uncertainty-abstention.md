@@ -88,13 +88,7 @@ $$
 
 按第 1 章的代价门槛 0.25，应判 S；按 0-1 代价加 $d=0.3$ 的 Chow 规则，$\max(0.533,0.467)<0.7$，应转人工。
 
-三层不确定性对应三类补救：
-
-| 层 | 来源 | 减小的办法 |
-|---|---|---|
-| 读取 | 模型读不准某个事实 | 改问法、换模型、多次读取、校准（7.2–7.5 节） |
-| 偶然 | 当前事实决定不了结论 | 增加事实、统一标准；剩下的用弃权兜底（7.8–7.11 节） |
-| 认知 | 案例少、模型不完美 | 更多案例、合理的先验（7.6–7.7 节） |
+三层各有补救：读取不确定性靠改问法、换模型和校准（7.2–7.5 节）；认知不确定性靠更多案例和合理的先验（7.6–7.7 节）；偶然不确定性靠增加事实，剩下的用弃权兜底（7.8–7.11 节）。
 
 ### 小结
 
@@ -156,7 +150,7 @@ $$
 
 ### 7.2.5 期望校准误差的三个陷阱
 
-**陷阱一：结果依赖分箱。** 把例子分成 $[0,0.5)$ 和 $[0.5,1]$ 两箱：平均预测 0.18 对实际 0.23，0.76 对 0.66，ECE 仍是 0.075。只分一箱时，平均预测 0.47、实际 0.445，ECE 只有 0.025：低估和高估相互抵消了。箱的个数、等宽还是等量分箱都会改变结果，比较模型时必须用同一种分箱（Nixon 等 2019；Kumar 等 2019 还指出，对连续输出，分箱估计可能低估真正的校准误差）。
+**陷阱一：结果依赖分箱。** 把例子分成 $[0,0.5)$ 和 $[0.5,1]$ 两箱：平均预测 0.18 对实际 0.23，0.76 对 0.66，ECE 仍是 0.075。只分一箱时，平均预测 0.47、实际 0.445，ECE 只有 0.025：低估和高估相互抵消了。箱的个数、等宽还是等量分箱都会改变结果，比较模型时必须用同一种分箱。
 
 **陷阱二：ECE 为 0 不代表有用。** 永远说 0.445 的模型 ECE 是 0。下一节会看到，ECE 不是"恰当评分规则"，不能单独用来挑模型。
 
@@ -373,7 +367,7 @@ $\mathrm{Beta}(2,3)$ 的 95% 可信区间约为 $[0.068,0.806]$；$\mathrm{Beta}
 
 **置信区间**是另一回事：它是一个从样本算区间的**程序** $C(S)$，要求对每个可能的真值 $\theta$，$\Pr_S\big(\theta\in C(S)\big)\ge0.95$，概率是对"反复抽样本"说的，$\theta$ 是固定的。例如 Clopper–Pearson 区间（Clopper 与 Pearson 1934）对 40 个案例 12 个 S 给出 $[0.166,0.465]$，对 3 个案例 1 个 S 给出 $[0.008,0.906]$。
 
-两者含义不同：可信区间是"给定这批数据，$\theta$ 在里面的后验概率是 95%"，依赖先验；置信区间不需要先验，但对"这一个区间"只能说它要么覆盖、要么没覆盖，95% 说的是程序。案例多时两者数值接近；案例少时差别大，先验的影响也大。本章后面的选择性分类保证和共形预测都是**频率意义**的保证：概率针对校准数据的随机性，不需要先验。
+两者含义不同：可信区间是"给定这批数据，$\theta$ 在里面的后验概率是 95%"，依赖先验；置信区间不需要先验，但对"这一个区间"只能说它要么覆盖、要么没覆盖，95% 说的是程序。案例少时两者差别大。本章后面的弃权保证都是**频率意义**的，不需要先验。
 
 ### 小结
 
@@ -489,7 +483,7 @@ $$
 
 这里用了 $\pi(u,v)=\pi(u\mid v)\pi(v)$。由命题 7.6，每次更新都保持 $\pi$ 平稳，轮流做也保持。$\square$
 
-**Gibbs 的弱点**：分量高度相关时走不动。设 $u,v\in\{0,1\}$，$\pi(0,0)=\pi(1,1)=0.495$，$\pi(0,1)=\pi(1,0)=0.005$。已知 $v$ 时 $u=v$ 的概率是 0.99，每次更新只有 1% 的机会离开当前格子。跑 2 万轮，$u$ 只变了约 390 次；非对角改成 0.1 时约 6500 次。
+**Gibbs 的弱点**：分量高度相关时走不动。设 $u,v\in\{0,1\}$，$\pi(0,0)=\pi(1,1)=0.495$，其余两格各 0.005，则每次更新只有 1% 的机会离开当前格子：跑 2 万轮，$u$ 只变了约 390 次（两格改成各 0.1 时约 6500 次）。
 
 ### 7.7.8 预烧、混合与诊断
 
@@ -509,7 +503,7 @@ $$
 
 ### 7.8.1 问题
 
-Chow 规则（第 1 章命题 1.7）假设知道 $\eta(x)$。实际中我们有一个分类器 $f$ 和一个**置信分数** $\kappa(x)$，比如校准后的最大概率，或 7.6 节的后验预测。门槛 $\tau$ 定在哪里？定下以后，多少案例会自动处理？其中错多少？
+Chow 规则（第 1 章命题 1.7）假设知道 $\eta(x)$。实际中只有一个分类器 $f$ 和一个**置信分数** $\kappa(x)$，比如校准后的最大概率或 7.6 节的后验预测。门槛 $\tau$ 定在哪里？多少案例会自动处理，其中错多少？
 
 ### 7.8.2 定义
 
@@ -578,12 +572,10 @@ $$
 
 ### 7.9.2 一个门槛：二项分布的上界
 
-先固定一个门槛 $\tau$。校准集里被接受的案例数记为 $n_\tau$，其中判错 $k_\tau$ 个。关键事实：**在已知哪些案例被接受时，$k_\tau$ 服从二项分布** $\mathrm{Bin}\big(n_\tau,R_{\mathrm{sel}}(\tau)\big)$。理由是：案例独立同分布，而是否接受只看输入，所以被接受的案例彼此独立，并且都服从"已知 $\kappa(X)\ge\tau$"时的条件分布。
-
-于是有两种上界：
+固定门槛 $\tau$，校准集里被接受 $n_\tau$ 个、其中判错 $k_\tau$ 个。关键事实：**已知哪些案例被接受时，$k_\tau$ 服从二项分布** $\mathrm{Bin}\big(n_\tau,R_{\mathrm{sel}}(\tau)\big)$。因为案例独立同分布、是否接受只看输入，被接受的案例彼此独立，且都服从"已知 $\kappa(X)\ge\tau$"时的条件分布。于是有两种上界：
 
 - **霍夫丁上界**（第 2 章命题 2.5）：$k_\tau/n_\tau+\sqrt{\ln(1/\delta)/(2n_\tau)}$。
-- **Clopper–Pearson 上界**：$U(k,n,\delta)$ 定义为使 $\Pr\big(\mathrm{Bin}(n,\theta)\le k\big)\ge\delta$ 的最大 $\theta$（$k=n$ 时取 1）。意思是：比 $U$ 更大的错误率下，"只错这么少"的可能性不到 $\delta$。它直接用二项分布，错误率小时比霍夫丁紧得多。
+- **Clopper–Pearson 上界**：$U(k,n,\delta)$ 是使 $\Pr\big(\mathrm{Bin}(n,\theta)\le k\big)\ge\delta$ 的最大 $\theta$（$k=n$ 时取 1）：错误率比 $U$ 更大时，"只错这么少"的可能性不到 $\delta$。错误率小时它比霍夫丁紧得多。
 
 ### 7.9.3 多个候选门槛
 
@@ -623,9 +615,9 @@ $$
 | 0.75 | 1720 | 0.860 | 95 | 0.055 | 0.093 | 0.070 |
 | 0.70 | 1850 | 0.925 | 130 | 0.070 | 0.106 | 0.086 |
 
-用 Clopper–Pearson 上界，0.95、0.90、0.85 三个门槛满足 $U_j\le0.05$，选 $\tau=0.85$：覆盖率 67.5%，并且以 95% 的把握，自动处理部分的错误率不超过 5%。用霍夫丁上界，没有一个门槛满足，只能全部转人工：目标错误率小时，霍夫丁的"最坏方差"太保守。
+用 Clopper–Pearson 上界，0.95、0.90、0.85 满足 $U_j\le0.05$，选 $\tau=0.85$：覆盖率 67.5%，并以 95% 的把握保证自动处理部分错误率不超过 5%。用霍夫丁上界则没有一个门槛满足：目标错误率小时，它按最坏方差计算，太保守。
 
-**一个常见错误**：如果只对 $\tau=0.80$ 算一个不分摊额度的 Clopper–Pearson 上界，得到 0.049，似乎也满足。但 0.80 是看过 6 个门槛以后挑的，必须用 $\delta/6$。
+**一个常见错误**：只对 $\tau=0.80$ 算不分摊额度的上界得 0.049，似乎也满足；但 0.80 是看过 6 个门槛以后挑的，必须用 $\delta/6$。
 
 ### 7.9.5 Geifman 与 El-Yaniv 的 SGR 算法
 
@@ -667,7 +659,7 @@ Geifman 与 El-Yaniv（2017）的**有保证风险的选择**（selection with g
 
 **定义 7.9（可交换）** 随机量 $Z_1,\dots,Z_N$ 叫作**可交换**的，如果对 $\{1,\dots,N\}$ 的任意重排 $\sigma$，$(Z_{\sigma(1)},\dots,Z_{\sigma(N)})$ 与 $(Z_1,\dots,Z_N)$ 的联合分布相同。
 
-**怎么读**：把这串量的顺序打乱，看不出任何区别。独立同分布一定可交换。从一个有限的案例池里不放回地随机抽，各次结果不独立，但仍然可交换。时间上有趋势的数据（比如夏季的校准案例、冬季的新案例）不可交换。
+**怎么读**：打乱顺序看不出任何区别。独立同分布一定可交换；从有限的案例池里不放回地抽，各次不独立，但仍可交换；夏季的校准案例和冬季的新案例则不可交换。
 
 ### 7.10.3 分割共形预测
 
@@ -872,15 +864,12 @@ $$
 
 ## 7.14 本章小结
 
-- 不确定性有三层：**读取**、**偶然**（当前事实决定不了结论，靠增加事实减小）、**认知**（数据有限，靠更多数据减小）。
-- **校准**（定义 7.1）是"说 $v$ 的案例里正好有 $v$ 成立"；**期望校准误差**（定义 7.2）依赖分箱、样本少时偏高，且不是恰当评分规则。
-- **恰当评分规则**（定义 7.3）让如实报告成为最优：Brier 分数（命题 7.1）、对数损失（命题 7.2）；Brier 分数可分解为可靠性、分辨力、不确定性（命题 7.3）。
+- 不确定性有**读取**、**偶然**、**认知**三层，分别靠校准与改问法、增加事实、更多数据来减小。
+- **校准**（定义 7.1）用可靠性图检查；**期望校准误差**（定义 7.2）依赖分箱，且不是恰当评分规则。Brier 分数（命题 7.1）和对数损失（命题 7.2）是严格恰当的（定义 7.3）；Brier 分数可分解为可靠性、分辨力、不确定性（命题 7.3）。
 - **再校准**：温度缩放、Platt 缩放、保序回归，灵活性和对数据的需求依次增加；读取阈值由下游代价决定。
-- **贝叶斯**：Beta–二项共轭（命题 7.4）；决策用后验预测（定义 7.4）；预测方差可拆成偶然与认知两部分；可信区间（定义 7.5）不是置信区间。
-- **MCMC**：细致平衡推出平稳（命题 7.5）；Metropolis–Hastings 满足细致平衡（命题 7.6）；Gibbs 是接受率为 1 的特例（命题 7.7）。
+- **贝叶斯**：Beta–二项共轭（命题 7.4），后验预测（定义 7.4），可信区间（定义 7.5）不是置信区间。**MCMC**：细致平衡推出平稳（命题 7.5），Metropolis–Hastings 满足细致平衡（命题 7.6），Gibbs 是其特例（命题 7.7）。
 - **选择性分类**：覆盖率与选择性风险（定义 7.8）；代价矩阵下的弃权（命题 7.8）；事先定好的候选门槛加二项上界与联合界，以 $1-\delta$ 的把握控制选择性风险（定理 7.9）。
-- **共形预测**：可交换（定义 7.9）下，分割共形预测集（定义 7.10）有至少 $1-\alpha$ 的边际覆盖（引理 7.10、定理 7.11），但不保证条件覆盖。
-- **共形风险控制**（定理 7.12）把覆盖推广到单调损失，可以控制"自动处理且判错"的平均代价。
+- **共形预测**：可交换（定义 7.9）下，分割共形预测集（定义 7.10）有至少 $1-\alpha$ 的边际覆盖（引理 7.10、定理 7.11），但不保证条件覆盖；**共形风险控制**（定理 7.12）把它推广到单调损失。
 - 所有频率保证都依赖可交换性，上线后要持续监控。
 
 ---
@@ -905,13 +894,11 @@ $$
 
 **练习 7.6** ★★ 在 7.8.3 节的 20 个案例上，把弃权代价改为 $d=0.2$。（1）在这些案例上，哪个门槛总代价最小？直接用 Chow 门槛 $1-d$ 呢？（2）在 7.8.4 节的代价矩阵下，$d=0.2$ 时转人工的区间是什么？
 
-**练习 7.7** ★★ 用 7.11.4 节的方法，在同样的 20 个案例上取 $\alpha=0.15$，求 $\hat\lambda$ 和覆盖率。
-
 ### 思考
 
-**练习 7.8** ★★★ 对一个事实组合，贝叶斯方法给出卖家责任比例的 95% 可信区间，共形预测给出一个结论集合。它们回答的是同一个问题吗？在一个需要向审计方解释"为什么这个案例没有自动处理"的系统里，你会怎样组合使用它们？
+**练习 7.7** ★★★ 对一个事实组合，贝叶斯方法给出卖家责任比例的 95% 可信区间，共形预测给出一个结论集合。它们回答的是同一个问题吗？在一个需要向审计方解释"为什么这个案例没有自动处理"的系统里，你会怎样组合使用它们？
 
-**练习 7.9** ★★★ 平台新上线一个品类，同时把读取"是否腐烂"的提示词改了一版。设计一套上线后的监控与报告方案：要监控哪些量、多久看一次、什么情况下重新校准、怎样分别报告两种转人工。说明每一项针对的是哪个保证的哪个前提。
+**练习 7.8** ★★★ 平台新上线一个品类，同时把读取"是否腐烂"的提示词改了一版。设计一套上线后的监控与报告方案：要监控哪些量、多久看一次、什么情况下重新校准、怎样分别报告两种转人工。说明每一项针对的是哪个保证的哪个前提。
 
 ---
 
@@ -978,13 +965,6 @@ $$
 <details>
 <summary>练习 7.7</summary>
 
-条件为 $(\text{判错数}+1)/21\le0.15$，即判错数 $\le2.15$，最多 2 个。按置信分数从高到低，判错依次出现在 0.90、0.78、0.70。门槛 $\lambda=0.70$ 时自动处理置信分数大于 0.70 的 13 个案例，判错 2 个，$3/21\approx0.143\le0.15$；门槛再低一点就会放进判错的 0.70，变成 $4/21\approx0.19$。所以 $\hat\lambda=0.70$，覆盖率 $13/20=65\%$。
-
-</details>
-
-<details>
-<summary>练习 7.8</summary>
-
 不是同一个问题。可信区间说的是"这个事实组合下卖家责任比例 $\theta$ 是多少"，是对参数的信念，依赖先验和似然模型；共形集合说的是"这个案例的结论可能是哪些"，是对新案例的频率保证，只依赖可交换性。
 
 一种组合：用后验预测作分数，用共形预测或定理 7.9 选门槛，保证由频率方法提供；对没有自动处理的案例，同时报告"集合里有哪几个结论"和"这个事实组合下的历史案例数与比例的可信区间"。前者说明为什么不能自动处理，后者说明不确定来自案例少（认知）还是结论本来就分歧（偶然），从而指出该补数据还是该补事实。
@@ -992,7 +972,7 @@ $$
 </details>
 
 <details>
-<summary>练习 7.9</summary>
+<summary>练习 7.8</summary>
 
 参考要点（不唯一）：
 
@@ -1024,8 +1004,8 @@ $$
 
 **教材**
 
-- Andrew Gelman, John Carlin, Hal Stern, David Dunson, Aki Vehtari, Donald Rubin. *Bayesian Data Analysis*, 3rd ed. CRC Press, 2013. 第 2 章讲 Beta–二项模型与后验预测，第 11–12 章讲 MCMC 与诊断。
-- Christian Robert, George Casella. *Monte Carlo Statistical Methods*, 2nd ed. Springer, 2004. MCMC 的系统处理，含马尔可夫链收敛定理的证明。
+- Andrew Gelman 等. *Bayesian Data Analysis*, 3rd ed. CRC Press, 2013. 第 2 章讲 Beta–二项模型与后验预测，第 11–12 章讲 MCMC 与诊断。
+- Christian Robert, George Casella. *Monte Carlo Statistical Methods*, 2nd ed. Springer, 2004. 含马尔可夫链收敛定理的证明。
 - David MacKay. *Information Theory, Inference, and Learning Algorithms*. Cambridge University Press, 2003. 第 29–30 章直观地讲 Metropolis 方法与 Gibbs 采样。
 - Vladimir Vovk, Alex Gammerman, Glenn Shafer. *Algorithmic Learning in a Random World*. Springer, 2005（第 2 版 2022）. 共形预测的原始系统表述，含 Mondrian 共形预测。
 - Anastasios Angelopoulos, Stephen Bates. A Gentle Introduction to Conformal Prediction and Distribution-Free Uncertainty Quantification. arXiv:2107.07511, 2021. 最好的入门读物，含风险控制。
@@ -1042,9 +1022,7 @@ $$
 - Bianca Zadrozny, Charles Elkan. Transforming Classifier Scores into Accurate Multiclass Probability Estimates. *KDD*, 2002. 保序回归用于校准。
 - Alexandru Niculescu-Mizil, Rich Caruana. Predicting Good Probabilities with Supervised Learning. *ICML*, 2005. 比较 Platt 缩放与保序回归。
 - Chuan Guo, Geoff Pleiss, Yu Sun, Kilian Weinberger. On Calibration of Modern Neural Networks. *ICML*, 2017. 温度缩放。
-- Jeremy Nixon 等. Measuring Calibration in Deep Learning. *CVPR Workshops*, 2019. ECE 的分箱问题。
-- Ananya Kumar, Percy Liang, Tengyu Ma. Verified Uncertainty Calibration. *NeurIPS*, 2019. 分箱估计校准误差的偏差。
-- Zihao Zhao, Eric Wallace, Shi Feng, Dan Klein, Sameer Singh. Calibrate Before Use: Improving Few-Shot Performance of Language Models. *ICML*, 2021. 上下文校准。
+- Zihao Zhao 等. Calibrate Before Use: Improving Few-Shot Performance of Language Models. *ICML*, 2021. 上下文校准。
 - Saurav Kadavath 等. Language Models (Mostly) Know What They Know. arXiv:2207.05221, 2022. 大模型在判断题格式上的校准。
 - Katherine Tian 等. Just Ask for Calibration. *EMNLP*, 2023. 口头报告概率与词元概率的比较。
 - OpenAI. GPT-4 Technical Report. arXiv:2303.08774, 2023. 后训练前后校准的对比。
@@ -1062,13 +1040,13 @@ $$
 - C. K. Chow. On Optimum Recognition Error and Reject Tradeoff. *IEEE Transactions on Information Theory*, 16(1), 1970. 错误率与弃权率的权衡。
 - Ran El-Yaniv, Yair Wiener. On the Foundations of Noise-free Selective Classification. *Journal of Machine Learning Research*, 11, 2010. 风险–覆盖权衡的理论。
 - Yonatan Geifman, Ran El-Yaniv. Selective Classification for Deep Neural Networks. *NeurIPS*, 2017. SGR 算法。
-- Harris Papadopoulos, Kostas Proedrou, Volodya Vovk, Alex Gammerman. Inductive Confidence Machines for Regression. *ECML*, 2002. 分割共形预测。
+- Harris Papadopoulos 等. Inductive Confidence Machines for Regression. *ECML*, 2002. 分割共形预测。
 - Vladimir Vovk. Conditional Validity of Inductive Conformal Predictors. *ACML*, 2012. 条件覆盖；单次校准覆盖率的分布。
 - Rina Foygel Barber, Emmanuel Candès, Aaditya Ramdas, Ryan Tibshirani. The Limits of Distribution-Free Conditional Predictive Inference. *Information and Inference*, 10(2), 2021. 条件覆盖的不可能性。
 - Mauricio Sadinle, Jing Lei, Larry Wasserman. Least Ambiguous Set-Valued Classifiers with Bounded Error Levels. *Journal of the American Statistical Association*, 114(525), 2019. 以 $1-\hat q_y(x)$ 为分数的集合分类器。
 - Yaniv Romano, Matteo Sesia, Emmanuel Candès. Classification with Valid and Adaptive Coverage. *NeurIPS*, 2020. 自适应预测集。
 - Ryan Tibshirani, Rina Foygel Barber, Emmanuel Candès, Aaditya Ramdas. Conformal Prediction Under Covariate Shift. *NeurIPS*, 2019. 加权共形预测。
 - Isaac Gibbs, Emmanuel Candès. Adaptive Conformal Inference Under Distribution Shift. *NeurIPS*, 2021. 自适应共形推断。
-- Stephen Bates, Anastasios Angelopoulos, Lihua Lei, Jitendra Malik, Michael Jordan. Distribution-Free, Risk-Controlling Prediction Sets. *Journal of the ACM*, 68(6), 2021. 以高概率控制风险。
-- Anastasios Angelopoulos, Stephen Bates, Emmanuel Candès, Michael Jordan, Lihua Lei. Learn then Test: Calibrating Predictive Algorithms to Achieve Risk Control. arXiv:2110.01052, 2021. 把门槛选择写成多重检验。
+- Stephen Bates 等. Distribution-Free, Risk-Controlling Prediction Sets. *Journal of the ACM*, 68(6), 2021. 以高概率控制风险。
+- Anastasios Angelopoulos 等. Learn then Test: Calibrating Predictive Algorithms to Achieve Risk Control. arXiv:2110.01052, 2021. 把门槛选择写成多重检验。
 - Anastasios Angelopoulos, Stephen Bates, Adam Fisch, Lihua Lei, Tal Schuster. Conformal Risk Control. arXiv:2208.02814, 2022（*ICLR* 2024）. 定理 7.12。
