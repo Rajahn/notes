@@ -359,7 +359,7 @@ $$
 
 把 Occam 界（第 2 章定理 2.11）和最小描述长度放在一起看：
 
-- Occam 界：$R(h)\le\hat R_S(h)+C\sqrt{\dfrac{\lvert\sigma(h)\rvert\ln2+\ln(1/\delta)}{2n}}$。
+- Occam 界：$R(h)\le\hat R_S(h)+C\sqrt{\dfrac{\lvert\kappa(h)\rvert\ln2+\ln(1/\delta)}{2n}}$。
 - 最小描述长度：最小化 $L(h)+L(S\mid h)$，其中 $L(S\mid h)$ 大致随训练错误增大。
 
 两者都是"规则的描述长度 + 拟合程度"，只是组合方式不同：Occam 界用平方根，是一个泛化保证；最小描述长度用直接相加，是一个选择准则。最小描述长度本身不直接给出泛化保证，但在一定条件下与贝叶斯方法和 Occam 界有严格的联系（Grünwald 2007）。

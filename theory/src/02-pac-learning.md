@@ -48,6 +48,16 @@
 | 增长函数 | 规则空间在 $n$ 个点上最多能表现出多少种不同标注 |
 | Rademacher 复杂度 | 规则空间与随机正负号的最大相关程度，衡量拟合噪声的能力 |
 | 没有免费午餐定理 | 不对问题做任何假设时，没有学习算法能保证学好 |
+| 切尔诺夫方法 | 先取指数、再用马尔可夫不等式，得到指数级概率界的技巧 |
+| 霍夫丁引理 | 平均为 0 的有界量，其"指数平均"不会太大 |
+| 凸函数、琴生不等式 | 图像向上弯的函数；对凸函数，"平均值的函数"不超过"函数的平均值" |
+| Occam 界、Kraft 不等式 | 按描述长度分配保证的泛化界；前缀码长度满足的不等式 |
+| 限制 | 规则空间在一组具体的点上能产生的全部输出串 |
+| Sauer–Shelah 引理 | VC 维有限时，增长函数只按多项式增长 |
+| 经验 Rademacher 复杂度 | 在手头这批样本上计算的 Rademacher 复杂度 |
+| McDiarmid 不等式 | 改动任一样本影响都不大的函数，会集中在它的期望附近 |
+| 对称化 | 引入一份"影子样本"，把真实期望换成两份样本之差的证明技巧 |
+| 归纳偏置 | 学习之前对规则可能长什么样所做的限制 |
 
 ### 需要的预备知识
 
@@ -56,7 +66,7 @@
 - 指数函数 $e^x$ 和自然对数 $\ln x$ 的基本性质：$e^{a+b}=e^ae^b$，$\ln(ab)=\ln a+\ln b$，$\ln e^x=x$，以及 $1+x\le e^x$ 对所有实数 $x$ 成立。
 - 求一个一元函数的最小值：求导、令导数为 0。
 
-2.4 节和 2.6 节会用到"凸函数"这个概念，用到时会解释。
+2.2 节和 2.8 节会用到"凸函数"和"琴生不等式"，用到时会解释。另外会用到几样工具，用到时也会说明：带拉格朗日余项的泰勒公式（2.2 节）、二项式定理（2.7 节），以及"独立随机量的函数仍然相互独立，乘积的期望等于期望的乘积"（2.2 节）。
 
 ---
 
@@ -188,7 +198,7 @@ $$
 \Pr\big(\mu-\bar Z\ge\varepsilon\big)\le e^{-2n\varepsilon^2/C^2},
 $$
 
-两边合起来：
+两边合起来（两件事至少发生一件的概率，不超过两者概率之和；2.4 节会正式说明这一点）：
 
 $$
 \Pr\big(\lvert\bar Z-\mu\rvert\ge\varepsilon\big)\le2e^{-2n\varepsilon^2/C^2}.
@@ -207,7 +217,9 @@ $$
 - $n=200$：$2e^{-2\times200\times0.01}=2e^{-4}\approx0.037$。比切比雪夫的 0.08 好一点。
 - $n=2000$：$2e^{-40}\approx8.5\times10^{-18}$。切比雪夫给出 0.008。差距是天文数字。
 
-**注意**：霍夫丁不等式不需要知道方差，只需要知道取值范围。代价是：当方差远小于范围时（比如真实错误率只有 1%），它比切比雪夫或更精细的不等式宽松。后面在卷零会讲改进版本（伯恩斯坦不等式）。
+"样本数每增加一倍，概率界就被平方一次"指单侧的界；双侧时还有一个系数 2，可以忽略。
+
+**注意**：霍夫丁不等式不需要知道方差，只需要知道取值范围，也就是说它**没有利用小方差**。当方差远小于范围时（比如真实错误率只有 1%），在 $n\varepsilon^2$ 不大的范围内，它可能比用到真实方差的切比雪夫不等式还宽松；但 $n$ 很大时，它仍然因为指数下降而紧得多。两种好处兼得的是伯恩斯坦不等式，本书开头的数学预备部分（卷零）会给出它的证明。
 
 ### 2.2.5 霍夫丁不等式的证明
 
@@ -260,6 +272,8 @@ $$
 
 **引理 2.4 的证明.** 这一步需要"凸函数"的概念。一个函数是**凸**的，意思是它的图像上任取两点连一条线段，函数在这两点之间的图像都在线段的下方。$e^{\lambda x}$ 就是凸函数（图像向上弯）。
 
+先处理两种简单情况。如果 $a=b$，$X$ 恒为 0，引理显然成立，所以下面设 $a<b$。由于 $\mathbb{E}[X]=0$ 且 $X\in[a,b]$，必有 $a\le0\le b$（平均为 0 的量不可能全部大于 0 或全部小于 0）。
+
 1. **用线段压住指数函数.** 区间 $[a,b]$ 里的任意 $x$ 可以写成两端点的加权平均：$x=\frac{b-x}{b-a}a+\frac{x-a}{b-a}b$，两个权重非负、加起来是 1。由凸性：
 
 $$
@@ -272,8 +286,6 @@ $$
 \mathbb{E}\big[e^{\lambda X}\big]\le\frac{b}{b-a}e^{\lambda a}-\frac{a}{b-a}e^{\lambda b}.
 $$
 
-   如果 $a=b$，$X$ 恒为 0，引理显然成立，所以下面设 $a<b$。由于 $\mathbb{E}[X]=0$ 且 $X\in[a,b]$，有 $a\le0\le b$。
-
 3. **换一种写法.** 记 $\theta=\frac{-a}{b-a}\in[0,1]$，$u=\lambda(b-a)$。那么 $\frac{b}{b-a}=1-\theta$，$\lambda a=-\theta u$，$\lambda b=(1-\theta)u$。右边变成
 
 $$
@@ -285,7 +297,8 @@ $$
 4. **把 $L(u)$ 控制住.** 只需证明 $L(u)\le u^2/8$。逐项计算：
    - $L(0)=0+\ln1=0$。
    - $L'(u)=-\theta+\dfrac{\theta e^u}{1-\theta+\theta e^u}$，所以 $L'(0)=-\theta+\theta=0$。
-   - 记 $q=\dfrac{\theta e^u}{1-\theta+\theta e^u}\in[0,1]$，则 $L''(u)=q(1-q)$。一个 $[0,1]$ 里的数 $q$ 满足 $q(1-q)\le1/4$（在 $q=1/2$ 时取到最大）。所以 $L''(u)\le1/4$。
+   - 记 $q(u)=\dfrac{\theta e^u}{1-\theta+\theta e^u}$。因为 $\theta\in[0,1]$，分子分母都非负且分子不超过分母，所以 $q\in[0,1]$。于是 $L'(u)=-\theta+q(u)$，$L''(u)=q'(u)$。对 $q$ 求导：$q'(u)=\dfrac{\theta e^u(1-\theta+\theta e^u)-\theta e^u\cdot\theta e^u}{(1-\theta+\theta e^u)^2}=q(u)\cdot\dfrac{1-\theta}{1-\theta+\theta e^u}=q(u)\big(1-q(u)\big)$。
+   - 一个 $[0,1]$ 里的数 $q$ 满足 $q(1-q)\le1/4$（在 $q=1/2$ 时取到最大）。所以 $L''(u)\le1/4$。
 
 5. **泰勒展开.** 由带拉格朗日余项的泰勒公式，存在 0 与 $u$ 之间的某个 $\xi$，使得
 
@@ -377,7 +390,7 @@ $$
 
 **直观理解**：把各件事发生的情形画成几块区域，"至少一件发生"是这些区域合起来的面积；把各块面积直接相加，重叠的部分被多算了，所以只会更大。
 
-**证明.** 对每种可能的结果，左边的指示函数 $\mathbf{1}[\text{至少一件发生}]$ 不超过 $\sum_j\mathbf{1}[A_j\text{ 发生}]$：若没有一件发生，两边都是 0；若有发生的，左边是 1，右边至少是 1。两边取期望即得。$\square$
+**证明（第一遍可以跳过）.** 对每种可能的结果，左边的指示函数 $\mathbf{1}[\text{至少一件发生}]$ 不超过 $\sum_j\mathbf{1}[A_j\text{ 发生}]$：若没有一件发生，两边都是 0；若有发生的，左边是 1，右边至少是 1。两边取期望即得。$\square$
 
 联合界几乎是最粗糙的不等式，因为它完全忽略了事件之间的重叠。但它的优点是**不需要任何关于事件之间关系的假设**，所以在学习理论里到处都是。
 
@@ -391,7 +404,7 @@ $$
 R(h)\le\hat R_S(h)+C\sqrt{\frac{\ln\lvert\mathcal{H}\rvert+\ln(1/\delta)}{2n}}.
 $$
 
-**怎么读**：和命题 2.5 相比，只是 $\ln(1/\delta)$ 变成了 $\ln\lvert\mathcal{H}\rvert+\ln(1/\delta)=\ln(\lvert\mathcal{H}\rvert/\delta)$。也就是说，同时管住 $\lvert\mathcal{H}\rvert$ 条规则，相当于对每一条要求 $\delta/\lvert\mathcal{H}\rvert$ 的把握。
+**怎么读**：和命题 2.5 相比，只是 $\ln(1/\delta)$ 变成了 $\ln\lvert\mathcal{H}\rvert+\ln(1/\delta)=\ln(\lvert\mathcal{H}\rvert/\delta)$。也就是说，同时管住 $\lvert\mathcal{H}\rvert$ 条规则，相当于要求每一条规则"出意外"的概率不超过 $\delta/\lvert\mathcal{H}\rvert$（即每一条的把握是 $1-\delta/\lvert\mathcal{H}\rvert$）。
 
 #### 证明（第一遍可以跳过）
 
@@ -451,7 +464,7 @@ $$
 n\ge\frac{2C^2\big(\ln\lvert\mathcal{H}\rvert+\ln(2/\delta)\big)}{\varepsilon^2}=\frac{2C^2\ln(2\lvert\mathcal{H}\rvert/\delta)}{\varepsilon^2}.
 $$
 
-这个数叫作**样本复杂度**：要达到指定的精度 $\varepsilon$ 和把握 $1-\delta$，样本至少要有多少。
+这给出了**样本复杂度**的一个上界。样本复杂度是：要达到指定的精度 $\varepsilon$ 和把握 $1-\delta$，样本**至少**要有多少。上面的式子说"这么多一定够"，真正需要的可能更少。
 
 **代入数字**：深度不超过 2 的树，$m=10$ 个谓词，$K=3$ 种结论，$\ln\lvert\mathcal{H}\rvert\approx11.3$；0-1 代价 $C=1$；$\delta=0.05$，$\ln(2/0.05)=\ln40\approx3.7$；$\varepsilon=0.1$：
 
@@ -464,8 +477,8 @@ $$
 **这些界通常偏保守。** 联合界忽略了规则之间的相似性（很多规则在大部分案例上给出相同结论），霍夫丁不等式忽略了方差。实践中往往用更少的样本就能学好。这些界的价值主要在于**定性的规律**：
 
 - 样本数与 $1/\varepsilon^2$ 成正比：精度提高一倍，样本要多四倍。
-- 样本数与 $\ln\lvert\mathcal{H}\rvert$ 成正比：规则空间的"大小"按对数计入。
-- 样本数与 $\ln(1/\delta)$ 成正比：把握从 95% 提高到 99.9%，只需要多一点样本。
+- 样本数随 $\ln\lvert\mathcal{H}\rvert$ 线性增长：规则空间的"大小"按对数计入。
+- 样本数随 $\ln(1/\delta)$ 线性增长：把握从 95% 提高到 99.9%，只需要多一点样本。
 
 ### 小结
 
@@ -508,7 +521,7 @@ $$
 n\ge\frac{11.3+3.0}{0.1}=143 .
 $$
 
-对比：不假设存在完美规则时，同样的保证（定理 2.7 的单侧余量不超过 0.1）需要 $n\ge14.3/(2\times0.01)=715$。
+对比：不假设存在完美规则时，要得到同样形式的保证，需要定理 2.7 的单侧余量不超过 0.1，即 $n\ge14.3/(2\times0.01)=715$。这里和 715 比，而不和 2.4.4 节的 3000 比，是因为可实现情形下挑出的规则训练错误为 0，只需要"真实错误不超过训练错误加余量"这一侧；3000 对应的是"和假设空间里最好的规则比"，多了一步。
 
 **为什么差这么多？** 直觉是：如果一条规则真实错误率是 10%，在训练集上"一次都不错"是一个很强的反证；而如果允许规则本身就有错，要分辨"真实错 10%"和"真实错 20%"需要看很多次。
 
@@ -518,7 +531,7 @@ $$
 
 把上面的结论抽象出来，得到学习理论中最基本的定义。
 
-**定义 2.1（PAC 可学习，可实现情形）** 称假设空间 $\mathcal{H}$ 是 **PAC 可学习**的，如果存在一个函数 $n_{\mathcal{H}}(\varepsilon,\delta)$ 和一个学习算法 $A$，满足：对任意 $\varepsilon,\delta\in(0,1)$，对任意使得某个 $h\in\mathcal{H}$ 满足 $R(h)=0$ 的分布 $\mathcal{D}$，只要样本数 $n\ge n_{\mathcal{H}}(\varepsilon,\delta)$，就有
+**定义 2.1（PAC 可学习，可实现情形）** 使用 0-1 代价。称假设空间 $\mathcal{H}$ 是 **PAC 可学习**的，如果存在一个函数 $n_{\mathcal{H}}(\varepsilon,\delta)$ 和一个学习算法 $A$，满足：对任意 $\varepsilon,\delta\in(0,1)$，对任意使得某个 $h\in\mathcal{H}$ 满足 $R(h)=0$ 的分布 $\mathcal{D}$，只要样本数 $n\ge n_{\mathcal{H}}(\varepsilon,\delta)$，就有
 
 $$
 \Pr_{S\sim\mathcal{D}^n}\big(R(A(S))\le\varepsilon\big)\ge1-\delta .
@@ -541,7 +554,7 @@ $$
 
 $\lceil x\rceil$ 读作"$x$ 向上取整"，即不小于 $x$ 的最小整数。
 
-**关于计算效率.** Valiant（1984）最初的定义还要求算法在多项式时间内完成。上面的定义只管样本数，不管计算量。两者是不同的问题：有限的规则空间在样本上总是可学的，但"在所有树里找训练错误最少的那棵"可能在计算上非常困难。后面讲最优决策树时会看到，这个问题是 NP 难的。
+**关于计算效率.** Valiant（1984）最初的定义还要求算法在多项式时间内完成。上面的定义只管样本数，不管计算量。两者是不同的问题：有限的规则空间在样本上总是可学的，但"在叶子数不超过 $k$ 的树里找训练错误最少的那棵"（$k$ 随问题规模增长）可能在计算上非常困难。注意，如果不限制树的大小，这个问题反而很简单：一棵足够大的树可以把每种事实组合单独分开，训练错误直接降到碰撞下界。后面讲最优决策树时会看到，这个问题是 NP 难的。
 
 ### 小结
 
@@ -574,30 +587,32 @@ $$
 \sum_j2^{-\ell_j}\le1 .
 $$
 
-**怎么读**：长度为 $\ell$ 的码字"占用" $2^{-\ell}$ 的份额，所有码字的份额加起来不超过 1。码字越短，占用越多，所以短码字不能太多。验证编码一：$2^{-1}+2^{-2}+2^{-2}=1$。
+**怎么读**：长度为 $\ell$ 的码字"占用" $2^{-\ell}$ 的份额，所有码字的份额加起来不超过 1。码字越短，占用越多，所以短码字不能太多。验证编码一：$2^{-1}+2^{-2}+2^{-2}=1$。编码二不是前缀码，它的份额加起来是 $2^{-1}+2^{-2}+2^{-1}=1.25>1$，违反了这个不等式。
 
-**证明.** 想象不停地抛一枚均匀硬币，正面记 0、反面记 1，得到一个无限长的随机 0/1 串。对每个码字 $w_j$，"随机串以 $w_j$ 开头"的概率是 $2^{-\ell_j}$（前 $\ell_j$ 次抛硬币恰好是 $w_j$）。由于是前缀码，一个随机串不可能同时以两个不同的码字开头（否则较短的那个是较长那个的开头），所以这些事件两两不相交，概率之和不超过 1。$\square$
+**类比的局限**："份额"不是"这个码字更可能正确"的意思，它只是一种分配方式：后面会把份额当作"出意外额度"分给各条规则。
+
+**证明（第一遍可以跳过）.** 想象不停地抛一枚均匀硬币，正面记 0、反面记 1，得到一个无限长的随机 0/1 串。对每个码字 $w_j$，"随机串以 $w_j$ 开头"的概率是 $2^{-\ell_j}$（前 $\ell_j$ 次抛硬币恰好是 $w_j$）。由于是前缀码，一个随机串不可能同时以两个不同的码字开头（否则较短的那个是较长那个的开头），所以这些事件两两不相交，概率之和不超过 1。$\square$
 
 ### 2.6.3 Occam 界
 
-**定理 2.11（Occam 界）** 设给每条规则 $h\in\mathcal{H}$ 一个 0/1 描述 $\sigma(h)$，所有描述构成前缀码，长度记为 $\lvert\sigma(h)\rvert$。**这套编码必须在看到样本之前确定。** 设代价取值于 $[0,C]$。则以至少 $1-\delta$ 的概率，对所有 $h\in\mathcal{H}$ 同时有
+**定理 2.11（Occam 界）** 设给每条规则 $h\in\mathcal{H}$ 一个 0/1 描述 $\kappa(h)$（$\kappa$ 读作"卡帕"），所有描述构成前缀码，长度记为 $\lvert\kappa(h)\rvert$。**这套编码必须在看到样本之前确定。** 设代价取值于 $[0,C]$。则以至少 $1-\delta$ 的概率，对所有 $h\in\mathcal{H}$ 同时有
 
 $$
-R(h)\le\hat R_S(h)+C\sqrt{\frac{\lvert\sigma(h)\rvert\ln2+\ln(1/\delta)}{2n}}.
+R(h)\le\hat R_S(h)+C\sqrt{\frac{\lvert\kappa(h)\rvert\ln2+\ln(1/\delta)}{2n}}.
 $$
 
-**怎么读**：和定理 2.7 相比，$\ln\lvert\mathcal{H}\rvert$ 换成了 $\lvert\sigma(h)\rvert\ln2$，即"描述这条规则需要的比特数"乘以 $\ln2\approx0.693$。**每条规则的余量由它自己的描述长度决定。** 而且 $\mathcal{H}$ 可以是无穷的，只要每条规则都有一个有限长的描述。
+**怎么读**：和定理 2.7 相比，$\ln\lvert\mathcal{H}\rvert$ 换成了 $\lvert\kappa(h)\rvert\ln2$，即"描述这条规则需要的比特数"乘以 $\ln2\approx0.693$。**每条规则的余量由它自己的描述长度决定。** 而且 $\mathcal{H}$ 可以是无穷的，只要每条规则都有一个有限长的描述。
 
 #### 证明（第一遍可以跳过）
 
-**思路**：和定理 2.7 一样用联合界，但给每条规则分配不同的额度 $\delta_h=\delta\cdot2^{-\lvert\sigma(h)\rvert}$；Kraft 不等式保证额度总和不超过 $\delta$。
+**思路**：和定理 2.7 一样用联合界，但给每条规则分配不同的额度 $\delta_h=\delta\cdot2^{-\lvert\kappa(h)\rvert}$；Kraft 不等式保证额度总和不超过 $\delta$。
 
-1. 对每条 $h$，令 $\delta_h=\delta\cdot2^{-\lvert\sigma(h)\rvert}$，$\varepsilon_h=C\sqrt{\ln(1/\delta_h)/(2n)}$。注意 $\ln(1/\delta_h)=\lvert\sigma(h)\rvert\ln2+\ln(1/\delta)$，这正是定理里的余量。
+1. 对每条 $h$，令 $\delta_h=\delta\cdot2^{-\lvert\kappa(h)\rvert}$，$\varepsilon_h=C\sqrt{\ln(1/\delta_h)/(2n)}$。注意 $\ln(1/\delta_h)=\lvert\kappa(h)\rvert\ln2+\ln(1/\delta)$，这正是定理里的余量。
 2. 每条 $h$ 都是固定的（编码在看到样本之前就定了），由命题 2.5，$\Pr\big(R(h)-\hat R_S(h)\ge\varepsilon_h\big)\le\delta_h$。
 3. 由联合界和 Kraft 不等式：
 
 $$
-\Pr\big(\text{存在 }h\text{ 出意外}\big)\le\sum_h\delta_h=\delta\sum_h2^{-\lvert\sigma(h)\rvert}\le\delta .\qquad\square
+\Pr\big(\text{存在 }h\text{ 出意外}\big)\le\sum_h\delta_h=\delta\sum_h2^{-\lvert\kappa(h)\rvert}\le\delta .\qquad\square
 $$
 
 （如果 $\mathcal{H}$ 是可数无穷的，联合界对可数多个事件同样成立。）
@@ -628,11 +643,15 @@ $$
 
 简单的树保证更紧。如果两棵树训练错误率一样，Occam 界更信任简单的那棵。
 
+细心的读者会发现：规则甲的余量 0.20，比第 1 章用"深度不超过 2 的树"整体算出的 0.19 还略大。原因是这套编码要能描述**任意形状、任意大小**的树，为此多付了几个比特（区分内部节点与叶子的结构比特）。Occam 界的优势不在小树上，而在它不需要事先划定一个大的假设空间：和"所有不超过 20 个叶子的树"这样的大空间相比，小树的保证会紧得多。（这里规则甲的 $a$、$b$ 是 10 个谓词中的两个，所以每个谓词用 4 比特，和第 1 章只有 2 个谓词的设定不同。）
+
+**这套编码怎样知道树结束了？** 解码时数一数"还有几个孩子位置没填"：开始时是 1；读到一个内部节点，空位减 1 再加 2；读到一个叶子，空位减 1。空位变成 0，树就结束了。
+
 ### 2.6.5 Occam 界的真正前提
 
 这个定理常被概括为"简单的规则更可能泛化好"。这个概括不准确。定理真正依赖的是：**编码是在看到数据之前选定的**。
 
-"简单"只是相对于某一种编码而言的。换一种编码，原本复杂的规则可以变得很短。定理并不偏爱某种"客观的简单"，它偏爱的是"事先承诺过的、给了短编码的那些规则"。如果先看了数据，再设计一套让训练成绩最好的规则恰好很短的编码，保证就失效了，因为第 2 步"每条 $h$ 都是固定的"这个前提被破坏了。
+"出意外额度"只是一种分配方式，不代表短编码的规则更可能正确。"简单"也只是相对于某一种编码而言的。换一种编码，原本复杂的规则可以变得很短。定理并不偏爱某种"客观的简单"，它偏爱的是"事先承诺过的、给了短编码的那些规则"。如果先看了数据，再设计一套让训练成绩最好的规则恰好很短的编码，保证就失效了，因为第 2 步"每条 $h$ 都是固定的"这个前提被破坏了。
 
 后面讲结构风险最小化和最小描述长度时，会从另外两个角度回到这一点。
 
@@ -689,7 +708,7 @@ $$
 
 **定义 2.6（打散）** 如果 $\mathcal{H}$ 在 $x_1,\dots,x_n$ 上能表现出**全部** $2^n$ 种输出串，就说 $\mathcal{H}$ **打散**了这组点。
 
-**直观理解**：打散意味着"不管这组点被怎样标注，规则空间里都有一条规则能完美拟合"。规则空间在这组点上没有任何约束，什么都能拟合，也就从这组点上学不到任何东西。
+**直观理解**：打散意味着"不管这组点被怎样标注，规则空间里都有一条规则能完美拟合"。规则空间在这组点上没有任何约束，什么都能拟合。于是这组点上的标签，对规则在**其他**点上的行为没有任何提示。注意这不等于"什么都学不到"：训练成绩本身仍然是对的，只是它不能告诉我们别处会怎样。
 
 ### 2.7.3 VC 维
 
@@ -747,29 +766,33 @@ $$
 
 #### 证明（第一遍可以跳过）
 
-**第一个不等式的思路**：对点数 $n$ 做归纳。去掉最后一个点，把规则空间在剩下点上的行为分成两部分，一部分的 VC 维仍不超过 $d$，另一部分的 VC 维不超过 $d-1$，再用组合恒等式 $\binom{n-1}{i}+\binom{n-1}{i-1}=\binom{n}{i}$。
+**第一个不等式的思路**：对点数做归纳。去掉最后一个点，把输出串分成"最后一位只有一种取值"和"两种取值都出现"两类，前者对应不含最后一个点的被打散子集，后者对应含最后一个点的被打散子集。
 
-为了让归纳干净，证明一个更强的说法：对任意一组 $n$ 个点 $C$，
+为了让归纳干净，证明一个更强的说法（Pajor 1985）：对**任意**假设空间 $\mathcal{H}$ 和**任意**一组 $n$ 个点 $P$，
 
 $$
-\lvert\mathcal{H}_C\rvert\le\big\lvert\{T\subseteq C:\mathcal{H}\text{ 打散 }T\}\big\rvert .
+\lvert\mathcal{H}_P\rvert\le\big\lvert\{T\subseteq P:\mathcal{H}\text{ 打散 }T\}\big\rvert .
 $$
 
 即"不同输出的个数"不超过"能被打散的子集个数"。这个说法蕴含引理：能被打散的子集大小都不超过 $d$，而大小不超过 $d$ 的子集共有 $\sum_{i\le d}\binom{n}{i}$ 个。
 
-1. **起点**：$n=1$。若 $\mathcal{H}$ 在这个点上只有一种输出，左边是 1，右边至少是 1（空集总能被"打散"：空集上只有一种空输出）。若有两种输出，这个点本身也被打散，右边是 2。成立。
+这里"打散"可以推广到任意一组输出串上：一组串**打散** $T$，意思是这些串只看 $T$ 中那些位置时，$2^{\lvert T\rvert}$ 种组合全都出现。一组串也可以看作某个假设空间在 $P$ 上的限制，所以下面的归纳假设对任何一组串都适用。
 
-2. **归纳步**：设 $C=\{x_1,\dots,x_n\}$，$C'=\{x_1,\dots,x_{n-1}\}$。把 $\mathcal{H}_C$ 里的输出串按"去掉最后一位以后是什么"分组。每组有 1 个或 2 个串（最后一位是 0 或 1）。定义两个集合：
-   - $Y_1$：去掉最后一位后的所有不同串，即 $\mathcal{H}_{C'}$。
-   - $Y_2$：那些"最后一位取 0 和取 1 都出现过"的前缀串。
+1. **起点**：$n=0$。没有点时只有一种空输出，左边是 1；空集被"打散"（空集上只有一种空输出，全部出现了），右边也是 1。成立。
 
-   那么 $\lvert\mathcal{H}_C\rvert=\lvert Y_1\rvert+\lvert Y_2\rvert$：每组贡献 1 个 $Y_1$ 元素，有 2 个串的组再贡献 1 个 $Y_2$ 元素。
+2. **归纳步**：设 $P=\{x_1,\dots,x_n\}$，$P'=\{x_1,\dots,x_{n-1}\}$，并假设结论对任意 $n-1$ 个点、任意一组串成立。把 $\mathcal{H}_P$ 里的输出串按"去掉最后一位以后是什么"分组。每组有 1 个或 2 个串（最后一位是 0 或 1）。定义两组串：
+   - $\mathcal{A}_1$：去掉最后一位后的所有不同串，即 $\mathcal{H}_{P'}$。
+   - $\mathcal{A}_2$：那些"最后一位取 0 和取 1 都出现过"的前缀串。
 
-3. **对 $Y_1$ 用归纳假设**：$Y_1$ 是 $\mathcal{H}$ 在 $n-1$ 个点上的限制，所以 $\lvert Y_1\rvert$ 不超过 $C'$ 中能被 $\mathcal{H}$ 打散的子集个数，而这些子集也正是 $C$ 中**不含** $x_n$ 且能被打散的子集。
+   那么 $\lvert\mathcal{H}_P\rvert=\lvert\mathcal{A}_1\rvert+\lvert\mathcal{A}_2\rvert$：每组贡献 1 个 $\mathcal{A}_1$ 元素，有 2 个串的组再贡献 1 个 $\mathcal{A}_2$ 元素。
 
-4. **对 $Y_2$ 用归纳假设**：$Y_2$ 是一个"串的集合"，可以看作某个规则空间 $\mathcal{H}'$ 在 $C'$ 上的限制（取那些前缀落在 $Y_2$ 里的规则）。由归纳假设，$\lvert Y_2\rvert$ 不超过 $C'$ 中能被 $Y_2$ 打散的子集 $T$ 的个数。而如果 $Y_2$ 打散了 $T$，那么 $\mathcal{H}$ 打散了 $T\cup\{x_n\}$：$T$ 上的每种输出都出现在 $Y_2$ 里，而 $Y_2$ 里的每个前缀都能配上 $x_n$ 的两种取值。所以这样的 $T$ 一一对应于 $C$ 中**含** $x_n$ 且能被 $\mathcal{H}$ 打散的子集 $T\cup\{x_n\}$。
+3. **对 $\mathcal{A}_1$ 用归纳假设**：$\lvert\mathcal{A}_1\rvert$ 不超过 $P'$ 中能被 $\mathcal{A}_1$（也就是 $\mathcal{H}$）打散的子集个数，而这些子集正是 $P$ 中**不含** $x_n$ 且能被 $\mathcal{H}$ 打散的子集。
 
-5. 把第 3、4 步加起来，右边正好是"$C$ 中能被 $\mathcal{H}$ 打散的子集"的总数（不含 $x_n$ 的加上含 $x_n$ 的）。归纳完成。
+4. **对 $\mathcal{A}_2$ 用归纳假设**：$\lvert\mathcal{A}_2\rvert$ 不超过 $P'$ 中能被 $\mathcal{A}_2$ 打散的子集 $T$ 的个数。如果 $\mathcal{A}_2$ 打散了 $T$，那么 $\mathcal{H}$ 打散了 $T\cup\{x_n\}$：$T$ 上的每种输出都出现在 $\mathcal{A}_2$ 里，而 $\mathcal{A}_2$ 里的每个前缀都能配上 $x_n$ 的两种取值。所以每个这样的 $T$ 对应一个**不同的**、**含** $x_n$ 且能被 $\mathcal{H}$ 打散的子集 $T\cup\{x_n\}$（反过来不一定：含 $x_n$ 的被打散子集不一定都来自 $\mathcal{A}_2$）。
+
+5. 把第 3、4 步加起来：$\lvert\mathcal{H}_P\rvert$ 不超过"不含 $x_n$ 的被打散子集个数"加上"含 $x_n$ 的被打散子集个数"，也就是 $P$ 中能被 $\mathcal{H}$ 打散的子集总数。归纳完成。
+
+**一个小例子**：两个点、$\mathcal{H}_P=\{00,11\}$。被打散的子集是 $\varnothing$、$\{x_1\}$、$\{x_2\}$，共 3 个，而输出串只有 2 个，不等式成立但不取等号。这时 $\mathcal{A}_2$ 是空的，$\{x_2\}$ 虽然被打散，却不来自 $\mathcal{A}_2$，这正是第 4 步"反过来不一定"的情形。
 
 **第二个不等式**：当 $n\ge d$ 时，$d/n\le1$，所以对 $i\le d$ 有 $(n/d)^d(d/n)^i\ge1$。于是
 
@@ -786,7 +809,7 @@ $$
 
 ### 2.7.5 VC 界：先说结论
 
-有了 Sauer–Shelah 引理，就可以把定理 2.7 里的 $\lvert\mathcal{H}\rvert$ 换成增长函数。下面这个结论在 2.8 节证明。
+有了 Sauer–Shelah 引理，大致可以把定理 2.7 里的 $\lvert\mathcal{H}\rvert$ 换成增长函数，再换成 $(en/d)^d$。严格的证明并不能直接这样替换（见 2.8.5 节的说明），下面这个结论在 2.8 节证明。
 
 **定理 2.13（VC 泛化界）** 设二分类、0-1 代价，$\mathrm{VC}(\mathcal{H})=d$，$n\ge d\ge1$。则以至少 $1-\delta$ 的概率，对所有 $h\in\mathcal{H}$ 同时有
 
@@ -815,7 +838,7 @@ $$
 
 ## 2.8 Rademacher 复杂度
 
-这一节证明定理 2.13，并介绍一个比 VC 维更一般的复杂度度量。它的证明用到一个本章没有证明的集中不等式（McDiarmid 不等式），其证明会放在卷零。**第一遍阅读可以只看 2.8.1 节的直观解释，然后跳到 2.9 节。**
+这一节证明定理 2.13，并介绍一个比 VC 维更一般的复杂度度量。它的证明用到一个本章没有证明的集中不等式（McDiarmid 不等式），其证明放在本书开头的数学预备部分。**第一遍阅读可以只看 2.8.1 节的直观解释，然后跳到 2.9 节。**
 
 ### 2.8.1 直观：规则空间能拟合多少噪声
 
@@ -830,7 +853,7 @@ $$
 
 ### 2.8.2 定义
 
-**定义 2.8（Rademacher 复杂度）** 设 $\mathcal{G}$ 是一族函数 $g:\mathcal{Z}\to\mathbb{R}$，$S=(z_1,\dots,z_n)$ 是一组点。$\sigma_1,\dots,\sigma_n$ 是相互独立的随机正负号，各以 $1/2$ 的概率取 $+1$ 或 $-1$（称为 **Rademacher 变量**）。$\mathcal{G}$ 在 $S$ 上的**经验 Rademacher 复杂度**为
+**定义 2.8（Rademacher 复杂度）** 设 $\mathcal{G}$ 是一族函数 $g:\mathcal{X}\times\mathcal{Y}\to\mathbb{R}$（每个 $g$ 给一个案例打分，最常见的是"某条规则在这个案例上的代价"），$S=(z_1,\dots,z_n)$ 是一组案例，$z_i=(x_i,y_i)$。$\sigma_1,\dots,\sigma_n$ 是相互独立的随机正负号，各以 $1/2$ 的概率取 $+1$ 或 $-1$（称为 **Rademacher 变量**）。$\mathcal{G}$ 在 $S$ 上的**经验 Rademacher 复杂度**为
 
 $$
 \hat{\mathfrak{R}}_S(\mathcal{G})=\mathbb{E}_\sigma\left[\sup_{g\in\mathcal{G}}\frac1n\sum_{i=1}^n\sigma_ig(z_i)\right],
@@ -849,6 +872,7 @@ $$
 
 - $\mathcal{G}$ 只有一条常量规则 $g\equiv+1$：$\frac1n\sum_i\sigma_i$ 的期望是 0，所以复杂度为 0。
 - $\mathcal{G}$ 打散了 $S$：对每组 $\sigma$，都有一条规则恰好等于 $\sigma$，相关程度为 $\frac1n\sum\sigma_i^2=1$，复杂度为 1。
+- **介于两者之间：两个点上的阈值规则。** 把 2.7 节的 0/1 输出改记为 $-1/+1$（2.8.4 节会说明这只是改名）。两个点 $x_1<x_2$ 上，阈值规则只能输出 $(-,-)$、$(+,-)$、$(+,+)$ 三种。四种等可能的 $\sigma$ 分别是 $(+,+)$、$(+,-)$、$(-,+)$、$(-,-)$，在三种输出中挑相关程度最大的，分别得到 $1$、$1$、$0$、$1$（$\sigma=(-,+)$ 恰好是阈值规则做不到的那种）。平均为 $0.75$，介于常量规则的 0 和打散时的 1 之间。
 
 ### 2.8.3 Rademacher 界
 
@@ -862,13 +886,15 @@ $$
 
 证明需要下面这个集中不等式，它是霍夫丁不等式的推广：不要求被控制的量是"和"，只要求"改动任何一个样本，它的变化都不大"。
 
-**McDiarmid 不等式（证明见卷零）** 设 $Z_1,\dots,Z_n$ 相互独立，函数 $f$ 满足：只改变第 $i$ 个参数时，函数值的变化不超过 $c_i$。则
+**定理 2.18（McDiarmid 不等式，证明放在本书开头的数学预备部分）** 设 $Z_1,\dots,Z_n$ 相互独立，函数 $f$ 满足：只改变第 $i$ 个参数时，函数值的变化不超过 $c_i$。则
 
 $$
 \Pr\big(f(Z_1,\dots,Z_n)-\mathbb{E}[f]\ge t\big)\le\exp\!\left(-\frac{2t^2}{\sum_ic_i^2}\right).
 $$
 
-当 $f$ 是平均值、每个 $Z_i\in[0,C]$ 时，$c_i=C/n$，它就退化为霍夫丁不等式。
+当 $f$ 是平均值、每个 $Z_i\in[0,C]$ 时，$c_i=C/n$，它就退化为霍夫丁不等式。这里的 $c_i$ 只是"第 $i$ 个参数的影响上限"，和代价函数 $c(y,\hat y)$ 无关。
+
+**代入例子**：下面证明中的 $\Phi(S)$，把一个案例换掉最多变化 $1/n$，所以 $c_i=1/n$，$\sum_ic_i^2=1/n$。取 $n=500$、$t=0.05$，偏离的概率不超过 $e^{-2\times0.0025\times500}=e^{-2.5}\approx0.082$。
 
 #### 证明（第一遍可以跳过）
 
@@ -890,7 +916,7 @@ $$
 
    不等号的理由："先平均再取最大"不超过"先取最大再平均"：对每个 $g$，平均值不超过最大值的平均。
 
-3. **插入随机正负号.** 右边的被积量是 $\sup_g\frac1n\sum_i\big(g(z_i')-g(z_i)\big)$。对任意一个 $i$，交换 $z_i$ 和 $z_i'$ 不改变 $(S,S')$ 的联合分布（两者独立同分布），而交换的效果是第 $i$ 项变号。所以给每一项乘上一个独立的随机正负号 $\sigma_i$，期望不变：
+3. **插入随机正负号.** 右边的被积量是 $\sup_g\frac1n\sum_i\big(g(z_i')-g(z_i)\big)$。先固定任意一组正负号 $\sigma$，把 $\sigma_i=-1$ 的那些位置上的 $z_i$ 与 $z_i'$ 交换。$z_i$ 和 $z_i'$ 独立同分布，交换以后 $(S,S')$ 的联合分布不变，所以期望不变；而交换的效果恰好是第 $i$ 项变号。于是不管 $\sigma$ 取什么值，期望都一样；再对 $\sigma$ 求平均，等式仍成立。（$n=1$ 时这就是 $\mathbb{E}[g(z')-g(z)]=\mathbb{E}[g(z)-g(z')]$。）所以：
 
 $$
 \mathbb{E}_{S,S'}\left[\sup_g\frac1n\sum_i\big(g(z_i')-g(z_i)\big)\right]=\mathbb{E}_{S,S',\sigma}\left[\sup_g\frac1n\sum_i\sigma_i\big(g(z_i')-g(z_i)\big)\right].
@@ -910,9 +936,9 @@ $$
 
 最后把 Rademacher 复杂度和 VC 维联系起来，证明定理 2.13。需要两个引理。
 
-**引理 2.15（0-1 代价的 Rademacher 复杂度）** 设二分类规则取值于 $\{-1,+1\}$，标签 $y\in\{-1,+1\}$，$\mathcal{G}=\{(x,y)\mapsto\mathbf{1}[h(x)\ne y]:h\in\mathcal{H}\}$ 是 0-1 代价函数族。则对任意样本，$\hat{\mathfrak{R}}_S(\mathcal{G})=\frac12\hat{\mathfrak{R}}_S(\mathcal{H})$，其中 $\hat{\mathfrak{R}}_S(\mathcal{H})$ 只看输入部分。
+**引理 2.15（0-1 代价的 Rademacher 复杂度）** 设二分类规则取值于 $\{-1,+1\}$，标签 $y\in\{-1,+1\}$，$\mathcal{G}=\{(x,y)\mapsto\mathbf{1}[h(x)\ne y]:h\in\mathcal{H}\}$ 是 0-1 代价函数族。则对任意样本，$\hat{\mathfrak{R}}_S(\mathcal{G})=\frac12\hat{\mathfrak{R}}_S(\mathcal{H})$，其中 $\hat{\mathfrak{R}}_S(\mathcal{H})=\mathbb{E}_\sigma\big[\sup_h\frac1n\sum_i\sigma_ih(x_i)\big]$ 只看输入部分。
 
-**证明.** 当 $h(x),y\in\{-1,+1\}$ 时，$\mathbf{1}[h(x)\ne y]=\frac{1-yh(x)}{2}$（相同时 $yh(x)=1$，结果为 0；不同时 $yh(x)=-1$，结果为 1）。代入定义：
+**证明（第一遍可以跳过）.** 当 $h(x),y\in\{-1,+1\}$ 时，$\mathbf{1}[h(x)\ne y]=\frac{1-yh(x)}{2}$（相同时 $yh(x)=1$，结果为 0；不同时 $yh(x)=-1$，结果为 1）。代入定义：
 
 $$
 \begin{aligned}
@@ -930,7 +956,7 @@ $$
 \mathbb{E}_\sigma\left[\max_{a\in A}\frac1n\sum_{i=1}^n\sigma_ia_i\right]\le\frac{r\sqrt{2\ln\lvert A\rvert}}{n}.
 $$
 
-**证明.** 思路和霍夫丁不等式相同：先取指数，再用霍夫丁引理。对任意 $\lambda>0$：
+**证明（第一遍可以跳过）.** 思路和霍夫丁不等式相同：先取指数，再用霍夫丁引理。对任意 $\lambda>0$：
 
 1. 由**琴生不等式**（对凸函数 $e^x$，"平均值的指数"不超过"指数的平均值"）：
 
@@ -951,7 +977,7 @@ $$
 \mathbb{E}\Big[\max_a\sum_i\sigma_ia_i\Big]\le\frac{\ln\lvert A\rvert}{\lambda}+\frac{\lambda r^2}{2}.
 $$
 
-5. 取 $\lambda=\sqrt{2\ln\lvert A\rvert}/r$（让右边两项相等，这时右边最小），右边等于 $r\sqrt{2\ln\lvert A\rvert}$。两边除以 $n$ 即得。$\square$
+5. （$\lvert A\rvert=1$ 或 $r=0$ 时左边为 0，结论显然，下面设两者都不成立。）取 $\lambda=\sqrt{2\ln\lvert A\rvert}/r$（让右边两项相等，这时右边最小），右边等于 $r\sqrt{2\ln\lvert A\rvert}$。两边除以 $n$ 即得。$\square$
 
 **定理 2.13 的证明.** 设规则取值于 $\{-1,+1\}$（与 $\{0,1\}$ 只差一个改名）。
 
@@ -968,9 +994,9 @@ $$
 
 ### 2.8.5 Rademacher 复杂度的意义
 
-为什么要绕这么一大圈，而不直接对增长函数用联合界？有三个原因：
+为什么要绕这么一大圈，而不直接对增长函数用联合界？首先，直接这样做是**不行**的：真实风险 $R(h)$ 取决于规则在样本**之外**的行为，两条在样本上输出相同的规则，真实风险可以完全不同，所以不能只对"样本上的不同行为"做联合界。经典的 VC 证明也要引入影子样本，最后得到 $\Pi_{\mathcal{H}}(2n)$ 和更差的常数。其次，Rademacher 复杂度还有三个额外的好处：
 
-1. **它依赖于数据分布。** $\mathfrak{R}_n$ 对样本求期望，在"容易"的分布上（比如大部分规则在大部分点上一致）会比最坏情形的 VC 界小。经验版本 $\hat{\mathfrak{R}}_S$ 还可以直接在手头的样本上估计。
+1. **它依赖于数据分布。** $\mathfrak{R}_n$ 对样本求期望，在"容易"的分布上（比如大部分规则在大部分点上一致）会比最坏情形的 VC 界小。经验版本 $\hat{\mathfrak{R}}_S$ 还可以直接在手头的样本上估计；把定理 2.14 里的 $\mathfrak{R}_n$ 换成 $\hat{\mathfrak{R}}_S$，需要再用一次 McDiarmid 不等式，代价是最后一项变成约 $3\sqrt{\ln(2/\delta)/(2n)}$（Mohri 等人教材定理 3.3）。
 2. **它适用于一般的函数族。** 不限于二分类和 0-1 代价，也适用于任何取值于 $[0,1]$ 的代价函数，包括代价矩阵下的多分类。
 3. **它把"复杂度"直接定义为"拟合噪声的能力"。** 这是对过拟合最直接的刻画。
 
@@ -1022,7 +1048,7 @@ $$
 
 ### 2.9.3 这个定理意味着什么
 
-1. **假设空间不能是"所有函数"。** 如果 $\mathcal{X}$ 是无穷的（比如所有可能的描述文字），所有函数构成的假设空间对任何样本数 $n$ 都包含上面的困难情形，所以它不是 PAC 可学习的。更一般地，VC 维无穷的假设空间都不是 PAC 可学习的。
+1. **假设空间不能是"所有函数"。** 定理 2.17 说的是期望，而 PAC 可学习说的是概率，需要一步转换：错误率不超过 1，若 $\mathbb{E}[R]\ge1/4$，则 $\mathbb{E}[R]\le\frac18+\frac78\Pr(R\ge\frac18)$，所以 $\Pr(R\ge1/8)\ge1/7$。也就是说，取 $\varepsilon=1/8$、$\delta<1/7$，无论样本多少都达不到要求。如果 $\mathcal{X}$ 是无穷的（比如所有可能的描述文字），所有函数构成的假设空间对任何样本数 $n$ 都包含上面的困难情形，所以它不是 PAC 可学习的。更一般地，VC 维无穷的假设空间都不是 PAC 可学习的：对任何 $n$，取一个被打散的 $2n$ 点集当 $Q$，同样的论证成立。
 2. **学习必须有先验假设。** 能从有限数据中学到东西，是因为我们事先限制了规则可能长的样子（假设空间、编码、先验）。这些限制叫作**归纳偏置**。没有归纳偏置，就没有学习。
 3. **没有放之四海而皆准的算法。** 在某些问题上表现好的算法，必然在另一些问题上表现差。比较学习算法，必须说明是在什么样的问题上比较。Wolpert（1996）从"对所有可能的目标函数求平均"的角度给出了另一种形式的结论：在没见过的点上，所有算法的平均表现相同。
 
@@ -1030,12 +1056,13 @@ $$
 
 本章的上界和下界合在一起，得到二分类的一个完整刻画。下面只陈述，证明见 Shalev-Shwartz 与 Ben-David 教材第 6、28 章。
 
-**定理（PAC 学习基本定理）** 对二分类和 0-1 代价，以下几条等价：
+**定理 2.19（PAC 学习基本定理）** 对二分类和 0-1 代价，以下几条等价：
 
 1. $\mathcal{H}$ 的 VC 维有限；
 2. $\mathcal{H}$ 是 PAC 可学习的；
 3. $\mathcal{H}$ 是不可知 PAC 可学习的；
-4. $\mathcal{H}$ 上的经验风险最小化是一个合格的学习算法。
+4. $\mathcal{H}$ 满足一致收敛：训练成绩与真实成绩之差对所有规则同时以高概率很小；
+5. $\mathcal{H}$ 上的**任何**经验风险最小化算法都是合格的（不可知）PAC 学习算法。
 
 并且当 VC 维为 $d$ 时，不可知情形的样本复杂度在常数倍意义下是
 
@@ -1043,7 +1070,7 @@ $$
 \frac{d+\ln(1/\delta)}{\varepsilon^2},
 $$
 
-可实现情形是 $\dfrac{d+\ln(1/\delta)}{\varepsilon}$。也就是说，上界和下界只差常数倍。可实现情形的上界原先多一个 $\ln(1/\varepsilon)$ 因子，Hanneke（2016）证明了这个因子可以去掉。
+可实现情形是 $\dfrac{d+\ln(1/\delta)}{\varepsilon}$。也就是说，上界和下界只差常数倍。可实现情形的上界原先多一个 $\ln(1/\varepsilon)$ 因子，Hanneke（2016）证明了这个因子可以去掉；但达到这个最优上界的是他构造的专门算法，一般的经验风险最小化算法可能确实需要这个额外的因子。
 
 多分类有类似的理论，用 Natarajan 维等推广的维数代替 VC 维。
 
@@ -1061,7 +1088,7 @@ $$
 
 ### 2.10.1 问题出在哪里
 
-回顾第 1 章 1.10.5 节：我们看到案例 6 判错了，于是让模型多观察一个事实 $p$："描述是否提到包装破损导致汁液渗出"。这个问题是**看着案例 6 的内容和标签**设计出来的。
+回顾第 1 章 1.10.5–1.10.6 节：案例 6 判错了，我们设想让模型多观察一个事实 $p$："描述是否提到包装破损导致汁液渗出"。这个问题是**看着案例 6 的内容和标签**设计出来的。
 
 如果在设计这个问题之前就固定了假设空间"$a,b$ 上的规则"，那么加入 $p$ 以后的假设空间"$a,b,p$ 上的规则"并不是事先固定的那一个。它取决于我们看到了哪些错误案例。换一批样本，提出的问题会不同，假设空间也不同。联合界的论证需要"在一个事先确定的集合上求和"，而这里的集合本身是随机的、依赖于样本的。
 
@@ -1069,7 +1096,7 @@ $$
 
 一种严格但保守的补救是：把"所有**可能**被提出来的问题"都算进假设空间，用 Occam 界给它们编码。
 
-**估算**：一个问题是一段中文文字，假设长 30 个字，每个字从约 3500 个常用字中选。如果用"逐字编码"，每个字约 $\log_23500\approx11.8$ 比特，30 个字约 353 比特，乘以 $\ln2$ 约为 245。
+**估算**：一个问题是一段中文文字，假设长 30 个字，每个字从约 3500 个常用字中选。如果用"逐字编码"，每个字约 $\log_23500\approx11.8$ 比特（这是用算术编码时的理想长度；用整数比特的码字需要 12 比特，变长问题还要再加几个比特表示长度，这些都不影响结论），30 个字约 353 比特，乘以 $\ln2$ 约为 245。
 
 再加上规则本身的描述，Occam 界的余量至少是
 
@@ -1088,8 +1115,8 @@ $\delta=0.05$ 时：
 
 另外两种补救方法在后面的章节详细讲：
 
-- **留出数据**：把一部分数据完全不给提问过程看，只用它来检验最终的规则。由 2.3.2 节，这时保证只取决于检验的次数，与提问过程多复杂无关。代价是能用于设计和学习的数据变少了。这是第 4 章的内容。
-- **自适应数据分析**：如果必须在同一份留出数据上反复检验很多次，可以用专门的机制控制"检验本身泄露的信息"，让反复检验的结论仍然可信。这是第 5 章的内容。
+- **补救二：留出数据**：把一部分数据完全不给提问过程看，只用它来检验最终的规则。由 2.3.2 节，这时保证只取决于检验的次数，与提问过程多复杂无关。代价是能用于设计和学习的数据变少了。后面讲模型评估与选择时会详细讲。
+- **补救三：自适应数据分析**：如果必须在同一份留出数据上反复检验很多次，可以用专门的机制控制"检验本身泄露的信息"，让反复检验的结论仍然可信。后面讲自适应数据分析时会详细讲。
 
 ### 小结
 
@@ -1109,6 +1136,10 @@ $\delta=0.05$ 时：
 | VC 维 | 数值阈值等连续参数的谓词，复杂度由 VC 维而非个数决定 |
 | 没有免费午餐 | 必须事先限制规则的形式；"让模型自由发挥"本身就是放弃了限制 |
 | 2.10 节 | 对着错误案例设计新问题，会大大削弱训练成绩的可信度，需要留出数据检验 |
+
+### 小结
+
+这一节说的是：本章的每个结论都对应一条实践规则：测试集只用于最终检验、比较多少候选就付多少代价、简单的规则保证更紧、对着数据设计问题会削弱保证。
 
 ---
 
@@ -1143,7 +1174,7 @@ $\delta=0.05$ 时：
 
 **练习 2.4** ★★ 用切比雪夫不等式证明"弱大数定律"：独立同分布、方差有限的随机量，其平均值偏离期望 $\varepsilon$ 以上的概率，随 $n\to\infty$ 趋于 0。
 
-**练习 2.5** ★★ 证明：取值于 $\{0,1\}$ 的随机量（例如一次判对或判错），如果它为 1 的概率是 $p$，那么它的方差是 $p(1-p)$，并且不超过 $1/4$。由此说明，当真实错误率很小时，霍夫丁不等式（只用取值范围）比切比雪夫不等式（用了方差）宽松。
+**练习 2.5** ★★ 证明：取值于 $\{0,1\}$ 的随机量（例如一次判对或判错），如果它为 1 的概率是 $p$，那么它的方差是 $p(1-p)$，并且不超过 $1/4$。由此说明霍夫丁不等式没有利用小方差；取 $p=0.01$，找出在什么范围内切比雪夫不等式比霍夫丁不等式更紧。
 
 **练习 2.6** ★★ 求下列假设空间的 VC 维，并证明：（a）双向阈值 $\{\mathbf{1}[x\le\theta]\}\cup\{\mathbf{1}[x>\theta]\}$；（b）平面上的轴平行矩形内部为 1、外部为 0。
 
@@ -1204,14 +1235,14 @@ $$
 
 $\mathbb{E}[Z]=p$，$\mathbb{E}[Z^2]=p$（因为 $Z^2=Z$），所以 $\operatorname{Var}[Z]=\mathbb{E}[Z^2]-(\mathbb{E}Z)^2=p-p^2=p(1-p)$。$p(1-p)$ 在 $p=1/2$ 时最大，为 $1/4$。
 
-当 $p=0.01$ 时，方差约为 0.0099，远小于 $1/4$。切比雪夫不等式用到了真实的方差，给出 $\Pr(\lvert\bar Z-p\rvert\ge\varepsilon)\le0.0099/(n\varepsilon^2)$；霍夫丁不等式只用到取值范围 $[0,1]$，相当于按最坏的方差 $1/4$ 来算。当 $n\varepsilon^2$ 不大时，前者可能更紧。能同时利用方差和指数下降的是伯恩斯坦不等式（卷零）。
+当 $p=0.01$ 时，方差约为 0.0099，远小于 $1/4$。切比雪夫不等式用到了真实的方差，给出 $\Pr(\lvert\bar Z-p\rvert\ge\varepsilon)\le0.0099/(n\varepsilon^2)$；霍夫丁不等式只用到取值范围 $[0,1]$，相当于按最坏的方差 $1/4$ 来算。当 $n\varepsilon^2$ 不大时，前者可能更紧。具体地，切比雪夫给出 $0.0099/(n\varepsilon^2)$，霍夫丁给出 $2e^{-2n\varepsilon^2}$；数值上只有 $n\varepsilon^2$ 小于约 3.3 时前者更小，而那时两个界都已经不小于约 0.003。能同时利用方差和指数下降的是伯恩斯坦不等式。
 
 </details>
 
 <details>
 <summary>练习 2.6</summary>
 
-（a）VC 维为 2。两个点 $x_1<x_2$ 的四种标注：(0,0) 用 $\mathbf{1}[x\le\theta]$ 且 $\theta<x_1$；(1,1) 用 $\theta\ge x_2$；(1,0) 用 $\mathbf{1}[x\le\theta]$ 且 $x_1\le\theta<x_2$；(0,1) 用 $\mathbf{1}[x>\theta]$ 且 $x_1\le\theta<x_2$。三个点 $x_1<x_2<x_3$ 的标注 (1,0,1) 做不到：两类规则的输出沿 $x$ 轴都只变一次。
+（a）VC 维为 2。两个点 $x_1<x_2$ 的四种标注：(0,0) 用 $\mathbf{1}[x\le\theta]$ 且 $\theta<x_1$；(1,1) 用 $\theta\ge x_2$；(1,0) 用 $\mathbf{1}[x\le\theta]$ 且 $x_1\le\theta<x_2$；(0,1) 用 $\mathbf{1}[x>\theta]$ 且 $x_1\le\theta<x_2$。三个点 $x_1<x_2<x_3$ 的标注 (1,0,1) 做不到：两类规则的输出沿 $x$ 轴都至多变一次。
 
 （b）VC 维为 4。取菱形的四个顶点（上、下、左、右），任何子集都能用一个恰好包住它们的轴平行矩形实现：包住一个子集的最小轴平行矩形，不会包含菱形的其他顶点。任意 5 个点：取最左、最右、最上、最下的点（至多 4 个），包住它们的最小矩形会包住所有点，所以"这至多 4 个点为 1、剩下的某个点为 0"的标注做不到。
 
@@ -1226,7 +1257,7 @@ $$
 (2^D-1+2^D)\times1+(2^D-1)\lceil\log_2m\rceil+2^D\lceil\log_2K\rceil .
 $$
 
-$D=2$ 时为 $7+3\lceil\log_2m\rceil+4\lceil\log_2K\rceil$。而 $\log_2(m^3K^4)=3\log_2m+4\log_2K$。差别来自两处：结构比特 7 个（区分内部节点与叶子，使编码能描述任意形状的树，而不只是深度恰为 2 的满树）；以及向上取整。前缀码为了能描述更多种类的树，付出了少量额外比特。
+$D=2$ 时为 $7+3\lceil\log_2m\rceil+4\lceil\log_2K\rceil$。而 $\log_2(m^3K^4)=3\log_2m+4\log_2K$。差别来自两处：结构比特 7 个（区分内部节点与叶子，使编码能描述任意形状的树，而不只是深度恰为 2 的满树）；以及向上取整。前缀码为了能描述更多种类的树，付出了少量额外比特。代入 $m=10$、$K=3$：编码长度 $7+3\times4+4\times2=27$ 比特，而 $\log_2 81\,000\approx16.3$ 比特，差约 10.7 比特。
 
 </details>
 
@@ -1251,7 +1282,7 @@ Massart 引理给出 $\sqrt n\sqrt{2\ln2}/n=\sqrt{2\ln2/n}\approx1.18/\sqrt n$�
 
 参考方案：在一开始就从全部数据中划出一个测试集（例如 300 个以外的独立数据，或者从现有数据中按组划出一部分），这部分数据**不参与**任何一轮的提问、测量后的规则学习或选择。20 轮结束后，只把最终选定的那一条规则在测试集上评估一次，用命题 2.5 给出区间。
 
-这属于 2.10 节的"补救二：留出数据"。代价是：用于提问和学习的数据变少；测试集只能用一次，如果中途用它比较各轮的结果，就又变成了"参与挑选"，需要按比较的次数放宽余量，或者使用第 5 章的自适应数据分析方法。
+这属于 2.10 节的"补救二：留出数据"。代价是：用于提问和学习的数据变少；测试集只能用一次，如果中途用它比较各轮的结果，就又变成了"参与挑选"，需要按比较的次数放宽余量，或者使用后面讲的自适应数据分析方法。
 
 如果坚持只用 300 个训练案例的训练错误率，2.10.2 节的估算表明，任何严格的保证都会非常宽松，2% 的训练错误率几乎不能说明真实错误率。
 
@@ -1284,21 +1315,24 @@ Massart 引理给出 $\sqrt n\sqrt{2\ln2}/n=\sqrt{2\ln2/n}\approx1.18/\sqrt n$�
 
 **教材**
 
-- Shai Shalev-Shwartz, Shai Ben-David. *Understanding Machine Learning: From Theory to Algorithms*. Cambridge University Press, 2014. 第 2–6 章是本章的主要参考，第 26 章讲 Rademacher 复杂度，第 28 章证明基本定理。
+- Shai Shalev-Shwartz, Shai Ben-David. *Understanding Machine Learning: From Theory to Algorithms*. Cambridge University Press, 2014. 第 2–7 章是本章的主要参考（第 7 章含 Occam 界与最小描述长度），第 26 章讲 Rademacher 复杂度，第 28 章证明基本定理。
 - Mehryar Mohri, Afshin Rostamizadeh, Ameet Talwalkar. *Foundations of Machine Learning*, 2nd ed. MIT Press, 2018. 第 2–3 章。本章 VC 界的形式与证明路线（Rademacher 复杂度、Massart 引理、Sauer 引理）与此书一致。
 - Michael Kearns, Umesh Vazirani. *An Introduction to Computational Learning Theory*. MIT Press, 1994. 从计算复杂性角度讲 PAC 学习，薄而清楚。
 - Luc Devroye, László Györfi, Gábor Lugosi. *A Probabilistic Theory of Pattern Recognition*. Springer, 1996. 第 12–14 章对 VC 理论有严谨完整的处理。
 
 **论文**
 
+- Herman Chernoff. A Measure of Asymptotic Efficiency for Tests of a Hypothesis Based on the Sum of Observations. *Annals of Mathematical Statistics*, 23(4), 1952. 切尔诺夫方法的来源。
+- Alain Pajor. *Sous-espaces $\ell_1^n$ des espaces de Banach*. Hermann, 1985. "被打散子集"形式的 Sauer–Shelah 引理。
+- Laurent Hyafil, Ronald Rivest. Constructing Optimal Binary Decision Trees is NP-Complete. *Information Processing Letters*, 5(1), 1976.
 - Leslie Valiant. A Theory of the Learnable. *Communications of the ACM*, 27(11), 1984. PAC 学习的起点。
 - Wassily Hoeffding. Probability Inequalities for Sums of Bounded Random Variables. *Journal of the American Statistical Association*, 58(301), 1963.
-- Vladimir Vapnik, Alexey Chervonenkis. On the Uniform Convergence of Relative Frequencies of Events to Their Probabilities. *Theory of Probability and Its Applications*, 16(2), 1971（俄文原文 1968）. VC 维与一致收敛。
+- Vladimir Vapnik, Alexey Chervonenkis. On the Uniform Convergence of Relative Frequencies of Events to Their Probabilities. *Theory of Probability and Its Applications*, 16(2), 1971（1968 年在 *Doklady* 上有简报）. VC 维与一致收敛。
 - Norbert Sauer. On the Density of Families of Sets. *Journal of Combinatorial Theory, Series A*, 13(1), 1972；Saharon Shelah. A Combinatorial Problem; Stability and Order for Models and Theories in Infinitary Languages. *Pacific Journal of Mathematics*, 41(1), 1972. Sauer–Shelah 引理。
 - Anselm Blumer, Andrzej Ehrenfeucht, David Haussler, Manfred Warmuth. Occam's Razor. *Information Processing Letters*, 24(6), 1987. Occam 界。
 - Anselm Blumer, Andrzej Ehrenfeucht, David Haussler, Manfred Warmuth. Learnability and the Vapnik–Chervonenkis Dimension. *Journal of the ACM*, 36(4), 1989. VC 维与 PAC 可学习的等价。
 - David Haussler. Decision Theoretic Generalizations of the PAC Model for Neural Net and Other Learning Applications. *Information and Computation*, 100(1), 1992. 不可知 PAC 学习。
-- Colin McDiarmid. On the Method of Bounded Differences. *Surveys in Combinatorics*, 1989. McDiarmid 不等式。
+- Colin McDiarmid. On the Method of Bounded Differences. *Surveys in Combinatorics, 1989*, London Mathematical Society Lecture Note Series 141, Cambridge University Press. McDiarmid 不等式。
 - Peter Bartlett, Shahar Mendelson. Rademacher and Gaussian Complexities: Risk Bounds and Structural Results. *Journal of Machine Learning Research*, 3, 2002. Rademacher 复杂度用于泛化界。
 - Pascal Massart. Some Applications of Concentration Inequalities to Statistics. *Annales de la Faculté des Sciences de Toulouse*, 9(2), 2000. Massart 引理。
 - Steve Hanneke. The Optimal Sample Complexity of PAC Learning. *Journal of Machine Learning Research*, 17, 2016. 可实现情形样本复杂度的最优上界。
