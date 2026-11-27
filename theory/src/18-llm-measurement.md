@@ -476,7 +476,8 @@ $$
 
 $$
 \begin{aligned}
-R-R_0&=0.5\times(0.04\times2.40+0.08\times0.3)+0.5\times(0.06\times0.40+0.08\times0.3)\\
+R-R_0&=0.5\times(0.04\times2.40+0.08\times0.3)\\
+&\quad+0.5\times(0.06\times0.40+0.08\times0.3)\\
 &=0.06+0.024=0.084,
 \end{aligned}
 $$

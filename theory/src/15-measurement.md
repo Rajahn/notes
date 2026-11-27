@@ -328,8 +328,10 @@ $$
 **命题 15.5（误读下的观察比例）** 设读错与否只取决于真实的 $b$、与结论无关，即 $\Pr(\tilde b\mid b,Y)=\Pr(\tilde b\mid b)$。则
 
 $$
-\tilde\eta(1)=\mathrm{PPV}\,\eta(1)+(1-\mathrm{PPV})\,\eta(0),\qquad
-\tilde\eta(0)=(1-\mathrm{NPV})\,\eta(1)+\mathrm{NPV}\,\eta(0),
+\begin{aligned}
+\tilde\eta(1)&=\mathrm{PPV}\,\eta(1)+(1-\mathrm{PPV})\,\eta(0),\\
+\tilde\eta(0)&=(1-\mathrm{NPV})\,\eta(1)+\mathrm{NPV}\,\eta(0),
+\end{aligned}
 $$
 
 并且

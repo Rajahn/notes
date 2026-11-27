@@ -24,7 +24,7 @@ async function main() {
         return route.fulfill({ path: path.join(dist, rel) });
       });
     }
-    await page.goto(pathToFileURL(path.resolve(input)).href, { waitUntil: 'networkidle' });
+    await page.goto(pathToFileURL(path.resolve(input)).href, { waitUntil: 'networkidle', timeout: 600000 });
     const title = await page.evaluate(() => {
       const name = document.title;
       const cover = document.createElement('section');
