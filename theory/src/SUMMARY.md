@@ -72,18 +72,18 @@
 
 # 卷八　实验设计与序贯决策
 
-- [第 37 章　实验设计]()
-- [第 38 章　多重检验]()
-- [第 39 章　多臂老虎机]()
-- [第 40 章　最优臂识别与竞速]()
-- [第 41 章　信息价值与主动学习]()
-- [第 42 章　搜索与多目标]()
+- [第 37 章　实验设计](37-experimental-design.md)
+- [第 38 章　多重检验](38-multiple-testing.md)
+- [第 39 章　多臂老虎机](39-bandits.md)
+- [第 40 章　最优臂识别与竞速](40-best-arm-racing.md)
+- [第 41 章　信息价值与主动学习](41-value-of-information.md)
+- [第 42 章　搜索与多目标](42-search-multiobjective.md)
 
 # 卷九　LLM 程序优化
 
-- [第 43 章　提示优化]()
-- [第 44 章　程序级优化]()
-- [第 45 章　自改进系统的评估陷阱]()
+- [第 43 章　提示优化](43-prompt-optimization.md)
+- [第 44 章　程序级优化](44-program-optimization.md)
+- [第 45 章　自改进系统的评估陷阱](45-evaluation-pitfalls.md)
 
 # 卷十　综合与研究方法
 

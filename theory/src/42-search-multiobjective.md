@@ -410,10 +410,10 @@ $$
 
 **定义 42.8（受支撑点）** 帕累托最优的 $\theta$ 叫**受支撑**的，如果存在不全为 0 的 $w_k\ge0$，使 $\theta$ 是 $\sum_kw_kf_k$ 的一个最小解。否则叫**不受支撑**的。
 
-**定理 42.9（加权和找不到被凸组合支配的点）** 设 $\theta^*$ 是某个候选。若存在候选 $\theta_1,\dots,\theta_r$ 和非负的 $\lambda_1,\dots,\lambda_r$（$\sum_i\lambda_i=1$），使凸组合 $\bar{\mathbf f}=\sum_i\lambda_i\mathbf f(\theta_i)$ 满足：
+**定理 42.9（加权和找不到被凸组合支配的点）** 设 $\theta^*$ 是某个候选，$\bar{\mathbf f}=\sum_i\lambda_i\mathbf f(\theta_i)$ 是候选 $\theta_1,\dots,\theta_r$ 的目标向量的凸组合（$\lambda_i\ge0$，$\sum_i\lambda_i=1$）。
 
-1. $\bar f_k\le f_k(\theta^*)$ 对所有 $k$，且至少一个 $k$ 严格小于，则对任何正权重 $w$，$\theta^*$ 都不是加权和的最小解；
-2. $\bar f_k<f_k(\theta^*)$ 对所有 $k$，则对任何不全为 0 的非负权重 $w$，$\theta^*$ 都不是加权和的最小解，即 $\theta^*$ 不受支撑。
+1. 若 $\bar f_k\le f_k(\theta^*)$ 对所有 $k$，且至少一个 $k$ 严格小于，则对任何正权重 $w$，$\theta^*$ 都不是加权和的最小解；
+2. 若 $\bar f_k<f_k(\theta^*)$ 对所有 $k$，则对任何不全为 0 的非负权重 $w$，$\theta^*$ 都不是加权和的最小解，因而不可能是受支撑点。
 
 **怎么读**：把所有候选的目标向量画成点，再把它们的凸包（所有凸组合）画出来。如果凸包里有一个点比 $\theta^*$ 更好，$\theta^*$ 就落在凸包"凹进去"的地方，加权和看不见它。加权和相当于拿一个超平面从下方去托这些点，最先碰到的总在凸包的边界上。
 
@@ -424,7 +424,7 @@ $$
 1. 记 $W(\theta)=\sum_kw_kf_k(\theta)$。由线性，$\sum_kw_k\bar f_k=\sum_i\lambda_iW(\theta_i)$。
 2. 由 $\lambda_i\ge0$、$\sum_i\lambda_i=1$，$\sum_i\lambda_iW(\theta_i)\ge\min_iW(\theta_i)$：一组数的加权平均不小于其中最小的。
 3. 情形 1：$w_k>0$，$\bar f_k\le f_k(\theta^*)$ 且某项严格，所以 $\sum_kw_k\bar f_k<W(\theta^*)$。合起来 $\min_iW(\theta_i)<W(\theta^*)$：某个 $\theta_i$ 的加权和严格更小，$\theta^*$ 不是最小解。
-4. 情形 2：$w_k\ge0$ 不全为 0，每项 $\bar f_k<f_k(\theta^*)$，权重为正的项严格变小，所以仍有 $\sum_kw_k\bar f_k<W(\theta^*)$，同样得到矛盾。$\square$
+4. 情形 2：$w_k\ge0$ 不全为 0，每项 $\bar f_k<f_k(\theta^*)$，权重为正的项严格变小，所以仍有 $\sum_kw_k\bar f_k<W(\theta^*)$，同样得到 $\min_iW(\theta_i)<W(\theta^*)$。$\square$
 
 **在例子里**：$0.55\times$甲′$+0.45\times$丙′$=(0.55\times6+0.45\times3,\ 0.45\times8)=(4.65,\ 3.6)$，两项都严格小于乙′的 $(5,4)$。由定理 42.9 的第 2 条，乙′不受支撑，这和 42.7.1 节逐个比较的结论一致。
 
@@ -438,7 +438,7 @@ $$
 
 ### 小结
 
-这一节说的是：正权加权和的解一定是帕累托最优的；但被候选的凸组合支配的点，任何权重都选不到；例子里"只把 $(0,1,1)$ 组转人工"就是这样的点，任何每例转人工代价 $d$ 都选不到它，而"转人工不超过 4 例"的约束恰好需要它；目标集合凸时加权和不会漏，离散问题一般不凸。
+这一节说的是：正权加权和的解一定是帕累托最优的；但被候选的凸组合支配的点，任何正权重都选不到（严格支配时非负权重也选不到）；例子里"只把 $(0,1,1)$ 组转人工"就是这样的点，任何每例转人工代价 $d$ 都选不到它，而"转人工不超过 4 例"的约束恰好需要它；目标集合凸时加权和不会漏，离散问题一般不凸。
 
 ---
 
@@ -463,7 +463,7 @@ $$
 1. $P_j(\boldsymbol\varepsilon)$ 的任何解都是弱帕累托最优的；若解的目标向量唯一，它是帕累托最优的。
 2. $\theta^*$ 是帕累托最优的，当且仅当对**每个** $j$，$\theta^*$ 都是 $P_j(\boldsymbol\varepsilon^*)$ 的解，其中 $\varepsilon^*_k=f_k(\theta^*)$。
 
-**怎么读**：第 2 条说，任何帕累托点都可以用 ε-约束精确地选出来，只要把上限设成它自己的值；这里没有凸性的要求，和定理 42.9 形成对照。第 1 条提醒：单解一个 ε-约束问题可能得到被支配的解，要么检查解是否唯一，要么在并列的解里再按其他目标挑一遍（先最小化 $f_j$，再在最优者中最小化其他目标，叫**词典序**）。
+**怎么读**：第 2 条说，任何帕累托点都可以用 ε-约束精确地选出来，只要把上限设成它自己的值，这时并列的解目标向量都和它相同；这里没有凸性的要求，和命题 42.10 形成对照。第 1 条提醒：单解一个 ε-约束问题可能得到被支配的解，要么检查解是否唯一，要么在并列的解里再按其他目标挑一遍（先最小化 $f_j$，再在最优者中最小化其他目标，叫**词典序**）。
 
 #### 证明（第一遍可以跳过）
 
@@ -500,11 +500,11 @@ $$
 
 ### 42.9.3 一般说法
 
-**命题 42.12（前沿的最优子结构）** 设每棵树的目标向量满足：叶子的向量只由到达它的案例集合 $s$ 决定，记为 $\mathbf v_{\mathrm{leaf}}(s)$；按谓词 $\phi_j$ 拆开的树，向量等于两棵子树的向量之和再加一个只依赖 $(j,s)$ 的常数向量 $\mathbf c_j(s)$。记 $\mathcal F(s,d)$ 为子集 $s$ 上深度不超过 $d$ 的树的帕累托前沿，$\operatorname{ND}(\cdot)$ 为"去掉被支配的点"。则
+**命题 42.12（前沿的最优子结构）** 设每棵树的目标向量满足：叶子的向量只由到达它的案例集合 $s$ 和它的标签决定，各种标签给出的向量组成有限集 $\mathcal V_{\mathrm{leaf}}(s)$；按谓词 $\phi_j$ 拆开的树，向量等于两棵子树的向量之和再加一个只依赖 $(j,s)$ 的常数向量 $\mathbf c_j(s)$。记 $\mathcal F(s,d)$ 为子集 $s$ 上深度不超过 $d$ 的树的帕累托前沿，$\operatorname{ND}(\cdot)$ 为"去掉被支配的点"。则对 $d\ge1$（$d=0$ 时只有第一项）
 
 $$
 \begin{aligned}
-\mathcal F(s,d)=\operatorname{ND}\Big(&\{\mathbf v_{\mathrm{leaf}}(s)\}\ \cup\\
+\mathcal F(s,d)=\operatorname{ND}\Big(&\mathcal V_{\mathrm{leaf}}(s)\ \cup\\
 &\bigcup_j\big\{\mathbf u+\mathbf w+\mathbf c_j(s):\\
 &\qquad\mathbf u\in\mathcal F(s_j^0,d-1),\ \mathbf w\in\mathcal F(s_j^1,d-1)\big\}\Big).
 \end{aligned}
@@ -516,7 +516,7 @@ $$
 
 **思路**：右边记为 $\mathcal G$。先证每个可达向量都被 $\mathcal G$ 中某个向量"不差地"覆盖，再用这一点证明两边相等。
 
-1. 记 $V(s,d)$ 为子集 $s$ 上深度不超过 $d$ 的树能取到的全部向量。对 $d$ 归纳证明：$\mathcal F(s,d)\subseteq V(s,d)$，且每个 $\mathbf v\in V(s,d)$ 都有某个 $\mathbf g\in\mathcal F(s,d)$ 满足 $\mathbf g\le\mathbf v$（逐项不大于）。有限集合上这总成立：若 $\mathbf v$ 被支配，就换成支配它的，支配关系不会循环，有限步后停在一个不被支配的向量上。
+1. 记 $V(s,d)$ 为子集 $s$ 上深度不超过 $d$ 的树能取到的全部向量。按定义 $\mathcal F(s,d)\subseteq V(s,d)$；并且每个 $\mathbf v\in V(s,d)$ 都有某个 $\mathbf g\in\mathcal F(s,d)$ 满足 $\mathbf g\le\mathbf v$（逐项不大于）。有限集合上这总成立：若 $\mathbf v$ 被支配，就换成支配它的，支配关系不会循环，有限步后停在一个不被支配的向量上。
 2. **$\mathcal G$ 里的向量都可达.** 叶子可达；$\mathbf u,\mathbf w$ 各对应一棵子树，接在问 $\phi_j$ 的结点下面，得到向量 $\mathbf u+\mathbf w+\mathbf c_j(s)$，所以 $\mathcal G\subseteq V(s,d)$。
 3. **每个可达向量都被 $\mathcal G$ 的某个元素覆盖.** 任取一棵树。若是叶子，它的向量就在并集里。若根问 $\phi_j$，两棵子树的向量 $\mathbf v^0\in V(s_j^0,d-1)$、$\mathbf v^1\in V(s_j^1,d-1)$，由第 1 步有 $\mathbf u\le\mathbf v^0$、$\mathbf w\le\mathbf v^1$ 在子问题前沿里，于是 $\mathbf u+\mathbf w+\mathbf c_j(s)\le\mathbf v^0+\mathbf v^1+\mathbf c_j(s)$，左边在并集里。并集里的点再按第 1 步的论证被 $\mathcal G$ 中的点覆盖。
 4. **两边相等.** 设 $\mathbf g\in\mathcal G$，若某个可达的 $\mathbf v$ 支配它，由第 3 步有 $\mathbf g'\in\mathcal G$、$\mathbf g'\le\mathbf v$，于是 $\mathbf g'$ 也支配 $\mathbf g$，与 $\mathcal G$ 中的点互不支配矛盾。所以 $\mathcal G\subseteq\mathcal F(s,d)$。反过来设 $\mathbf f\in\mathcal F(s,d)$，由第 3 步有 $\mathbf g\in\mathcal G$、$\mathbf g\le\mathbf f$；$\mathbf g$ 可达，若 $\mathbf g\ne\mathbf f$ 则 $\mathbf g$ 支配 $\mathbf f$，矛盾，所以 $\mathbf f=\mathbf g\in\mathcal G$。$\square$
@@ -560,7 +560,7 @@ $$
 
 **怎么读**：每个点"认领"它右上方到参考点为止的一块，超体积是这些块合起来的大小。点越靠近原点、铺得越开，认领的越多。Zitzler 与 Thiele（1999）用它比较多目标进化算法。
 
-**代入数字**：42.6.3 节的 6 个前沿点，参考点 $\mathbf r=(10,24)$。按 $E$ 从小到大扫过去，每段宽度乘以高度：$E\in[0,1]$ 高 $24-20=4$，$[1,2]$ 高 8，$[2,3]$ 高 12，$[3,5]$ 高 16，$[5,6]$ 高 20，$[6,10]$ 高 24，合计 $4+8+12+32+20+96=172$。如果只用加权和扫一遍权重，得到的是除乙′以外的 5 个点，超体积 168；乙′贡献的 4，就是加权和看不见的那一块。
+**代入数字**：42.6.3 节的 6 个前沿点，参考点 $\mathbf r=(10,24)$。按 $E$ 从小到大扫过去，每段宽度乘以高度：$E\in[0,1]$ 高 $24-20=4$，$[1,2]$ 高 8，$[2,3]$ 高 12，$[3,5]$ 高 16，$[5,6]$ 高 20，$[6,10]$ 高 24，合计 $4+8+12+32+20+96=172$。如果只用加权和扫一遍权重，最多得到除乙′以外的 5 个点（丁′、戊′只在 $d=0.25$ 时并列出现），超体积 168；乙′贡献的 4，就是加权和看不见的那一块。
 
 **命题 42.13（超体积的单调性）** 若 $B$ 中每个点都被 $A$ 中某个点弱支配（逐项不大于），则 $\mathrm{HV}(A;\mathbf r)\ge\mathrm{HV}(B;\mathbf r)$。
 
@@ -617,7 +617,7 @@ $h_2$ 支配 $h_1$，是因为读 $q$ 免费。可是第 13 章 13.7 节说过�
 
 **定义 42.12（ε-支配与 ε-帕累托集）** 给定容差 $\boldsymbol\varepsilon=(\varepsilon_1,\dots,\varepsilon_m)\ge\mathbf 0$。若 $f_k(\theta')+\varepsilon_k\le f_k(\theta)$ 对所有 $k$ 成立，且至少一个 $k$ 严格成立，称 $\theta'$ **ε-支配** $\theta$。不被任何候选 ε-支配的候选组成 **ε-帕累托集**，用经验目标 $\hat{\mathbf f}$ 时记为 $\hat{\mathcal P}(\boldsymbol\varepsilon)$，用真实目标 $\mathbf f$ 时记为 $\mathcal P(\boldsymbol\varepsilon)$。
 
-**怎么读**：只有"在每个目标上都至少好 $\varepsilon_k$"的对手才能把一个候选排除出去。$\boldsymbol\varepsilon=\mathbf 0$ 时就是帕累托集。只有一个目标时，$\theta$ 被排除当且仅当有人比它好 $\varepsilon$ 以上，即 $\hat{\mathcal P}(\varepsilon)=\{\theta:\hat f(\theta)\le\min\hat f+\varepsilon\}$，正是定义 13.1 的经验 Rashomon 集。（类似的 ε-支配概念在进化多目标文献中用于存档，见 Laumanns 等 2002。）
+**怎么读**：只有"在每个目标上都至少好 $\varepsilon_k$"的对手才能把一个候选排除出去。$\boldsymbol\varepsilon=\mathbf 0$ 时就是帕累托集。只有一个目标时，$\theta$ 被排除当且仅当有人比它好 $\varepsilon$ 以上，即 $\hat{\mathcal P}(\varepsilon)=\{\theta:\hat f(\theta)\le\min\hat f+\varepsilon\}$，正是定义 13.1 的经验 Rashomon 集。（Laumanns 等 2002 为压缩进化多目标的存档用的 ε-支配方向相反，只要求"差不多一样好"。）
 
 **命题 42.14（经验与真实 ε-帕累托集互相包含）** 设在某个事件上，所有候选、所有目标同时满足 $\lvert\hat f_k(\theta)-f_k(\theta)\rvert\le\gamma_k$。记 $\boldsymbol\gamma=(\gamma_1,\dots,\gamma_m)$。则在这个事件上，对所有 $\boldsymbol\varepsilon\ge\mathbf 0$：
 
@@ -731,7 +731,7 @@ $$
 - **模拟退火**：以 $e^{-\Delta/T}$ 接受变差（定义 42.3）；固定温度下以玻尔兹曼分布为平稳分布（命题 42.2），低温时集中在全局最优（命题 42.3）；对数降温且常数不小于最深的坎时收敛（定理 42.4）。
 - **进化算法**：适应度分层界（命题 42.5）给出 OneMax 上 $e\,n\,H(n)$ 的期望时间（推论 42.6）；需要同时改多处时等待时间指数增长。
 - **贝叶斯优化**：高斯过程后验（定义 42.5）加期望改进（定义 42.6），闭式为 $(\hat f_{\mathrm{best}}-\mu)\Phi(z)+\sigma\varphi(z)$（命题 42.7）。
-- **帕累托**：支配、帕累托最优、前沿、弱帕累托最优（定义 42.7）；正权加权和的解帕累托最优（命题 42.8）；被凸组合支配的点任何权重都选不到（定理 42.9），凸时不会漏（命题 42.10）。
+- **帕累托**：支配、帕累托最优、前沿、弱帕累托最优（定义 42.7）；正权加权和的解帕累托最优（命题 42.8）；被凸组合支配的点任何正权重都选不到（定理 42.9），凸时不会漏（命题 42.10）。
 - **ε-约束**：解至少弱帕累托最优，每个帕累托点都能被选出（命题 42.11）；约束形式选得比罚分形式全。
 - **精确前沿**：可加目标的前沿有最优子结构（命题 42.12）。
 - **近似前沿**：NSGA-II 的非支配排序与拥挤距离（定义 42.10）；超体积（定义 42.11）对"整体更好"单调（命题 42.13）；MAP-Elites 按格子保留多样的好候选。
