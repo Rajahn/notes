@@ -246,7 +246,10 @@ $$
 **命题 28.1（近似贪心的覆盖）** 设 $f$ 规范化、单调、次模，$F^\star\subseteq V$ 满足 $\lvert F^\star\rvert\le k^\star$，$\mathrm{OPT}=f(F^\star)$。$\alpha$-近似贪心采纳 $k$ 次后，
 
 $$
-f(A_k)\ge\Big(1-\big(1-\tfrac{\alpha}{k^\star}\big)^k\Big)\mathrm{OPT}\ge\big(1-e^{-\alpha k/k^\star}\big)\mathrm{OPT}.
+\begin{aligned}
+f(A_k)&\ge\Big(1-\big(1-\tfrac{\alpha}{k^\star}\big)^k\Big)\mathrm{OPT}\\
+&\ge\big(1-e^{-\alpha k/k^\star}\big)\mathrm{OPT}.
+\end{aligned}
 $$
 
 **怎么读**：$k^\star$ 是"理想的库"的大小，$k$ 是实际采纳的次数。提议者打了折扣（$\alpha<1$），就多采纳几次来补。**代入数字**：$\alpha=1$、$k=k^\star$ 时右边是 $1-1/e\approx0.632$，即定理 14.5；$\alpha=0.5$、$k^\star=4$ 时，采纳 4 次只保证 $1-e^{-0.5}\approx0.393$，采纳 12 次保证 $1-e^{-1.5}\approx0.777$（精确的系数 $1-(7/8)^{12}\approx0.799$）。要保证 90%，需要 $k\ge k^\star\ln10/\alpha\approx18.4$，即 19 次。
@@ -270,7 +273,10 @@ $$
 **命题 28.2（噪声读数下的拆开）** 设谓词 $t$ 的真实值为 $t_i$，读数 $\hat t_i=t_i\oplus e_i$，其中 $e_i$ 相互独立、与标签无关，$\Pr(e_i=1)=\varepsilon$。记 $\mathcal{C}$ 为异标签对的集合，$P_t$ 为按真实值被 $t$ 拆开的对。则
 
 $$
-\mathbb{E}\big[\hat f(\{t\})\big]=\big(1-2\varepsilon(1-\varepsilon)\big)\lvert P_t\rvert+2\varepsilon(1-\varepsilon)\big(\lvert\mathcal{C}\rvert-\lvert P_t\rvert\big).
+\begin{aligned}
+\mathbb{E}\big[\hat f(\{t\})\big]={}&\big(1-2\varepsilon(1-\varepsilon)\big)\lvert P_t\rvert\\
+&+2\varepsilon(1-\varepsilon)\big(\lvert\mathcal{C}\rvert-\lvert P_t\rvert\big).
+\end{aligned}
 $$
 
 **怎么读**：$\oplus$ 是异或，$e_i=1$ 表示读错。真实值相同的一对，以概率 $2\varepsilon(1-\varepsilon)$ 读成不同，被虚假地"拆开"；真实值不同的一对，以同样的概率读成相同，被漏掉。**代入数字**：$\varepsilon=0.03$ 时 $2\varepsilon(1-\varepsilon)=0.0582$。一个碰撞组有 50 个 S、30 个 B，共 1500 个异标签对；一个在这组里真实值全都相同的问题，期望虚假拆开 $1500\times0.0582\approx87$ 对。一个在全部训练案例上恒为 0 的问题，在有 3410 个未拆开对的样本上，期望拆开约 198 对。
@@ -366,23 +372,29 @@ Occam 界（定理 2.11）的真正前提是**编码在看到样本之前确定*
 
 **例子**：在提示"请提出一个可以从售后描述中观察的是/否问题"下，"买家是否提到包装破损"这样的问题由大约 20 个词元组成，若平均每个词元约 1.5 比特，码长约 30 比特。一个为拆开某个碰撞组而写的定制问题，比如"描述中是否同时出现'周二'、'小区门口'和'第三箱'"，会长得多、也怪得多，码长可能达到 120 比特以上。码长可以把模型对每个词元给出的对数概率相加直接算出来。
 
-**命题 28.3（按提议先验编码的 Occam 界）** 设提议先验 $P_0$ 和读取器都在看到 $S$ 之前固定，每个问题 $q$ 对应一个事实 $\phi_q$；对每个 $k\ge1$，事先固定一套前缀码 $\kappa_k$，给"$k$ 个事实上的规则"编码。代价取值于 $[0,C]$，$S\sim\mathcal{D}^n$。则以至少 $1-\delta$ 的概率，对所有 $k$、所有问题序列 $Q=(q_1,\dots,q_k)$ 和所有规则 $g$ 同时有
+**命题 28.3（按提议先验编码的 Occam 界）** 设提议先验 $P_0$ 和读取器都在看到 $S$ 之前固定，每个问题 $q$ 对应一个事实 $\phi_q$；对每个 $k\ge1$，事先固定一套前缀码 $\kappa_k$，给"$k$ 个事实上的规则"编码。代价取值于 $[0,C]$，$S\sim\mathcal{D}^n$。记总码长（自然对数单位）
 
 $$
-R(g\circ\phi_Q)\le\hat R_S(g\circ\phi_Q)+C\sqrt{\frac{\sum_{j=1}^k\ln\frac{1}{P_0(q_j)}+k\ln2+\lvert\kappa_k(g)\rvert\ln2+\ln\frac1\delta}{2n}}.
+B(k,Q,g)=\sum_{j=1}^k\ln\frac{1}{P_0(q_j)}+k\ln2+\lvert\kappa_k(g)\rvert\ln2 .
+$$
+
+则以至少 $1-\delta$ 的概率，对所有 $k$、所有问题序列 $Q=(q_1,\dots,q_k)$ 和所有规则 $g$ 同时有
+
+$$
+R(g\circ\phi_Q)\le\hat R_S(g\circ\phi_Q)+C\sqrt{\frac{B(k,Q,g)+\ln(1/\delta)}{2n}}.
 $$
 
 **怎么读**：
 
 - $\phi_Q$ 是"把 $Q$ 中每个问题都读一遍"得到的事实向量，$g\circ\phi_Q$ 是先读事实再用规则 $g$ 判定。
-- 根号里的第一项是问题的码长（换成自然对数单位），第二项 $k\ln2$ 是"库里有几个问题"的码长，第三项是规则本身的码长，第四项与定理 2.11 相同。
+- $B$ 的第一项是问题的码长（换成自然对数单位），第二项 $k\ln2$ 是"库里有几个问题"的码长，第三项是规则本身的码长；根号里的 $\ln(1/\delta)$ 与定理 2.11 相同。
 - **关键在"对所有 $Q$ 同时成立"**：提议者看了什么都没关系，它最后提出的那组问题也在"所有 $Q$"里面。看着标签提问的代价不是"保证失效"，而是**按问题的先验码长付费**：自然的问题便宜，定制的问题昂贵。
 
 **代入数字**：$n=2000$，$\delta=0.05$（$\ln20\approx3.00$），库里 5 个问题，规则是一棵有 4 个内部节点、5 个叶子的二分类树。按 2.6.4 节的编码，树的码长是 $9+4\times3+5\times1=26$ 比特。
 
-- 5 个自然的问题，各 30 比特：根号内是 $150\ln2+5\ln2+26\ln2+3.00\approx104.0+3.5+18.0+3.0=128.5$，余量 $\sqrt{128.5/4000}\approx0.179$。
-- 5 个定制的问题，各 120 比特：根号内约 440.4，余量约 0.332。
-- 按 2.10.2 节的逐字编码：根号内约 1249.5，余量约 0.559。
+- 5 个自然的问题，各 30 比特：分子 $B+\ln(1/\delta)$ 是 $150\ln2+5\ln2+26\ln2+3.00\approx104.0+3.5+18.0+3.0=128.5$，余量 $\sqrt{128.5/4000}\approx0.179$。
+- 5 个定制的问题，各 120 比特：分子约 440.4，余量约 0.332。
+- 按 2.10.2 节的逐字编码：分子约 1249.5，余量约 0.559。
 
 要让自然问题的余量降到 0.1，需要 $n\ge128.5/(2\times0.01)\approx6423$。
 
@@ -406,10 +418,10 @@ $$
 
 上面的界管的是**训练集**。概念发现循环还经常用一份**选择集**来决定采纳与否，就像 28.7 节的设计丙。第 5 章 5.10 节说过，要数的是"提出方从选择集得到了多少比特"。
 
-**命题 28.4（只反馈采纳决定）** 设选择集 $S_{\mathrm{sel}}\sim\mathcal{D}^n$ 与提议者看到的其他一切独立。循环进行 $T$ 轮，每轮在选择集上评估至多 $m$ 个候选规则，只告诉提议者"采纳了第几个，或都没采纳"。则以至少 $1-\delta$ 的概率，所有被评估过的规则（共 $k\le Tm+1$ 个，含最终交付的那个）在选择集上的成绩与真实成绩同时满足
+**命题 28.4（只反馈采纳决定）** 设选择集 $S_{\mathrm{sel}}\sim\mathcal{D}^n$ 与提议者看到的其他一切独立。循环进行 $T$ 轮，每轮在选择集上评估至多 $m$ 个候选规则，只告诉提议者"采纳了第几个，或都没采纳"。则以至少 $1-\delta$ 的概率，所有被评估过的规则（共 $k\le Tm+1$ 个，含最终交付的那个）在选择集上的成绩 $\hat R_{\mathrm{sel}}(h)$ 与真实成绩同时满足（代价取值于 $[0,1]$）
 
 $$
-\big\lvert\hat R_{S_{\mathrm{sel}}}(h)-R(h)\big\rvert\le\sqrt{\frac{T\ln(m+1)+\ln(2k/\delta)}{2n}}\qquad(\text{代价取值于 }[0,1]).
+\big\lvert\hat R_{\mathrm{sel}}(h)-R(h)\big\rvert\le\sqrt{\frac{T\ln(m+1)+\ln(2k/\delta)}{2n}}.
 $$
 
 **怎么读**：每轮的回答只有 $m+1$ 种可能，所以 $T$ 轮的交互记录至多有 $(m+1)^T$ 种，$b=T\log_2(m+1)$ 比特，$b\ln2=T\ln(m+1)$。**代入 28.7 节的数字**：$T=25$，$m=4$，$b\approx58.0$ 比特，$k=101$。
@@ -515,7 +527,11 @@ $$
 3. 代入命题 7.6 的比值：
 
 $$
-\frac{\pi(C')\,Q(C'\to C)}{\pi(C)\,Q(C\to C')}=\frac{q(c')\,\mathrm{ML}(C')\cdot q(c_j)}{q(c_j)\,\mathrm{ML}(C)\cdot q(c')}=\frac{\mathrm{ML}(C')}{\mathrm{ML}(C)}.
+\begin{aligned}
+\frac{\pi(C')\,Q(C'\to C)}{\pi(C)\,Q(C\to C')}
+&=\frac{q(c')\,\mathrm{ML}(C')\cdot q(c_j)}{q(c_j)\,\mathrm{ML}(C)\cdot q(c')}\\
+&=\frac{\mathrm{ML}(C')}{\mathrm{ML}(C)}.
+\end{aligned}
 $$
 
 4. 取 $\min\{1,\cdot\}$ 即得。$\square$
