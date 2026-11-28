@@ -200,8 +200,8 @@ def wmc(phi):
 S = lambda s: s['a'] and (s['b'] or s['p'])
 B = lambda s: s['a'] and not s['b'] and not s['p']
 O = lambda s: not s['a']
-print(wmc(S), wmc(B), wmc(O))       # 0.738 0.162 0.1
-print(0.9*0.7 + 0.9*0.4 - wmc(S))   # 0.252 = Pr(a,b,p 全真)
+print([round(wmc(f), 3) for f in (S, B, O)])  # [0.738, 0.162, 0.1]
+print(round(0.9*0.7 + 0.9*0.4 - wmc(S), 3))    # 0.252 = Pr(a,b,p 全真)
 ```
 
 枚举要 $2^m$ 步。几十个概率事实时就已经不可行。下一节讲怎样避开枚举。
@@ -277,7 +277,7 @@ ProbLog2（Fierens 等，2015）的流程是：只把与查询相关的那部分
 3. 构造程序：概率事实 $\tfrac12::y_1,\dots,\tfrac12::y_m$；对每个 $k$ 一条规则 $q\leftarrow y_{i_k}\wedge y_{j_k}$。所有 $2^m$ 个世界概率都是 $2^{-m}$，$q$ 成立当且仅当 $\neg\psi$ 成立，所以 $\Pr(q)=(2^m-\#\psi)/2^m$。
 4. 能算出 $\Pr(q)$ 就能算出 $\#\psi=2^m(1-\Pr(q))$，构造本身是多项式时间的。$\square$
 
-难度不只在精确计算。Roth（1996）表明，许多概率推理问题连近似到任意常数倍都难。所以实用系统只能依靠两样东西：问题结构好（编译后电路不大），或者接受近似（25.8 节）。
+难度不只在精确计算。Roth（1996）证明，即使对一些语法上很受限的公式类，把模型个数近似到很宽的倍数以内也是 NP 难的。所以实用系统只能依靠两样东西：问题结构好（编译后电路不大），或者接受近似（25.8 节）。
 
 ### 小结
 
@@ -300,7 +300,10 @@ $$
 **命题 25.5（成功概率的多线性与偏导数）** 在定义 25.1 的设定下，把 $\Pr(q)$ 看成 $(p_1,\dots,p_m)$ 的函数。则对每个 $i$，
 
 $$
-\Pr(q)=p_i\Pr(q\mid f_i)+(1-p_i)\Pr(q\mid\neg f_i),\qquad \frac{\partial\Pr(q)}{\partial p_i}=\Pr(q\mid f_i)-\Pr(q\mid\neg f_i),
+\begin{aligned}
+\Pr(q)&=p_i\Pr(q\mid f_i)+(1-p_i)\Pr(q\mid\neg f_i),\\
+\frac{\partial\Pr(q)}{\partial p_i}&=\Pr(q\mid f_i)-\Pr(q\mid\neg f_i),
+\end{aligned}
 $$
 
 其中两个条件概率都不依赖于 $p_i$。
@@ -312,7 +315,10 @@ $$
 **怎样用来训练**。设读取器是参数为 $\theta$ 的网络，对案例 $x$ 输出 $\Pr(b)=g_\theta(x)$。案例的历史结论是 $y$，我们最小化对数损失 $-\ln\Pr(y)$（第 7 章命题 7.2 说明它是严格恰当的）。由链式法则，
 
 $$
-\frac{\partial(-\ln\Pr(y))}{\partial\theta}=-\frac{1}{\Pr(y)}\cdot\frac{\partial\Pr(y)}{\partial\Pr(b)}\cdot\frac{\partial g_\theta(x)}{\partial\theta}.
+\begin{aligned}
+\frac{\partial(-\ln\Pr(y))}{\partial\theta}
+&=-\frac{1}{\Pr(y)}\cdot\frac{\partial\Pr(y)}{\partial\Pr(b)}\cdot\frac{\partial g_\theta(x)}{\partial\theta}.
+\end{aligned}
 $$
 
 **怎么读**：中间那一项由命题 25.5 给出；最后一项是普通的网络梯度。代入一个结论为 S 的案例：$\Pr(a)=1$、$\Pr(p)=0.4$、$g_\theta(x)=0.7$，则 $\Pr(\mathrm S)=0.7+0.3\times0.4=0.82$，$\partial\Pr(\mathrm S)/\partial\Pr(b)=0.6$，损失对 $\Pr(b)$ 的导数是 $-0.6/0.82\approx-0.73$：梯度下降会**提高**读取器说"腐烂"的概率。
@@ -380,7 +386,7 @@ $\Pr_\theta$ 是把神经谓词的概率代入后程序的成功概率。
 
 **定义 25.6（交换半环与来源标注）** **交换半环** $(K,\oplus,\otimes,\bar0,\bar1)$ 是一个集合和两种运算：$\oplus$、$\otimes$ 都满足交换律、结合律，$\bar0$、$\bar1$ 分别是它们的单位元，$\otimes$ 对 $\oplus$ 满足分配律，且 $\bar0\otimes k=\bar0$。**来源标注**（provenance）给每个输入事实一个 $K$ 中的标签；一条规则的条件全部满足时，结论得到条件标签的 $\otimes$；同一结论有几种推法时，取各种推法标签的 $\oplus$。
 
-**怎么读**：表里每一行是一个半环。Green、Karvounarakis、Tannen（2007）在数据库里提出这套框架，说明同一个推理引擎换一个半环，就能算出"能不能推出""有几种推法""最可能的推法""用到了哪些事实"等不同的东西。"直接加乘"正是 25.3 节那个错误的求和：它把 $a$ 算了两遍（$a\otimes a$ 的标签是 $0.9^2$，而 $a\wedge a=a$）；"最小最大"是 Gödel 模糊逻辑（25.10 节）。只有"证明集合"保留了足够的信息，在最后做一次加权模型计数得到精确值。
+**怎么读**：表里每一行是一个半环。Green、Karvounarakis、Tannen（2007）在数据库里提出这套框架，说明同一个推理引擎换一个半环，就能算出"能不能推出""有几种推法""最可能的推法""用到了哪些事实"等不同的东西。"直接加乘"正是 25.3 节那个错误的求和：它把两个证明共享的世界算了两遍，根源是这个半环不满足布尔运算的幂等律（$x\oplus x=2x\ne x$，$x\otimes x=x^2\ne x$，而 $f\vee f=f\wedge f=f$）；"最小最大"是 Gödel 模糊逻辑（25.10 节）。只有"证明集合"保留了足够的信息，在最后做一次加权模型计数得到精确值。
 
 ### Scallop 与前 $k$ 个证明
 
@@ -421,7 +427,10 @@ $$
 **定义 25.7（语义损失；Xu、Zhang、Friedman、Liang、Van den Broeck，2018）** 设 $\alpha$ 是变元 $x_1,\dots,x_m$ 上的命题公式，$p\in[0,1]^m$ 是网络对这些变元的输出。**语义损失**是
 
 $$
-L^{\mathrm s}(\alpha,p)=-\ln\sum_{\sigma\models\alpha}\;\prod_{i:\,\sigma(x_i)=1}p_i\prod_{i:\,\sigma(x_i)=0}(1-p_i)=-\ln\operatorname{WMC}(\alpha,w_p).
+\begin{aligned}
+L^{\mathrm s}(\alpha,p)&=-\ln\sum_{\sigma\models\alpha}\;\prod_{i:\,\sigma(x_i)=1}p_i\prod_{i:\,\sigma(x_i)=0}(1-p_i)\\
+&=-\ln\operatorname{WMC}(\alpha,w_p).
+\end{aligned}
 $$
 
 **怎么读**：求和号里就是"按 $p$ 独立抽一组 0/1 值，它满足 $\alpha$"的概率，即以 $p$ 为权重的加权模型计数（定义 25.3）。原文的定义带一个正的比例常数，这里取为 1。恰好一个的例子中 $\operatorname{WMC}=0.504$，$L^{\mathrm s}=0.685$。
@@ -451,7 +460,10 @@ $$
 **用作正则项**。原文的主要用法是半监督学习：有标签的样本用交叉熵，没有标签的样本只加语义损失，
 
 $$
-L(\theta)=\sum_{i\in\text{有标签}}\mathrm{CE}\big(y^{(i)},p_\theta(x^{(i)})\big)+\lambda\sum_{j\in\text{无标签}}L^{\mathrm s}\big(\alpha,p_\theta(x^{(j)})\big).
+\begin{aligned}
+L(\theta)=&\sum_{i\in\text{有标签}}\mathrm{CE}\big(y^{(i)},p_\theta(x^{(i)})\big)\\
+&+\lambda\sum_{j\in\text{无标签}}L^{\mathrm s}\big(\alpha,p_\theta(x^{(j)})\big).
+\end{aligned}
 $$
 
 **怎么读**：$\lambda>0$ 是权重。没有标签的样本也能提供信号：它们的输出至少要满足约束。原文还把它用于结构化输出，如网格上的路径和排序，这时约束很复杂，要先编译成 SDD 才能高效计算 $\operatorname{WMC}$ 及其梯度。语义损失只要求约束**成立的概率**高，不要求网络的输出本身是校准的概率。
@@ -493,9 +505,11 @@ $$
 **命题 25.9（三个剩余蕴含）** （1）三个 t-范数的剩余蕴含分别是
 
 $$
-I_{\mathrm M}(x,y)=\begin{cases}1,&x\le y\\ y,&x>y\end{cases}\qquad
-I_{\mathrm P}(x,y)=\begin{cases}1,&x\le y\\ y/x,&x>y\end{cases}\qquad
-I_{\mathrm L}(x,y)=\min(1,\,1-x+y).
+\begin{aligned}
+&I_{\mathrm M}(x,y)=\begin{cases}1,&x\le y\\ y,&x>y\end{cases}\qquad
+I_{\mathrm P}(x,y)=\begin{cases}1,&x\le y\\ y/x,&x>y\end{cases}\\[4pt]
+&I_{\mathrm L}(x,y)=\min(1,\,1-x+y).
+\end{aligned}
 $$
 
 （2）对这三个（实际上对任何连续 t-范数），$T(x,z)\le y$ 当且仅当 $z\le I_T(x,y)$；因此 $T\big(x,I_T(x,y)\big)\le y$，并且 $I_T(x,y)=1$ 当且仅当 $x\le y$。
@@ -508,13 +522,13 @@ $$
 
 **思路**：$T(x,\cdot)$ 单调且连续，所以 $\{z:T(x,z)\le y\}$ 是一个从 0 开始的闭区间，右端点就是 $I_T(x,y)$；对每个 t-范数解出右端点。
 
-1. 由单调性，若 $z$ 在集合里，比它小的都在；由连续性，集合是闭的。所以集合是 $[0,I_T(x,y)]$，这就是（2）的第一句。取 $z=I_T(x,y)$ 得第二句。$T(x,1)=x\le y$ 当且仅当 $1$ 在集合里，得第三句。
+1. 集合非空，因为 $T(x,0)\le\min(x,0)=0\le y$（命题 25.8）。由单调性，若 $z$ 在集合里，比它小的都在；由连续性，集合是闭的。所以集合是 $[0,I_T(x,y)]$，这就是（2）的第一句。取 $z=I_T(x,y)$ 得第二句。$T(x,1)=x\le y$ 当且仅当 $1$ 在集合里，得第三句。
 2. $T_{\mathrm M}$：$x\le y$ 时任何 $z$ 都满足 $\min(x,z)\le y$，上确界为 1；$x>y$ 时需要 $z\le y$，上确界为 $y$。
 3. $T_{\mathrm P}$：$x\le y$ 时 $xz\le x\le y$，上确界为 1；$x>y$ 时（此时 $x>0$）需要 $z\le y/x$。
 4. $T_{\mathrm L}$：$\max(0,x+z-1)\le y$ 当且仅当 $z\le1-x+y$，与 $z\le1$ 合起来上确界为 $\min(1,1-x+y)$。
 5. （3）：$S_{\mathrm L}(1-x,y)=\min(1,1-x+y)$，与第 4 步相同。$\square$
 
-**兑现 0.7 节的预告**。0.7 节说过：Łukasiewicz 三值逻辑的蕴含是 $\min(1,1-p+q)$，它让 $\mathrm U\to\mathrm U$ 为真，却使 $p\to q$ 不再等价于 $\neg p\vee q$。现在可以说清楚原因：这个蕴含是 $T_{\mathrm L}$ 的剩余蕴含，限制到 $\{0,\tfrac12,1\}$ 上就是 0.7 节的表；它等于用**强析取** $\min(1,x+y)$ 写的 $\neg p\vee q$（第（3）条），而 Kleene 逻辑用的是**弱析取** $\max$，两者在 $\tfrac12,\tfrac12$ 处不同：$\max=\tfrac12$，$\min(1,1)=1$。
+**兑现 0.7 节的预告**。0.7 节说过：Łukasiewicz 三值逻辑的蕴含是 $\min(1,1-p+q)$，它让 $\mathrm U\to\mathrm U$ 为真，却使 $p\to q$ 不再等价于 $\neg p\vee q$。现在可以说清楚原因：这个蕴含是 $T_{\mathrm L}$ 的剩余蕴含，限制到 $\{0,\tfrac12,1\}$ 上就是 0.7 节的 Łukasiewicz 三值蕴含；它等于用**强析取** $\min(1,x+y)$ 写的 $\neg p\vee q$（第（3）条），而 Kleene 逻辑用的是**弱析取** $\max$，两者在 $\tfrac12,\tfrac12$ 处不同：$\max=\tfrac12$，$\min(1,1)=1$。
 
 Łukasiewicz 逻辑因此有两套联结词：弱的 $\min$、$\max$（与 Kleene 相同）和强的 $T_{\mathrm L}$、$S_{\mathrm L}$。强合取不幂等：$T_{\mathrm L}(\tfrac12,\tfrac12)=0$，"未知且未知"成了"假"；$T_{\mathrm L}(0.7,0.7)=0.4\ne0.7$。这又一次说明，0.7 节选 Kleene 读法来表示"读不出来"是对的。Łukasiewicz 联结词在可微逻辑里的地位来自另外两点：它们是分段线性的，由它们写出的约束是凸的（25.14 节的概率软逻辑正是建立在它上面）；而且它的蕴含梯度很均衡（下一节）。
 
@@ -576,7 +590,7 @@ $$
 T_{\mathrm L}(x,y)=\max(0,x+y-1)\;\le\;\Pr(A\cap B)\;\le\;\min(x,y)=T_{\mathrm M}(x,y),
 $$
 
-并且区间内每个值都能由某个联合分布取到；$\Pr(A\cap B)=T_{\mathrm P}(x,y)$ 当且仅当 $A,B$ 独立。因此没有任何函数 $T(x,y)$ 能对所有联合分布给出 $\Pr(A\cap B)$，除非 $x,y\in\{0,1\}$ 或 $x+y\le1$ 且 $\min(x,y)=0$ 这类区间退化的情形。
+并且区间内每个值都能由某个联合分布取到；$\Pr(A\cap B)=T_{\mathrm P}(x,y)$ 当且仅当 $A,B$ 独立。因此，除了 $\min(x,y)=0$ 或 $\max(x,y)=1$ 这两种区间退化为一点的情形，没有任何只看 $(x,y)$ 的函数能对所有联合分布给出 $\Pr(A\cap B)$。
 
 **怎么读**：Łukasiewicz 和 Gödel 恰好是合取概率的下界和上界：前者对应"两件事尽量不一起发生"，后者对应"小的那件事发生时大的那件一定发生"。乘积在中间，只对应独立。代入例子一：区间是 $[0.4,0.7]$，真实值 0.65 在里面，靠近上界。
 
@@ -594,7 +608,7 @@ $$
 
 ### 小结
 
-这一节说的是：合取的概率被 Łukasiewicz 和 Gödel t-范数夹住，乘积只对应独立；模糊逻辑逐个联结词计算，无法表达事实之间的相关，也不满足 $b\wedge\neg b=0$，所以模糊真值不是概率。
+这一节说的是：合取的概率被 Łukasiewicz 和 Gödel t-范数夹住，乘积只对应独立；模糊逻辑逐个联结词计算，无法表达事实之间的相关，也无法同时正确处理 $b\wedge\neg b$ 和 $b\wedge b$，所以模糊真值不是概率。
 
 ---
 
@@ -926,7 +940,7 @@ $p=1$：总惩罚 $w\max(0,0.7-s)+s$。$s<0.7$ 时斜率 $1-w$。$w>1$ 时 $s^*=
 **教材**
 
 - Luc De Raedt, Kristian Kersting, Sriraam Natarajan, David Poole. *Statistical Relational Artificial Intelligence: Logic, Probability, and Computation*. Morgan & Claypool, 2016. 概率逻辑程序、马尔可夫逻辑网与提升推理的简明综述。
-- Adnan Darwiche. *Modeling and Reasoning with Bayesian Networks*. Cambridge University Press, 2009. 第 12 章前后讲加权模型计数与知识编译。
+- Adnan Darwiche. *Modeling and Reasoning with Bayesian Networks*. Cambridge University Press, 2009. 后半部分讲把概率推理编译成算术电路、归约为加权模型计数。
 - Erich Peter Klement, Radko Mesiar, Endre Pap. *Triangular Norms*. Kluwer, 2000. t-范数的标准参考。
 - Petr Hájek. *Metamathematics of Fuzzy Logic*. Kluwer, 1998. 以 t-范数和剩余蕴含为基础的模糊逻辑体系。
 - Lise Getoor, Ben Taskar (eds.). *Introduction to Statistical Relational Learning*. MIT Press, 2007. 马尔可夫逻辑网等模型的早期汇编。
