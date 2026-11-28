@@ -144,8 +144,10 @@ Pearl 把这三类问题排成一个梯子（Pearl 与 Mackenzie 2018；Pearl 20
 **定义 34.2（反事实概率）** 设 $e$ 是关于事实世界里内生变量的一个事件（证据），$\Pr(e)>0$。则
 
 $$
-\Pr(Y_x=y\mid e)=\sum_{u}\mathbf{1}[Y_x(u)=y]\,\Pr(u\mid e),\qquad
-\Pr(u\mid e)=\frac{\Pr(u)\,\mathbf{1}[e\text{ 在 }u\text{ 下成立}]}{\Pr(e)}.
+\begin{aligned}
+\Pr(Y_x=y\mid e)&=\sum_{u}\mathbf{1}[Y_x(u)=y]\,\Pr(u\mid e),\\
+\Pr(u\mid e)&=\frac{\Pr(u)\,\mathbf{1}[e\text{ 在 }u\text{ 下成立}]}{\Pr(e)}.
+\end{aligned}
 $$
 
 **怎么读**：
@@ -323,9 +325,11 @@ $P$ 外生时，实验只能告诉我们：必坏 + 受影响 = 0.56，必坏 + 
 **定义 34.4（必要性概率、充分性概率）**（Pearl 1999）
 
 $$
-\mathrm{PN}=\Pr(Y_0=0\mid X=1,Y=1),\quad
-\mathrm{PS}=\Pr(Y_1=1\mid X=0,Y=0),\quad
-\mathrm{PNS}=\Pr(Y_1=1,Y_0=0).
+\begin{aligned}
+\mathrm{PN}&=\Pr(Y_0=0\mid X=1,Y=1),\\
+\mathrm{PS}&=\Pr(Y_1=1\mid X=0,Y=0),\\
+\mathrm{PNS}&=\Pr(Y_1=1,Y_0=0).
+\end{aligned}
 $$
 
 **怎么读**：
@@ -380,9 +384,11 @@ $$
 **推论 34.5（单调性下可识别）** 在定理 34.4 的条件下，再设**单调性**：对所有单元 $Y_1(u)\ge Y_0(u)$。则
 
 $$
-\mathrm{PNS}=p_1-p_0,\qquad
-\mathrm{PN}=\frac{p_1-p_0}{p_1},\qquad
-\mathrm{PS}=\frac{p_1-p_0}{1-p_0}.
+\begin{aligned}
+\mathrm{PNS}&=p_1-p_0,\\
+\mathrm{PN}&=\frac{p_1-p_0}{p_1},\\
+\mathrm{PS}&=\frac{p_1-p_0}{1-p_0}.
+\end{aligned}
 $$
 
 **证明.** 单调性即 $q_d=0$，于是 $q_a=p_0$，$q_c=p_1-p_0$，代入定理证明的第 3 步。$\square$
@@ -442,8 +448,10 @@ $$
 Tian 与 Pearl（2000）也给出了不假设单调时、同时用实验和观察数据的紧界。以 PN 为例：
 
 $$
-\max\Big\{0,\ \frac{\Pr(Y=1)-\Pr(Y_0=1)}{\Pr(X=1,Y=1)}\Big\}\le\mathrm{PN}\le
-\min\Big\{1,\ \frac{\Pr(Y_0=0)-\Pr(X=0,Y=0)}{\Pr(X=1,Y=1)}\Big\}.
+\begin{aligned}
+\mathrm{PN}&\ge\max\Big\{0,\ \frac{\Pr(Y=1)-\Pr(Y_0=1)}{\Pr(X=1,Y=1)}\Big\},\\
+\mathrm{PN}&\le\min\Big\{1,\ \frac{\Pr(Y_0=0)-\Pr(X=0,Y=0)}{\Pr(X=1,Y=1)}\Big\}.
+\end{aligned}
 $$
 
 **怎么读**：下界正是命题 34.6 的值，单调性让 PN 落在下界上。上界的分子是"全体都不接受处理时结果不发生"的比例，减去"实际没接受处理、结果也没发生"的比例，剩下的是"接受了处理、在不接受时结果不会发生"的人的比例上限。代入：上界为 $(0.88-0.801)/0.07\approx1.13$，截到 1，所以 PN 在 $[0.70,1]$。
@@ -508,7 +516,10 @@ $$
 写一个小的结构模型。只看时限内、包装完好的申请，真实腐烂 $b$ 的比例是 0.5，并**假设腐烂与否不受买家是否老年的影响**，即 $b$ 不是 $G$ 的后代。读取器的方程用一个均匀分布的噪声 $V$：
 
 $$
-\tilde b:=\mathbf{1}\big[b=1\ \text{且}\ V\le s_G\big]\ \text{或}\ \mathbf{1}\big[b=0\ \text{且}\ V>0.95\big],
+\begin{aligned}
+\tilde b:={}&\mathbf{1}\big[b=1\ \text{且}\ V\le s_G\big]\\
+&\text{或}\ \mathbf{1}\big[b=0\ \text{且}\ V>0.95\big],
+\end{aligned}
 $$
 
 其中 $s_1=0.6$（老年用户），$s_0=0.9$。规则戊看 $\tilde b$：时限内、包装完好时，读出腐烂判 S，否则判 B。
