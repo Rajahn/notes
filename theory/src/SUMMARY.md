@@ -49,12 +49,12 @@
 
 # 卷五　神经符号
 
-- [第 23 章　符号接地与神经符号方法的谱系]()
-- [第 24 章　归纳逻辑编程]()
-- [第 25 章　概率逻辑与可微逻辑]()
-- [第 26 章　溯因学习]()
-- [第 27 章　概念瓶颈模型]()
-- [第 28 章　前沿：LLM 驱动的可解释学习]()
+- [第 23 章　符号接地与神经符号方法的谱系](23-neurosymbolic-landscape.md)
+- [第 24 章　归纳逻辑编程](24-ilp.md)
+- [第 25 章　概率逻辑与可微逻辑](25-probabilistic-differentiable-logic.md)
+- [第 26 章　溯因学习](26-abductive-learning.md)
+- [第 27 章　概念瓶颈模型](27-concept-bottleneck.md)
+- [第 28 章　前沿：LLM 驱动的可解释学习](28-llm-interpretable-learning.md)
 
 # 卷六　程序综合、验证与修复
 
