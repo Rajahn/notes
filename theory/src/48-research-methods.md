@@ -327,7 +327,9 @@ $R^*_\phi$ 是只看读数时的贝叶斯风险（第 1 章定义 1.14），作�
 
 **怎么读**：这就是第 2 章的联合界用在模拟上。表中 $G=27$、$\delta=0.05$，每个格点的两侧各分 $\delta/(2G)\approx0.00093$。区间用第 40 章命题 40.10 的经验伯恩斯坦界：差值 $D_r\in[-3,3]$，线性变换到 $[0,1]$ 后对两侧各用一次。
 
-**证明.** 由联合界（第 2 章命题 2.6），至少一个区间不含真值的概率不超过 $G\cdot\delta/G=\delta$。在其余情形，每个 $\Delta(\theta_g)$ 都在自己的区间里，各判定都对；且 $\min_g\Delta(\theta_g)\ge\min_gL_g$。$\square$
+#### 证明（第一遍可以跳过）
+
+由联合界（第 2 章命题 2.6），至少一个区间不含真值的概率不超过 $G\cdot\delta/G=\delta$。在其余情形，每个 $\Delta(\theta_g)$ 都在自己的区间里，各判定都对；且 $\min_g\Delta(\theta_g)\ge\min_gL_g$。$\square$
 
 格点**之间**呢？例如 $\lambda=0.75$ 时会怎样？直觉上，世界参数变一点，结果也只变一点。下面的命题说明这在原则上对，但量化以后几乎没用。
 
@@ -813,7 +815,7 @@ $s=1$：$a=1.96-1=0.96$，功效 $1-\Phi(0.96)\approx0.169$，$\varphi(0.96)/0.1
 
 **论文**
 
-- T. C. Chamberlin. The Method of Multiple Working Hypotheses. *Science*, 1890. 同时持有多个竞争假设。
+- T. C. Chamberlin. The Method of Multiple Working Hypotheses. *Science*, 15, 1890. 同时持有多个竞争假设。
 - John R. Platt. Strong Inference. *Science*, 146(3642), 1964. 用关键实验逐个排除备择假设。
 - S. Keshav. How to Read a Paper. *ACM SIGCOMM Computer Communication Review*, 37(3), 2007. 三遍读法。
 - Tim P. Morris, Ian R. White, Michael J. Crowther. Using Simulation Studies to Evaluate Statistical Methods. *Statistics in Medicine*, 38(11), 2019. 模拟研究的目的、数据生成机制、估计目标、方法、性能度量五项框架，以及蒙特卡洛误差。
