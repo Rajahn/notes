@@ -80,7 +80,7 @@
 
 ### 37.2.1 一个例子
 
-旧规则下申诉率 6%。新规则只改变一成案例的判定，在这些案例上把申诉率从 20% 降到 8%，其余案例不受影响，所以总体申诉率降到 $0.9\times0.0444+0.1\times0.08=0.048$。要用一个双侧 $\alpha=0.05$ 的检验，以 80% 的把握发现 6% 到 4.8% 的下降，每组要多少案例？
+旧规则下申诉率 6%。新规则只改变一成案例的判定，在这些案例上把申诉率从 20% 降到 8%，其余九成案例的申诉率约 4.44%、不受影响（$0.9\times0.0444+0.1\times0.2=0.06$），所以总体申诉率降到 $0.9\times0.0444+0.1\times0.08=0.048$。要用一个双侧 $\alpha=0.05$ 的检验，以 80% 的把握发现 6% 到 4.8% 的下降，每组要多少案例？
 
 答案是每组约 5565 个，共一万一千多个。下面推导这个数，再看怎样把它降下来。
 
@@ -101,7 +101,7 @@ $$
 **思路**：备择假设下 $\hat p_1-\hat p_0$ 近似正态，均值 $\Delta$、标准差 $\sigma_\Delta$；拒绝域是"离 0 超过 $z_{1-\alpha/2}$ 个标准差"，算它的概率。
 
 1. 两组独立，$\operatorname{Var}(\hat p_1-\hat p_0)=\sigma_\Delta^2$；由中心极限定理（定理 0.1.10），$(\hat p_1-\hat p_0-\Delta)/\sigma_\Delta$ 近似服从 $N(0,1)$。$\hat\sigma$ 收敛到 $\sigma_\Delta$，近似中用 $\sigma_\Delta$ 代替它。
-2. 设 $\Delta>0$。$\Pr(Z>z_{1-\alpha/2})\approx\Pr\big(N(0,1)>z_{1-\alpha/2}-\Delta/\sigma_\Delta\big)=\Phi(\Delta/\sigma_\Delta-z_{1-\alpha/2})$。另一侧 $\Pr(Z<-z_{1-\alpha/2})=\Phi(-\Delta/\sigma_\Delta-z_{1-\alpha/2})$，功效 0.8 时不到 $10^{-6}$，忽略。$\Delta<0$ 对称。
+2. 设 $\Delta>0$。$\Pr(Z>z_{1-\alpha/2})$ 约等于 $\Pr\big(N(0,1)>z_{1-\alpha/2}-\Delta/\sigma_\Delta\big)$，即 $\Phi(\Delta/\sigma_\Delta-z_{1-\alpha/2})$。另一侧 $\Pr(Z<-z_{1-\alpha/2})=\Phi(-\Delta/\sigma_\Delta-z_{1-\alpha/2})$，功效 0.8 时不到 $10^{-6}$，忽略。$\Delta<0$ 对称。
 3. 令 $\lvert\Delta\rvert/\sigma_\Delta-z_{1-\alpha/2}=z_{1-\beta}$，即 $\sqrt n\,\lvert\Delta\rvert=(z_{1-\alpha/2}+z_{1-\beta})\sqrt{p_1(1-p_1)+p_0(1-p_0)}$，平方即得。$\square$
 
 两个变体：原假设下用合并比例算方差的检验，所需样本量略大（这里是 5568）；两组比例接近、都约为 $p$ 时，公式化为 $n\approx2\times7.85\,p(1-p)/\Delta^2\approx16\,p(1-p)/\Delta^2$，这就是常说的"16 倍方差除以效果平方"的经验法则（Lehr 1992）。
@@ -250,7 +250,7 @@ $$
 
 1. **完全随机化.** 处理组是从总体中独立抽的 $n_1$ 个案例，$\operatorname{Var}(\bar Y_1)=\sigma_1^2/n_1$，$\sigma_1^2$ 是总体中 $Y(1)$ 的方差。两组独立，$\operatorname{Var}(\hat\tau)=\sigma_1^2/n_1+\sigma_0^2/n_0$。期望为 $\mu_1-\mu_0$。
 2. **全方差公式**（定理 0.1.6），以区组为条件：$\sigma_w^2=\sum_gw_g\sigma_{wg}^2+\sum_gw_g(\mu_{wg}-\mu_w)^2=\sum_gw_g\sigma_{wg}^2+B_w$。
-3. **区组随机化.** 各区组各组独立，$\operatorname{Var}(\bar Y_{1g})=\sigma_{1g}^2/(w_gn_1)$。所以 $\operatorname{Var}(\hat\tau_{\mathrm B})=\sum_gw_g^2\big(\sigma_{1g}^2/(w_gn_1)+\sigma_{0g}^2/(w_gn_0)\big)=\sum_gw_g\sigma_{1g}^2/n_1+\sum_gw_g\sigma_{0g}^2/n_0$。期望为 $\sum_gw_g(\mu_{1g}-\mu_{0g})=\mu_1-\mu_0$。
+3. **区组随机化.** 各区组各组独立，$\operatorname{Var}(\bar Y_{1g})=\sigma_{1g}^2/(w_gn_1)$。所以 $\operatorname{Var}(\hat\tau_{\mathrm B})=\sum_gw_g^2\big(\sigma_{1g}^2/(w_gn_1)+\sigma_{0g}^2/(w_gn_0)\big)$，化简为 $\sum_gw_g\sigma_{1g}^2/n_1+\sum_gw_g\sigma_{0g}^2/n_0$。期望为 $\sum_gw_g(\mu_{1g}-\mu_{0g})=\mu_1-\mu_0$。
 4. 用第 2 步代入第 1 步再减去第 3 步，得 $B_1/n_1+B_0/n_0$。它非负，为 0 当且仅当 $B_1=B_0=0$，即所有 $\mu_{wg}$ 等于 $\mu_w$。$\square$
 
 定理比较的是"按比例从各区组取案例"与"从全体独立取案例"。实际中案例是先到达、再在区组内分组的，区组大小随机，上一章命题 35.7 的条件论证适用，结论在大样本下不变。
@@ -297,10 +297,10 @@ $$
 **定义 37.3（$2^k$ 析因设计与析因效应）** $k$ 个因素各取两个水平，记作 $x_j\in\{-1,+1\}$；**全析因设计**把 $2^k$ 种组合都安排试验。对因素的子集 $S$，令 $\chi_S(x)=\prod_{j\in S}x_j$（与第 9 章定义 9.3 相同）。$S$ 的**析因效应**是
 
 $$
-E_S=\bar y(\chi_S=+1)-\bar y(\chi_S=-1),
+E_S=\bar\mu(\chi_S=+1)-\bar\mu(\chi_S=-1),
 $$
 
-即 $\chi_S$ 取 $+1$ 的那一半试验的平均结果，减去取 $-1$ 的那一半的平均。$\lvert S\rvert=1$ 时叫**主效应**，$\lvert S\rvert=2$ 时叫**二阶交互**，依此类推。
+即在 $2^k$ 种组合中，$\chi_S$ 取 $+1$ 的那一半组合的平均真实结果 $\mu(x)$，减去取 $-1$ 的那一半的平均。用试验结果代替 $\mu(x)$ 算出的同一个量记作 $\hat E_S$。$\lvert S\rvert=1$ 时叫**主效应**，$\lvert S\rvert=2$ 时叫**二阶交互**，依此类推。
 
 **怎么读**：主效应 $E_A$ 是"A 在 B 的两个水平上的效果的平均"；交互 $E_{AB}$ 是"B 取 + 时 A 的效果"与"B 取 − 时 A 的效果"之差的一半。**代入**：$E_A=\frac{(0.82-0.80)+(0.94-0.86)}2=0.05$，$E_B=\frac{(0.86-0.80)+(0.94-0.82)}2=0.09$，$E_{AB}=\frac{0.08-0.02}2=0.03$。
 
@@ -317,9 +317,9 @@ $$
 **思路**：$\hat E_S$ 是 $y$ 与 $\chi_S$ 的内积乘一个常数，正交性（引理 9.7）给出一切。
 
 1. $\chi_S$ 在 $2^k$ 种组合中恰有一半取 $+1$（$S$ 非空时，由引理 9.7 取 $T=\varnothing$ 得平均为 0），所以 $\hat E_S=\frac{2}{N}\sum_i\chi_S(x_i)y_i$。
-2. **无偏.** $\mathbb{E}[\hat E_S]=\frac2N\sum_i\chi_S(x_i)\mu(x_i)=2\cdot\frac{1}{2^k}\sum_x\chi_S(x)\mu(x)=2\langle\mu,\chi_S\rangle=2\hat\mu(S)$，第二步因为每种组合恰好出现 $r$ 次。
+2. **无偏.** $\mathbb{E}[\hat E_S]=\frac2N\sum_i\chi_S(x_i)\mu(x_i)$。每种组合恰好出现 $r$ 次，所以它等于 $2\cdot\frac{1}{2^k}\sum_x\chi_S(x)\mu(x)=2\langle\mu,\chi_S\rangle=2\hat\mu(S)$。
 3. **方差.** $\operatorname{Var}(\hat E_S)=\frac{4}{N^2}\sum_i\chi_S(x_i)^2\sigma^2=\frac{4\sigma^2}{N}$。
-4. **不相关.** $\operatorname{Cov}(\hat E_S,\hat E_T)=\frac{4\sigma^2}{N^2}\sum_i\chi_S(x_i)\chi_T(x_i)=\frac{4\sigma^2}{N}\langle\chi_S,\chi_T\rangle=0$（引理 9.7）。$\square$
+4. **不相关.** $\operatorname{Cov}(\hat E_S,\hat E_T)=\frac{4\sigma^2}{N^2}\sum_i\chi_S(x_i)\chi_T(x_i)$，同理等于 $\frac{4\sigma^2}{N}\langle\chi_S,\chi_T\rangle$，由引理 9.7 为 0。$\square$
 
 ### 37.5.4 交互作用怎样读
 
@@ -361,7 +361,7 @@ $$
 \mathbb{E}[\hat E_S]=\sum_{T:\,S\triangle T\in\{\varnothing,W_1,W_2,\dots\}}E_T,
 $$
 
-即 $S$ 与它所有别名的析因效应之和。
+即 $S$ 与它所有别名的析因效应之和。（某个词取 $-1$ 时，对应的别名前带负号。）
 
 **怎么读**：数据只给出一组别名效应的和，分给谁要靠假设。**代入**：设真实效应为 $E_A=0.05$、$E_B=0.09$、$E_C=0.02$、$E_D=0$、$E_{AB}=0.03$、$E_{CD}=0.02$，其余为 0。在上面 8 次试验上，A、B、C、D 的估计分别是 0.05、0.09、0.02、0（三阶交互为 0，没有混入），而 AB 列的估计是 $0.03+0.02=0.05$。只看这个数，会以为"提示词 × 照片"的交互比实际大。
 
@@ -430,8 +430,8 @@ $$
 
 1. AB 顺序：$Y_{i1}=\mu_i+\varepsilon_{i1}$，$Y_{i2}=\mu_i+\pi+\tau+\lambda_A+\varepsilon_{i2}$，所以 $d_i=\pi+\tau+\lambda_A+(\varepsilon_{i2}-\varepsilon_{i1})$。
 2. BA 顺序：$Y_{i1}=\mu_i+\tau+\varepsilon_{i1}$，$Y_{i2}=\mu_i+\pi+\lambda_B+\varepsilon_{i2}$，所以 $d_i=\pi-\tau+\lambda_B+(\varepsilon_{i2}-\varepsilon_{i1})$。
-3. 相减除以 2：$\mathbb{E}[\hat\tau_{\mathrm X}]=\frac12\big((\pi+\tau+\lambda_A)-(\pi-\tau+\lambda_B)\big)=\tau+\frac{\lambda_A-\lambda_B}2$。
-4. 每个 $d_i$ 的方差为 $2\sigma_\varepsilon^2$，不含 $\mu_i$；两种顺序独立，$\operatorname{Var}(\hat\tau_{\mathrm X})=\frac14\big(\frac{2\sigma_\varepsilon^2}n+\frac{2\sigma_\varepsilon^2}n\big)=\frac{\sigma_\varepsilon^2}n$。$\square$
+3. 相减除以 2：$\mathbb{E}[\hat\tau_{\mathrm X}]=\frac12\big((\pi+\tau+\lambda_A)-(\pi-\tau+\lambda_B)\big)$，即 $\tau+\frac{\lambda_A-\lambda_B}2$。
+4. 每个 $d_i$ 的方差为 $2\sigma_\varepsilon^2$，不含 $\mu_i$；两种顺序独立，所以 $\operatorname{Var}(\hat\tau_{\mathrm X})=\frac14\big(\frac{2\sigma_\varepsilon^2}n+\frac{2\sigma_\varepsilon^2}n\big)$，即 $\sigma_\varepsilon^2/n$。$\square$
 
 ### 37.7.3 残留效应是软肋
 
@@ -500,7 +500,16 @@ $$
 
 1. $\bar X_{i\cdot}-\bar X=(c_i-\bar c)+(\bar e_{i\cdot}-\bar e)$，$r$ 全部抵消。$c_i$ 独立同分布，$\mathbb{E}\sum_i(c_i-\bar c)^2=(n_c-1)\sigma_c^2$；$\bar e_{i\cdot}$ 独立同分布、方差 $\sigma_e^2/n_r$，$\mathbb{E}\sum_i(\bar e_{i\cdot}-\bar e)^2=(n_c-1)\sigma_e^2/n_r$；两块独立、均值为 0，交叉项期望为 0。所以 $\mathbb{E}[\mathrm{MS}_c]=n_r(\sigma_c^2+\sigma_e^2/n_r)$。$\mathrm{MS}_r$ 对称。
 2. 残差 $\hat e_{ij}=e_{ij}-\bar e_{i\cdot}-\bar e_{\cdot j}+\bar e$，$c$、$r$ 都抵消。
-3. 恒等式 $\sum_{ij}(e_{ij}-\bar e)^2=n_r\sum_i(\bar e_{i\cdot}-\bar e)^2+n_c\sum_j(\bar e_{\cdot j}-\bar e)^2+\sum_{ij}(\text{残差})^2$ 成立：三块的交叉项都含"残差对某一行或某一列求和"，而残差的每行和、每列和都是 0。
+3. 把 $e_{ij}-\bar e$ 写成 $(\bar e_{i\cdot}-\bar e)+(\bar e_{\cdot j}-\bar e)+\hat e_{ij}$，平方求和得
+
+$$
+\begin{aligned}
+\sum_{i,j}(e_{ij}-\bar e)^2&=n_r\sum_i(\bar e_{i\cdot}-\bar e)^2\\
+&\quad+n_c\sum_j(\bar e_{\cdot j}-\bar e)^2+\sum_{i,j}\hat e_{ij}^2 .
+\end{aligned}
+$$
+
+   交叉项都是 0：行块与列块的交叉项是 $\sum_i(\bar e_{i\cdot}-\bar e)$ 与 $\sum_j(\bar e_{\cdot j}-\bar e)$ 之积，两者都是 0；它们与 $\hat e$ 的交叉项含 $\hat e$ 的行和或列和，而 $\hat e$ 的每行和、每列和都是 0。
 4. 取期望：左边 $(n_cn_r-1)\sigma_e^2$，右边前两项 $(n_c-1)\sigma_e^2$ 与 $(n_r-1)\sigma_e^2$，所以残差平方和的期望是 $(n_c-1)(n_r-1)\sigma_e^2$，即 $\mathbb{E}[\mathrm{MS}_e]=\sigma_e^2$。
 5. 三个估计的无偏性由期望的线性得到。$\square$
 
