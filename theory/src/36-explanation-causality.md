@@ -76,7 +76,7 @@
 
 ### 回顾：结构因果模型与干预
 
-本卷前面讲过，一个**结构因果模型**由外生变量 $U$、内生变量 $V$ 和每个内生变量的一条**结构方程**组成，例如 $q:=f_q(p,U_q)$；给定外生变量的分布，就得到全部变量的联合分布。**干预** $\operatorname{do}(X=x)$ 把 $X$ 的方程换成常数 $x$，其他方程不动；$\Pr(Y\mid\operatorname{do}(X=x))$ 一般不等于 $\Pr(Y\mid X=x)$。反事实按三步算：用观察到的事实推出外生变量（溯因），改方程（行动），重新求解（预测）。本章只用这些。
+本卷前面讲过，一个**结构因果模型**由外生变量 $U$（本卷前面称为外生噪声）、内生变量 $V$ 和每个内生变量的一条**结构方程**组成，例如 $q:=f_q(p,U_q)$；给定外生变量的分布，就得到全部变量的联合分布。**干预** $\operatorname{do}(X=x)$ 把 $X$ 的方程换成常数 $x$，其他方程不动；$\Pr(Y\mid\operatorname{do}(X=x))$ 一般不等于 $\Pr(Y\mid X=x)$。反事实按三步算：用观察到的事实推出外生变量（溯因），改方程（行动），重新求解（预测）。本章只用这些。
 
 ### 本章的世界
 
@@ -121,7 +121,10 @@ $$
 **定义 36.1（世界的因果效应与模型上的干预效应）** 设世界由一个结构因果模型描述，$X=(X_1,\dots,X_m)$ 是二值事实，$Y$ 是结论。事实 $j$ 对"结论为 $k$"的**平均因果效应**是
 
 $$
-\mathrm{ACE}_j=\Pr\big(Y=k\mid\operatorname{do}(X_j=1)\big)-\Pr\big(Y=k\mid\operatorname{do}(X_j=0)\big).
+\begin{aligned}
+\mathrm{ACE}_j&=\Pr\big(Y=k\mid\operatorname{do}(X_j=1)\big)\\
+&\quad-\Pr\big(Y=k\mid\operatorname{do}(X_j=0)\big).
+\end{aligned}
 $$
 
 对模型 $f:\{0,1\}^m\to[0,1]$（例如"判 $k$"的指示函数），事实 $j$ 的**模型上的干预效应**是
@@ -216,6 +219,8 @@ $$
 
 干预式也有代价。它把 $x_T$ 和总体里抽来的 $X_{-T}$ 拼在一起，可能拼出世界里几乎不存在的组合，例如"渗汁而面单无备注"只占时限内案例的 $1/60$。模型在这些组合上的行为从没被数据约束过，第 8 章命题 8.3 的操纵正是利用了这一点。Frye 等人（2021）和 Aas 等人（2021）等工作因此主张在数据流形上（即用条件分布）计算。Kumar 等人（2020）则指出，两种做法都各有反常之处，选哪一种取决于想回答的问题。
 
+在本书的系统里，选择通常不难。规则只有几个二值事实，可以直接读，几乎不需要靠归因去"猜"规则用了什么；需要归因的场合多半是比较几条候选规则（第 13 章）或向申诉者说明某个事实的分量，这时要的是忠于规则，用干预式，并把基线写明。想问"哪些事实携带了关于结论的信息"，用观察式，但那是在描述数据，最好直接报告条件概率表，而不是借用 Shapley 值的名义。
+
 ### 小结
 
 这一节说的是：观察式值函数忠于数据，会给模型没用的相关事实记功；干预式值函数忠于模型，等于剪断模型输入导线的干预，模型不用的事实一定得 0 分（命题 36.2）；但它会在世界里不存在的组合上查询模型。两者都只描述模型，都不是世界中的因果效应。
@@ -233,7 +238,10 @@ $$
 **定义 36.3（非对称 Shapley 值）** 给定事实之间的因果先后（$i$ 是 $j$ 的祖先，就要求 $i$ 排在 $j$ 前面），记 $\Pi_\prec$ 为与之一致的全部顺序。事实 $j$ 的**非对称 Shapley 值**是
 
 $$
-\varphi^{\mathrm{asym}}_j=\frac{1}{\lvert\Pi_\prec\rvert}\sum_{\pi\in\Pi_\prec}\Big[v\big(T_\pi(j)\cup\{j\}\big)-v\big(T_\pi(j)\big)\Big],
+\begin{aligned}
+\varphi^{\mathrm{asym}}_j=\frac{1}{\lvert\Pi_\prec\rvert}\sum_{\pi\in\Pi_\prec}\Big[&v\big(T_\pi(j)\cup\{j\}\big)\\
+&-v\big(T_\pi(j)\big)\Big],
+\end{aligned}
 $$
 
 其中 $T_\pi(j)$ 是顺序 $\pi$ 中排在 $j$ 前面的事实，$v$ 用观察式值函数。
@@ -300,7 +308,7 @@ $$
 
 **在例子里**：$\mu(b,p,q)=\eta_{\mathrm S}(b,p)$，不依赖 $q$。在 $x=(0,1,1)$ 上，$\mu$ 的因果 Shapley 值与世界值函数的 Shapley 分解都是 $(-77/480,\;47/96,\;0)\approx(-0.160,\;0.490,\;0)$：备注 0 分，渗汁是主因，没腐烂往回拉。这一回归因说的就是世界。
 
-反例也在手边。若渗汁没被记录，只能用 $\mu'(b,q)=\Pr(\mathrm S\mid b,q)$，在 $(b,q)=(0,1)$ 上它的干预式 Shapley 值是 $(\varphi_b,\varphi_q)\approx(-0.201,\;0.343)$。可是 $\mathrm{ACE}_q=0$：没记录的 $p$ 同时影响 $q$ 和 $Y$，违反了命题 36.4 的第二个条件。漏掉的事实就是藏起来的共同原因。
+反例也在手边。若渗汁没被记录，只能用 $\mu'(b,q)=\Pr(\mathrm S\mid b,q)$，在 $(b,q)=(0,1)$ 上它的干预式 Shapley 值是 $(\varphi_b,\varphi_q)\approx(-0.201,\;0.343)$（$b$、$q$ 不互为因果，由命题 36.3 这也是因果 Shapley 值）。可是 $\mathrm{ACE}_q=0$：没记录的 $p$ 同时影响 $q$ 和 $Y$，违反了命题 36.4 的第二个条件。漏掉的事实就是藏起来的共同原因。
 
 ### 小结
 
@@ -349,7 +357,10 @@ $$
 **定义 36.5（因果追索）** 设世界的结构因果模型已知，个体的观察值为 $x$，$I$ 是**可行动**的变量。一个**行动**是干预 $A=\operatorname{do}(X_I=\theta)$，代价为 $\mathrm{cost}(A;x)$。记 $x^{\mathrm{SCF}}(A)$ 为按"溯因—行动—预测"算出的**结构反事实**。**因果追索**是
 
 $$
-A^\star\in\arg\min_{A}\ \mathrm{cost}(A;x)\quad\text{使得}\quad h\big(x^{\mathrm{SCF}}(A)\big)=y'.
+\begin{aligned}
+A^\star&\in\arg\min_{A}\ \mathrm{cost}(A;x)\\
+&\quad\text{使得}\quad h\big(x^{\mathrm{SCF}}(A)\big)=y'.
+\end{aligned}
 $$
 
 外生变量不能由 $x$ 唯一确定时，把约束换成"$\Pr\big(h(X^{\mathrm{SCF}}(A))=y'\mid x\big)\ge1-\gamma$"。
@@ -601,6 +612,8 @@ $$
 
 0.7 节说过，"规则 $a\wedge b\to\mathrm S$ 成立，不代表腐烂导致卖家责任"。现在可以把这句话拆开：在**判定**的因果模型里，腐烂确实是判 S 的原因，而且是精确的（命题 36.6）；在**世界**里，"腐烂是不是卖家造成的"是另一个问题，规则对它什么也没说。
 
+导读里的问题"规则判错了，是事实读错了、缺了一个事实，还是规则本身不对？"也可以分成三步回答。第一步是诊断：只看读数和结论，三类部件各自都说得通，要靠核实区分（第 31 章）。第二步是实际因果：核实之后，哪些坏了的部件合起来造成了这一次错误，各担多少（36.7 节）。第三步才是修复：改规则还是加事实，要看改动在没参与诊断的案例上的效果（第 32 章），而"改一版规则以后投诉会不会少"已经是世界层的问题，要用本卷前面的效应估计来回答。
+
 ### 小结
 
 这一节说的是：规则层的解释（路径、反事实、对规则的归因、系统按事实计算）都是精确的；读取层的解释要靠核实；世界层的因果说法要靠本卷前面的工具，任何对模型的解释都不能代替它们。
@@ -751,17 +764,17 @@ $a=1$ 是但若原因，$k=0$，责任度 1。$b=1$ 单独不是但若原因；�
 
 **论文**
 
-- David Lewis. Causation. *Journal of Philosophy*, 70, 1973. 以反事实依赖定义因果，但若检验的哲学源头。
-- Joseph Y. Halpern, Judea Pearl. Causes and Explanations: A Structural-Model Approach. Part I: Causes. *British Journal for the Philosophy of Science*, 56, 2005. 基于结构方程的实际原因定义（更新后的版本）。
+- David Lewis. Causation. *Journal of Philosophy*, 70(17), 1973. 以反事实依赖定义因果，但若检验的哲学源头。
+- Joseph Y. Halpern, Judea Pearl. Causes and Explanations: A Structural-Model Approach. Part I: Causes. *British Journal for the Philosophy of Science*, 56(4), 2005. 基于结构方程的实际原因定义（更新后的版本）。
 - Joseph Y. Halpern. A Modification of the Halpern-Pearl Definition of Causality. *IJCAI*, 2015. 修改后的定义：其他变量只能冻结在实际值。
-- Joseph Y. Halpern, Christopher Hitchcock. Graded Causation and Defaults. *British Journal for the Philosophy of Science*, 2015. 用正常与反常给原因分级，缓和道岔一类的反直觉结论。
+- Joseph Y. Halpern, Christopher Hitchcock. Graded Causation and Defaults. *British Journal for the Philosophy of Science*, 66(2), 2015. 用正常与反常给原因分级，缓和道岔一类的反直觉结论。
 - Hana Chockler, Joseph Y. Halpern. Responsibility and Blame: A Structural-Model Approach. *Journal of Artificial Intelligence Research*, 22, 2004. 责任度 $1/(k+1)$ 与作为期望责任度的过错。
 - Dominik Janzing, Lenon Minorics, Patrick Blöbaum. Feature Relevance Quantification in Explainable AI: A Causal Problem. *AISTATS*, 2020. 论证解释模型应当用干预式值函数。
 - Hugh Chen, Joseph Janizek, Scott Lundberg, Su-In Lee. True to the Model or True to the Data? arXiv, 2020. 观察式与干预式 Shapley 值分别忠于数据和模型，以及各自适合的用途。
 - Christopher Frye, Colin Rowat, Ilya Feige. Asymmetric Shapley Values: Incorporating Causal Knowledge into Model-Agnostic Explainability. *NeurIPS*, 2020. 只按与因果顺序一致的排列平均。
 - Tom Heskes, Evi Sijben, Ioan Gabriel Bucur, Tom Claassen. Causal Shapley Values: Exploiting Causal Knowledge to Explain Individual Predictions of Complex Models. *NeurIPS*, 2020. 以世界中的干预为值函数，并分解直接与间接效应。
 - Christopher Frye, Damien de Mijolla, Tom Begley, Laurence Cowton, Megan Stanley, Ilya Feige. Shapley Explainability on the Data Manifold. *ICLR*, 2021. 主张在数据流形上计算 Shapley 值。
-- Kjersti Aas, Martin Jullum, Anders Løland. Explaining Individual Predictions When Features Are Dependent: More Accurate Approximations to Shapley Values. *Artificial Intelligence*, 2021. 特征相关时条件式值函数的估计方法。
+- Kjersti Aas, Martin Jullum, Anders Løland. Explaining Individual Predictions When Features Are Dependent: More Accurate Approximations to Shapley Values. *Artificial Intelligence*, 298, 2021. 特征相关时条件式值函数的估计方法。
 - I. Elizabeth Kumar, Suresh Venkatasubramanian, Carlos Scheidegger, Sorelle Friedler. Problems with Shapley-Value-Based Explanations as Feature Importance Measures. *ICML*, 2020. 两种值函数各自的反常之处。
 - Mukund Sundararajan, Amir Najmi. The Many Shapley Values for Model Explanation. *ICML*, 2020. Shapley 值的多种变体与反常表现。
 - Berk Ustun, Alexander Spangher, Yang Liu. Actionable Recourse in Linear Classification. *FAT\**, 2019. 提出追索，并在约束下计算它。

@@ -65,10 +65,10 @@
 
 # 卷七　因果推断
 
-- [第 33 章　因果推断基础]()
-- [第 34 章　反事实]()
-- [第 35 章　实验与因果效应估计]()
-- [第 36 章　解释与因果]()
+- [第 33 章　因果推断基础](33-causal-foundations.md)
+- [第 34 章　反事实](34-counterfactuals.md)
+- [第 35 章　实验与因果效应估计](35-causal-effect-estimation.md)
+- [第 36 章　解释与因果](36-explanation-causality.md)
 
 # 卷八　实验设计与序贯决策
 
