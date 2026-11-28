@@ -375,7 +375,15 @@ $$
 **思路**：把 FDR 拆成每个真原假设的贡献。固定一个真原假设 $i$，只要 $p_i$ 足够小会被拒绝，拒绝总数就和"把 $p_i$ 换成 0"时相同，而后者与 $p_i$ 独立。
 
 1. **另一种写法**。记 $N(j)=\#\{l:p_l\le jq/m\}$。"$p_{(j)}\le jq/m$"等价于"$N(j)\ge j$"，所以 $R=\max\{j:N(j)\ge j\}$（没有时为 0），并且 $H_i$ 被拒绝当且仅当 $p_i\le Rq/m$。
-2. **拆开**。$\dfrac{V}{\max(R,1)}=\sum_{i\in I_0}\dfrac{\mathbf{1}[H_i\text{ 被拒绝}]}{\max(R,1)}=\sum_{i\in I_0}\sum_{k=1}^m\frac1k\,\mathbf{1}\big[p_i\le kq/m,\ R=k\big]$。
+2. **拆开**。按 $R$ 的取值分开写：
+
+$$
+\begin{aligned}
+\frac{V}{\max(R,1)}&=\sum_{i\in I_0}\frac{\mathbf{1}[H_i\text{ 被拒绝}]}{\max(R,1)}\\
+&=\sum_{i\in I_0}\sum_{k=1}^m\frac1k\,\mathbf{1}\big[p_i\le kq/m,\ R=k\big].
+\end{aligned}
+$$
+
 3. **换成 0**。对固定的 $i$，令 $R^{(i)}$ 为把 $p_i$ 换成 0、其余不变时 BH 拒绝的个数；它只依赖其余 p 值，所以与 $p_i$ 独立。相应的计数 $N^{(i)}(j)=N(j)+\mathbf{1}[p_i>jq/m]$。若 $p_i\le kq/m$，则对所有 $j\ge k$ 都有 $N^{(i)}(j)=N(j)$。"$R=k$"等价于"$N(k)\ge k$ 且对所有 $j>k$ 有 $N(j)<j$"，只涉及 $j\ge k$ 的计数，所以在 $p_i\le kq/m$ 时，$R=k$ 当且仅当 $R^{(i)}=k$。
 4. **用独立性**。于是
 
@@ -463,14 +471,20 @@ $$
 2. 令 $B_1=\{p_i\le c\}$，$B_j=\{(j-1)c<p_i\le jc\}$（$j\ge2$），它们互不相交，$\{p_i\le kc\}=\bigcup_{j\le k}B_j$。于是
 
 $$
-E_i=\sum_{k=1}^m\sum_{j=1}^k\frac1k\Pr(B_j,\,R=k)\le\sum_{j=1}^m\frac1j\sum_{k\ge j}\Pr(B_j,\,R=k)\le\sum_{j=1}^m\frac1j\Pr(B_j).
+\begin{aligned}
+E_i&=\sum_{k=1}^m\sum_{j=1}^k\frac1k\Pr(B_j,\,R=k)\\
+&\le\sum_{j=1}^m\frac1j\sum_{k\ge j}\Pr(B_j,\,R=k)\le\sum_{j=1}^m\frac1j\Pr(B_j).
+\end{aligned}
 $$
 
 第一个不等号交换求和顺序并用 $1/k\le1/j$；第二个用事件 $\{R=k\}$ 互不相交。
 3. 记 $F(u)=\Pr(p_i\le u)\le u$，$F_j=F(jc)$，$F_0=0$。分部求和：
 
 $$
-\sum_{j=1}^m\frac1j(F_j-F_{j-1})=\sum_{j=1}^{m-1}\Big(\frac1j-\frac1{j+1}\Big)F_j+\frac{F_m}m\le c\sum_{j=1}^{m-1}\frac1{j+1}+c=cH_m .
+\begin{aligned}
+\sum_{j=1}^m\frac1j(F_j-F_{j-1})&=\sum_{j=1}^{m-1}\Big(\frac1j-\frac1{j+1}\Big)F_j+\frac{F_m}m\\
+&\le c\sum_{j=1}^{m-1}\frac1{j+1}+c=cH_m .
+\end{aligned}
 $$
 
 不等号用 $F_j\le jc$ 和系数非负。
@@ -512,8 +526,18 @@ $$
 
 **思路**：如果第 $t$ 个被拒绝，到时刻 $T$ 的拒绝总数至少是 $D(t-1)+1$；把分母换成这个更小的量，每一项的期望恰好被 $\alpha\gamma_t$ 控制住。
 
-1. $\dfrac{V(T)}{\max(D(T),1)}=\sum_{t\le T,\ t\in I_0}\dfrac{\mathbf{1}[p_t\le\alpha_t]}{\max(D(T),1)}$。若 $H_t$ 被拒绝，则 $D(T)\ge D(t)=D(t-1)+1$。所以上式不超过 $\sum_{t\le T,\,t\in I_0}\dfrac{\mathbf{1}[p_t\le\alpha_t]}{D(t-1)+1}$。
-2. $\alpha_t$ 与 $D(t-1)$ 由过去决定。对过去取条件期望：$\mathbb{E}\Big[\dfrac{\mathbf{1}[p_t\le\alpha_t]}{D(t-1)+1}\,\Big\vert\,\mathcal F_{t-1}\Big]\le\dfrac{\alpha_t}{D(t-1)+1}=\alpha\gamma_t$。
+1. 若 $H_t$ 被拒绝，则 $D(T)\ge D(t)=D(t-1)+1$。所以
+
+$$
+\frac{V(T)}{\max(D(T),1)}=\sum_{t\le T,\ t\in I_0}\frac{\mathbf{1}[p_t\le\alpha_t]}{\max(D(T),1)}\le\sum_{t\le T,\ t\in I_0}\frac{\mathbf{1}[p_t\le\alpha_t]}{D(t-1)+1}.
+$$
+
+2. $\alpha_t$ 与 $D(t-1)$ 由过去决定，再用"给定过去仍有效"：
+
+$$
+\mathbb{E}\Big[\frac{\mathbf{1}[p_t\le\alpha_t]}{D(t-1)+1}\,\Big\vert\,\mathcal F_{t-1}\Big]\le\frac{\alpha_t}{D(t-1)+1}=\alpha\gamma_t .
+$$
+
 3. 再取期望并对 $t$ 求和：$\mathrm{FDR}(T)\le\alpha\sum_{t\le T}\gamma_t\le\alpha$。 $\square$
 
 **数字**：12 周的实验，p 值依次为 0.0004、0.30、0.004、0.0008、0.45、0.02、0.06、0.003、0.70、0.03、0.002、0.15。$\alpha=0.05$，$\gamma_t=6/(\pi^2t^2)$（总和为 1）。
@@ -571,7 +595,12 @@ $$
 **思路**：$k^*$ 由 $Z$ 决定，给定 $Z$ 后是固定的数；没希望的候选永远不会被拒绝，只对有希望的做联合界。
 
 1. 给定 $Z$。若 $\psi_i>\alpha/k^*$，则 $p_i\ge\psi_i>\alpha/k^*$，$H_i$ 不会被拒绝。
-2. 所以 $\Pr(V\ge1\mid Z)\le\sum_{i\in I_0,\ \psi_i\le\alpha/k^*}\Pr(p_i\le\alpha/k^*\mid Z)\le m(k^*)\cdot\alpha/k^*\le\alpha$。
+2. 对有希望的真原假设用联合界：
+
+$$
+\Pr(V\ge1\mid Z)\le\sum_{i\in I_0,\ \psi_i\le\alpha/k^*}\Pr\big(p_i\le\alpha/k^*\,\big\vert\,Z\big)\le m(k^*)\cdot\frac{\alpha}{k^*}\le\alpha .
+$$
+
 3. 对 $Z$ 取平均即得。 $\square$
 
 Terada 等人（2013）的 LAMP 把这个想法和频繁项集挖掘结合起来：覆盖数越小越不可能显著，正好与"支持度不低于阈值"的挖掘配合，可以在指数多的组合里精确地算出 $k^*$。Webb（2007）则比较了在规则发现里控制假发现的几种做法，包括把数据分成探索与检验两份。

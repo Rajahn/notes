@@ -233,7 +233,11 @@ $$
 两者都无偏，并且
 
 $$
-\operatorname{Var}(\hat\tau)-\operatorname{Var}(\hat\tau_{\mathrm B})=\frac{B_1}{n_1}+\frac{B_0}{n_0}\ \ge0,\qquad B_w=\sum_gw_g(\mu_{wg}-\mu_w)^2,
+\begin{aligned}
+&\operatorname{Var}(\hat\tau)-\operatorname{Var}(\hat\tau_{\mathrm B})\\
+&\qquad=\frac{B_1}{n_1}+\frac{B_0}{n_0}\ \ge0,\\
+&B_w=\sum_gw_g(\mu_{wg}-\mu_w)^2,
+\end{aligned}
 $$
 
 等号当且仅当各区组的均值 $\mu_{wg}$ 都相同。
@@ -405,7 +409,10 @@ $$
 设对象 $i$ 在阶段 $t$ 的结果为
 
 $$
-Y_{it}=\mu_i+\pi\,\mathbf{1}[t=2]+\tau\,\mathbf{1}[\text{阶段 }t\text{ 用 B}]+\lambda_{\text{前}}\,\mathbf{1}[t=2]+\varepsilon_{it},
+\begin{aligned}
+Y_{it}=\mu_i&+\pi\,\mathbf{1}[t=2]+\tau\,\mathbf{1}[\text{阶段 }t\text{ 用 B}]\\
+&+\lambda_{\text{前}}\,\mathbf{1}[t=2]+\varepsilon_{it},
+\end{aligned}
 $$
 
 $\mu_i$ 是对象本身的水平，$\pi$ 是**时期效应**（第二阶段普遍更好或更差），$\tau$ 是 B 相对 A 的效果，$\lambda_{\text{前}}$ 是前一阶段处理的残留（AB 顺序为 $\lambda_A$，BA 为 $\lambda_B$），$\varepsilon_{it}$ 独立、方差 $\sigma_\varepsilon^2$。
@@ -466,16 +473,21 @@ $c_i$、$r_j$、$e_{ij}$ 相互独立，均值为 0，方差分别为 $\sigma_c^
 
 $$
 \begin{aligned}
-\mathrm{MS}_c&=\frac{n_r}{n_c-1}\sum_i(\bar X_{i\cdot}-\bar X)^2,\qquad
-\mathrm{MS}_r=\frac{n_c}{n_r-1}\sum_j(\bar X_{\cdot j}-\bar X)^2,\\
-\mathrm{MS}_e&=\frac{1}{(n_c-1)(n_r-1)}\sum_{i,j}(X_{ij}-\bar X_{i\cdot}-\bar X_{\cdot j}+\bar X)^2 .
+\mathrm{MS}_c&=\frac{n_r}{n_c-1}\sum_i(\bar X_{i\cdot}-\bar X)^2,\\
+\mathrm{MS}_r&=\frac{n_c}{n_r-1}\sum_j(\bar X_{\cdot j}-\bar X)^2,\\
+\mathrm{MS}_e&=\frac{1}{(n_c-1)(n_r-1)}\sum_{i,j}\hat e_{ij}^2,\\
+\hat e_{ij}&=X_{ij}-\bar X_{i\cdot}-\bar X_{\cdot j}+\bar X .
 \end{aligned}
 $$
 
 则 $\mathbb{E}[\mathrm{MS}_c]=\sigma_e^2+n_r\sigma_c^2$，$\mathbb{E}[\mathrm{MS}_r]=\sigma_e^2+n_c\sigma_r^2$，$\mathbb{E}[\mathrm{MS}_e]=\sigma_e^2$。因此
 
 $$
-\hat\sigma_e^2=\mathrm{MS}_e,\qquad\hat\sigma_c^2=\frac{\mathrm{MS}_c-\mathrm{MS}_e}{n_r},\qquad\hat\sigma_r^2=\frac{\mathrm{MS}_r-\mathrm{MS}_e}{n_c}
+\begin{aligned}
+\hat\sigma_e^2&=\mathrm{MS}_e,\\
+\hat\sigma_c^2&=\frac{\mathrm{MS}_c-\mathrm{MS}_e}{n_r},\\
+\hat\sigma_r^2&=\frac{\mathrm{MS}_r-\mathrm{MS}_e}{n_c}
+\end{aligned}
 $$
 
 都是无偏估计。
@@ -487,7 +499,7 @@ $$
 **思路**：把各平均代入模型，用"样本方差无偏"处理每一块；残差平方和用总平方和的分解得到。
 
 1. $\bar X_{i\cdot}-\bar X=(c_i-\bar c)+(\bar e_{i\cdot}-\bar e)$，$r$ 全部抵消。$c_i$ 独立同分布，$\mathbb{E}\sum_i(c_i-\bar c)^2=(n_c-1)\sigma_c^2$；$\bar e_{i\cdot}$ 独立同分布、方差 $\sigma_e^2/n_r$，$\mathbb{E}\sum_i(\bar e_{i\cdot}-\bar e)^2=(n_c-1)\sigma_e^2/n_r$；两块独立、均值为 0，交叉项期望为 0。所以 $\mathbb{E}[\mathrm{MS}_c]=n_r(\sigma_c^2+\sigma_e^2/n_r)$。$\mathrm{MS}_r$ 对称。
-2. 残差 $X_{ij}-\bar X_{i\cdot}-\bar X_{\cdot j}+\bar X=e_{ij}-\bar e_{i\cdot}-\bar e_{\cdot j}+\bar e$，$c$、$r$ 都抵消。
+2. 残差 $\hat e_{ij}=e_{ij}-\bar e_{i\cdot}-\bar e_{\cdot j}+\bar e$，$c$、$r$ 都抵消。
 3. 恒等式 $\sum_{ij}(e_{ij}-\bar e)^2=n_r\sum_i(\bar e_{i\cdot}-\bar e)^2+n_c\sum_j(\bar e_{\cdot j}-\bar e)^2+\sum_{ij}(\text{残差})^2$ 成立：三块的交叉项都含"残差对某一行或某一列求和"，而残差的每行和、每列和都是 0。
 4. 取期望：左边 $(n_cn_r-1)\sigma_e^2$，右边前两项 $(n_c-1)\sigma_e^2$ 与 $(n_r-1)\sigma_e^2$，所以残差平方和的期望是 $(n_c-1)(n_r-1)\sigma_e^2$，即 $\mathbb{E}[\mathrm{MS}_e]=\sigma_e^2$。
 5. 三个估计的无偏性由期望的线性得到。$\square$
