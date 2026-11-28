@@ -709,3 +709,145 @@ $$
 - 评测要防污染、对齐预算、封存测试、报告读取信度和多重性；开放问题包括读取噪声、概念漂移、措辞泄漏、成本和自适应提议的理论（28.11–28.12 节）。
 
 ---
+
+## 练习
+
+难度标记：★ 检验理解，★★ 需要推导或计算，★★★ 开放思考。
+
+### 检验理解
+
+**练习 28.1** ★ 下面五种做法里，语言模型分别扮演 28.1.2 节的哪种角色？使用时是否还要调用模型？（1）在一池由模型生成的提示里，用决策树算法挑选节点提示，推理时沿路径调用模型。（2）让模型看 50 个带结论的案例，写一个只读订单字段的 Python 函数作为定责规则。（3）对每个案例问模型"草莓是否有腐烂迹象"，把回答作为规则的输入。（4）给出规则和它判错的 6 个案例，让模型提出一条例外。（5）看碰撞组 $\{1,2,3\}$ 的原文，让模型提出一个新的是/否问题。
+
+**练习 28.2** ★ 在 28.7 节的模拟里：（1）为什么最小支持度门槛几乎没有改善测试准确率？（2）为什么设计丙的训练碰撞下界停在 0.15 左右是一件好事，而不是"循环没做完"？
+
+**练习 28.3** ★ 判断对错并说明理由：（1）提议者看过训练标签，所以命题 28.3 不适用。（2）读取器的提示里放了 5 个训练集中的案例作为样例，命题 28.3 仍然适用。（3）"卖家是否存在明显过失"这个问题码长很短，命题 28.3 给它的余量很小，所以它是一个好问题。
+
+### 推导
+
+**练习 28.4** ★★ 读取器以 $\varepsilon=0.05$ 独立地读错。（1）一个碰撞组有 40 个 S、20 个 B，一个在组内真实值全都相同的问题，期望虚假拆开多少对？（2）如果每个案例独立读三次取多数（假设三次读取的错误相互独立），每个案例读错的概率是多少？期望虚假拆开多少对？（3）第 18 章说多次读取的错误往往是共享的。这会怎样改变（2）的结论？
+
+**练习 28.5** ★★ 在命题 28.1 中取 $k^\star=4$。（1）$\alpha=0.5$ 时，按 $1-e^{-\alpha k/k^\star}\ge0.9$ 需要采纳多少次？按精确的 $1-(1-\alpha/k^\star)^k\ge0.9$ 呢？（2）$\alpha=0.25$ 时呢？（3）说明为什么这些次数只关于训练覆盖，不说明测试成绩。
+
+**练习 28.6** ★★ 选择集 $n=1000$，$\delta=0.05$，循环 10 轮，每轮评估 9 个候选。（1）只返回"采纳了第几个，或都没采纳"时，按命题 28.4 的余量是多少？候选事先固定、不看反馈时呢？（2）如果每轮把 9 个候选的准确率都精确到千分位告诉提议者，按定理 5.1 余量是多少？
+
+**练习 28.7** ★★ 用 28.9.2 节的 6 个案例。（1）算 $\mathrm{ML}(\{r\})$、$\mathrm{ML}(\{s\})$ 和 $\mathrm{ML}(\{p,r,s\})$。（2）按命题 28.6，从 $\{r,s\}$ 提议把 $s$ 换成 $p$，接受概率是多少？从 $\{b,p\}$ 提议把 $b$ 换成 $r$ 呢？（3）验证 28.9.2 节四个概念的后验出现概率之和为 2，并解释为什么是 2。
+
+**练习 28.8** ★★ 沿用 28.8.2 节的设定（规则码长 26 比特，$\delta=0.05$）。（1）5 个定制问题（各 120 比特）时，要让余量不超过 0.1，至少需要多少个训练案例？（2）$n=5000$、要求余量不超过 0.15 时，库里最多能放多少个 30 比特的自然问题？（为简单起见，假设规则码长不随问题个数变化。）
+
+### 思考
+
+**练习 28.9** ★★★ 用 12.13 节的例子设计一个"模型修补、约束把关、修补失败时发现新概念"的流程：说明每一步给语言模型看什么、在哪份数据上检查零伤害约束和支持度、命题 12.12 判定不可行时怎样生成概念发现循环的输入，以及怎样记录提议者看到的信息，使最后的测试成绩可信。
+
+**练习 28.10** ★★★ 一个谓词库是用模型的旧版本发现和读取的。现在模型升级了。设计一个实验，判断这个库在新版本上是否还能用：在什么数据上比较、比较哪些量（逐个概念的一致率与 $\kappa$、拆开对数、碰撞下界、规则判定的变化），按什么标准决定"照用""重读部分概念"或"重新发现"。
+
+---
+
+## 练习提示与答案
+
+<details>
+<summary>练习 28.1</summary>
+
+（1）充当节点（角色 4），候选池由模型提出（兼有角色 1）；使用时要调用模型。（2）直接写规则（角色 3）；函数只读订单字段，使用时不调用模型。（3）读取概念（角色 2）；使用时要调用模型。（4）批评与修补（角色 5）；只在训练时出场，但每条例外仍要按零伤害约束和支持度检查。（5）提出概念（角色 1）；新问题要由某个读取器回答，如果读取器是模型，使用时就要调用它。
+
+</details>
+
+<details>
+<summary>练习 28.2</summary>
+
+（1）门槛只要求候选两侧各有至少 8 个案例。无用的问题比例在 0.2 到 0.6 之间，支持度很大，照样通过；覆盖 8 个以上案例的定制问题也能通过。门槛只挡住了只对一两个案例成立的定制问题（从 1.85 个降到 0.50 个），而测试准确率的下降主要来自无用的问题（6–8 个）。（2）这个问题有 10% 的标签噪声和 3% 的读取噪声，即使用全部真实事实，最优准确率也只有约 0.862，不可约误差约 0.138。训练碰撞停在 0.15 左右，说明剩下的大多是不可约的碰撞；硬要拆开它们，只能靠无用或定制的问题，那正是设计甲的做法。
+
+</details>
+
+<details>
+<summary>练习 28.3</summary>
+
+（1）错。命题 28.3 对所有问题序列同时成立，提议者看了什么都没关系；它要求的是码长所用的 $P_0$ 和读取器不看数据。（2）错。读取器的样例来自训练集，事实 $\phi_q$ 就依赖于 $S$，证明第 3 步"每个三元组对应的规则在看到 $S$ 之前就确定"不成立。样例应当来自与训练集无关的设计集。（3）错。界只管泛化，不管可解释性。这个问题夹带了结论（命题 8.5），规则"若有明显过失 → S"的透明是假的；码长短恰恰说明命题 28.3 挡不住这类泄漏（28.12.3 节）。
+
+</details>
+
+<details>
+<summary>练习 28.4</summary>
+
+（1）$2\varepsilon(1-\varepsilon)=0.095$，异标签对 $40\times20=800$ 个，期望虚假拆开 $76$ 对。（2）三次取多数读错，需要至少两次读错：$3\varepsilon^2(1-\varepsilon)+\varepsilon^3=3\varepsilon^2-2\varepsilon^3=0.00725$。代回命题 28.2，$2\times0.00725\times0.99275\approx0.0144$，期望约 11.5 对。（3）错误共享时，三次读取会一起错，多数投票几乎不降低错误率（命题 18.4），虚假拆开接近（1）的 76 对。要降低共享误差，得换问法、换模型，或在难案例上用人工复核。
+
+</details>
+
+<details>
+<summary>练习 28.5</summary>
+
+（1）$e^{-\alpha k/4}\le0.1$ 即 $k\ge4\ln10/0.5\approx18.4$，需要 19 次；精确形式 $(7/8)^k\le0.1$ 即 $k\ge\ln10/(-\ln0.875)\approx17.2$，需要 18 次。（2）$\alpha=0.25$：$k\ge36.8$，需要 37 次；精确形式 $(15/16)^k\le0.1$ 给出 $k\ge35.7$，需要 36 次。（3）$f$ 是训练集上的拆开对数，定制谓词和真实规律在它眼里一样；28.7 节的设计甲训练覆盖增长最快，测试成绩却最差。
+
+</details>
+
+<details>
+<summary>练习 28.6</summary>
+
+（1）$T=10$，$m=9$，$k=91$，$b\ln2=10\ln10\approx23.0$，$\ln(2k/\delta)=\ln3640\approx8.20$，余量 $\sqrt{31.2/2000}\approx0.125$；非自适应时 $\sqrt{8.20/2000}\approx0.064$。（2）每个准确率有 1001 种取值，$b=90\log_21001\approx897$ 比特，余量 $\sqrt{(897\times0.693+8.20)/2000}\approx0.561$，几乎没有用。
+
+</details>
+
+<details>
+<summary>练习 28.7</summary>
+
+（1）$\{r\}$：$r=1$ 的组是案例 1、3（S、B），贡献 $\frac{1!\,1!}{3!}=\frac16$；$r=0$ 的组是案例 2、4、5、6（S、B、B、S），贡献 $\frac{2!\,2!}{5!}=\frac1{30}$；$\mathrm{ML}=\frac1{180}$。$\{s\}$ 同理也是 $\frac1{180}$。$\{p,r,s\}$：案例 1、2、3 各自成组，各 $\frac12$；案例 4、5 一组（B、B）$\frac13$；案例 6 单独 $\frac12$；$\mathrm{ML}=\frac1{48}$。（2）$\{r,s\}\to\{r,p\}$：$\frac{1/144}{1/96}=\frac23$。$\{b,p\}\to\{r,p\}$：$\frac{1/144}{1/72}=\frac12$。（3）$0.814+0.678+0.254+0.254=2.000$。每个集合恰好含两个概念，所以每个集合的后验概率在"出现概率"的和里被数了两次，总和是 $2\times1$。
+
+</details>
+
+<details>
+<summary>练习 28.8</summary>
+
+（1）根号内的分子约 440.4，要求 $440.4/(2n)\le0.01$，即 $n\ge22\,019$。（2）要求 $\big(31k\ln2+26\ln2+\ln20\big)/10\,000\le0.0225$，即 $21.49k\le225-18.0-3.0=204.0$，$k\le9.49$。最多 9 个问题，此时余量约 0.146；10 个时约 0.154。
+
+</details>
+
+<details>
+<summary>练习 28.9</summary>
+
+参考思路：（1）数据分成设计集、选择集、封存测试集；受保护案例和必须修正的案例都来自设计集，各自在选择集上也有对应的受保护集合。（2）给模型看父政策、设计集上判错的案例和受保护案例，请它提出例外；每条例外在设计集上检查零伤害约束（定义 12.8）和最小支持度，在选择集上只返回"采纳或不采纳"，计入比特预算（命题 28.4）。（3）命题 12.12 判定某组不可行时，把这组的原文和结论作为概念发现循环的输入，请模型提出能区分其中案例的可观察问题，按 18.2 节的格式写，并记下码长（命题 28.3）和"看过标签"的来源；同时把这组送人工复核标签。（4）新事实入库后，重新检查可行性和零伤害约束，再回到修补。（5）全程记录每轮给模型看了什么、返回了什么；测试集只在最后用一次，分别报告受保护案例上的变化和整体成绩。
+
+</details>
+
+<details>
+<summary>练习 28.10</summary>
+
+参考思路：（1）在固定的锚定集上，让新旧两个读取器读全部概念，逐个算一致率、$\kappa$，并在有金标的部分算各自对金标的敏感度和特异度，用只看不一致案例的配对比较（18.9.3 节）。（2）在训练集上用新读数重算每个概念的拆开对数和整个库的碰撞下界，看是否有概念失去了它唯一拆开的那些对（14.6.2 节）。（3）用旧规则在新读数上判定，数改判的案例，按命题 18.5 算代价的变化。（4）决策：所有概念的 $\kappa$ 和对金标的准确率都没有显著下降、规则改判很少时照用；少数概念变化显著时只重读这些概念、重学规则；碰撞下界明显上升或有概念失去意义时，在新读取器上重新运行概念发现循环。无论哪种，都要产生新的读取器身份，旧回执不能改标（命题 18.1）。
+
+</details>
+
+---
+
+## 延伸
+
+- 碰撞下界与误差的四个来源：第 1 章；Occam 界与看着数据扩张的假设空间：第 2 章；交互记录与数据分割：第 5 章。
+- Metropolis–Hastings 与 Beta–二项模型：第 7 章；可解释性与夹带结论的事实：第 8 章。
+- 最优树与最优性证书：第 11 章；规则学习、零伤害约束与支持度门槛：第 12 章；Rashomon 集：第 13 章。
+- 拆开对数、次模覆盖与 CAAFE、OCTree：第 14 章；标注者模型：第 16 章；语言模型作为测量仪器：第 18 章；从语言模型蒸馏的两条路线：第 22 章。
+- 符号接地与神经符号方法的谱系：第 23 章；归纳逻辑编程：第 24 章；概念瓶颈模型：第 27 章。
+- 程序综合：第 29 章；抽象与精化（反例引导的抽象精化与碰撞驱动循环的对应）：第 30 章。
+- 多臂老虎机与最优臂识别：第 39、40 章；信息价值：第 41 章。
+- 提示优化、程序级优化与自改进系统的评估陷阱：第 43、44、45 章；开放问题汇总：第 47 章。
+
+## 文献
+
+**教材**
+
+- Shai Shalev-Shwartz, Shai Ben-David. *Understanding Machine Learning: From Theory to Algorithms*. Cambridge University Press, 2014. 第 7 章的 Occam 界与最小描述长度，是命题 28.3 的出发点。
+- Christian Robert, George Casella. *Monte Carlo Statistical Methods*. Springer, 第 2 版, 2004. Metropolis–Hastings 与独立提议采样器的系统讲解。
+
+**论文**
+
+- Chandan Singh, Armin Askari, Rich Caruana, Jianfeng Gao. Augmenting Interpretable Models with Large Language Models during Training. *Nature Communications*, 14, 7913, 2023. Aug-Linear 与 Aug-Tree：训练时用语言模型，推理时不用。
+- John X. Morris, Chandan Singh, Alexander M. Rush, Jianfeng Gao, Yuntian Deng. Tree Prompting: Efficient Task Adaptation without Fine-Tuning. *EMNLP*, 2023. 以提示为节点的决策树。
+- Ruochen Wang, Si Si, Felix Yu, Dorothea Wiesmann, Cho-Jui Hsieh, Inderjit Dhillon. Large Language Models are Interpretable Learners. *ICLR*, 2025. LLM-符号程序与 IL-Bench。
+- Jean Feng, Avni Kothari, Luke Zier, Chandan Singh, Yan Shuo Tan. Bayesian Concept Bottleneck Models with LLM Priors. *NeurIPS*, 2025（arXiv:2410.15555）. BC-LLM：语言模型作为概念提取器与先验的贝叶斯概念搜索。
+- Noah Hollmann, Samuel Müller, Frank Hutter. Large Language Models for Automated Data Science: Introducing CAAFE for Context-Aware Automated Feature Engineering. *NeurIPS*, 2023. 让语言模型写特征构造代码。
+- Jaehyun Nam 等. Optimized Feature Generation for Tabular Data via LLMs with Decision Tree Reasoning. *NeurIPS*, 2024. OCTree。
+- Evolving LLM-Generated Features for Interpretable Classification. arXiv:2610.03951, 2026. 进化的自然语言特征加逻辑回归；很新的预印本，作者与细节请以原文为准。
+- Mia Chiquier, Utkarsh Mall, Carl Vondrick. Evolving Interpretable Visual Classifiers with Large Language Models. arXiv:2404.09941, 2024. 以语言模型为变异算子演化文字属性。
+- Lifang Zheng, Hanmo Liu, Kani Chen. Adaptive Concept Discovery for Interpretable Few-Shot Text Classification. *ICLR*, 2026. StructCBM：少样本下不训练分类头的概念瓶颈。
+- Aditya Kumar, Cassandra A. Cohen, William W. Cohen. Coding LLMs Can Be Harnessed to Learn Interpretable Models from Data. arXiv:2610.14006, 2026. CLIPPER：在 SLIPPER 的提升框架中由写代码的语言模型每轮提出一条规则。
+- William W. Cohen, Yoram Singer. A Simple, Fast, and Effective Rule Learner. *AAAI*, 1999. SLIPPER：用置信度加权的提升学习规则集。
+- Yangqiaoyu Zhou, Haokun Liu, Tejes Srivastava, Hongyuan Mei, Chenhao Tan. Hypothesis Generation with Large Language Models. *Proceedings of the 1st Workshop on NLP for Science*, 2024（arXiv:2404.04326）. HypoGeniC：假设库、受上置信界启发的奖励与错误样例库。
+- Ruiqi Zhong, Peter Zhang, Steve Li, Jinwoo Ahn, Dan Klein, Jacob Steinhardt. Goal Driven Discovery of Distributional Differences via Language Descriptions. *NeurIPS*, 2023. D5：提议谓词、由验证模型测量。
+- Ruiqi Zhong, Charlie Snell, Dan Klein, Jacob Steinhardt. Describing Differences between Text Distributions with Natural Language. *ICML*, 2022. 用自然语言描述两个文本分布的差别。
+- W. K. Hastings. Monte Carlo Sampling Methods Using Markov Chains and Their Applications. *Biometrika*, 57(1), 1970. 不对称提议下的接受概率，命题 28.6 的基础。
