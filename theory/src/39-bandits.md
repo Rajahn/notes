@@ -380,7 +380,7 @@ $$
 
 1. $P(A)+Q(A^c)\ge\sum_x\min(p(x),q(x))$：左边在 $A$ 上取 $p$、在 $A^c$ 上取 $q$，每一项都不小于两者中的较小者。
 2. 由柯西–施瓦茨，$\big(\sum_x\sqrt{p(x)q(x)}\big)^2=\big(\sum_x\sqrt{\min\cdot\max}\big)^2\le\sum_x\min(p,q)\cdot\sum_x\max(p,q)$，而 $\sum_x\max(p,q)\le\sum_x(p+q)=2$。所以 $\sum_x\min(p,q)\ge\frac12\big(\sum_x\sqrt{pq}\big)^2$。
-3. 由琴生不等式（$\ln$ 是凹函数），$\ln\sum_{x:p>0}p\sqrt{q/p}\ge\sum_{x:p>0}p\ln\sqrt{q/p}=-\frac12\mathrm{KL}(P\Vert Q)$，所以 $\big(\sum_x\sqrt{pq}\big)^2\ge e^{-\mathrm{KL}(P\Vert Q)}$。
+3. 若有 $p>0=q$ 的点，KL 为无穷，不等式显然成立；否则由琴生不等式（$\ln$ 是凹函数），$\ln\sum_{x:p>0}p\sqrt{q/p}\ge\sum_{x:p>0}p\ln\sqrt{q/p}=-\frac12\mathrm{KL}(P\Vert Q)$，所以 $\big(\sum_x\sqrt{pq}\big)^2\ge e^{-\mathrm{KL}(P\Vert Q)}$。
 4. 把 1 到 3 连起来。$\square$
 
 ### 39.5.3 Lai–Robbins 下界
@@ -552,7 +552,7 @@ $$
 
 **思路**：在估计的损失上，指数权重方法的后悔不超过 $\frac{\ln K}\eta+\frac\eta2\sum_t\sum_iP_t(i)\hat y_{t,i}^2$；由命题 39.10，$\mathbb{E}\big[\sum_iP_t(i)\hat y_{t,i}^2\big]=\sum_iy_{t,i}^2\le K$；两项之和 $\frac{\ln K}\eta+\frac{\eta TK}2$ 在上述 $\eta$ 处取最小值 $\sqrt{2TK\ln K}$。完整证明见 Lattimore 与 Szepesvári（2020）第 11 章。
 
-**代入** $T=10^4$、$K=3$：$\sqrt{2\times10^4\times3\times\ln3}\approx257$。这个界对**任何**损失表都成立，代价是：在奖励确实不变的问题上，它不如随机老虎机的方法。模拟中 EXP3 在 39.1 节的问题上后悔 139.1，与 UCB1 相近，是 Thompson 采样的八倍多。
+**代入** $T=10^4$、$K=3$：$\sqrt{2\times10^4\times3\times\ln3}\approx257$。这个界对**任何**损失表都成立，代价是：在奖励确实不变的问题上，它不如随机老虎机的方法。模拟中 EXP3 在 39.1 节的问题上后悔 139.1，与 UCB1 相近，远高于 Thompson 采样的 16.8。
 
 ### 39.7.4 一次模型更新
 
