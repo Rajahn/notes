@@ -91,7 +91,7 @@
 - 但这个平均掩盖了两极分化：约 25.8% 的模拟里，A 被用了不到一半的次数，系统长期锁死在 B 或 C 上；
 - 把案例数加到 10 万，平均损失涨到约 3573 次，几乎按案例数等比例增长。
 
-贪心失败的原因很具体：A 第一次读错的概率是 10%。读错一次，A 的读对率记为 0；只要 B 或 C 开头读对了，它们的记录就比 A 好，A 再也不会被选中，也就再没有机会洗刷"0"的记录。**没有被选中的候选，它的估计永远不会被修正。**
+贪心失败的原因很具体：A 第一次读错的概率是 10%。读错一次，A 的读对率记为 0；只要 B 或 C 开头读对了，它们的记录就比 A 好，A 就很可能再也不会被选中，也就再没有机会洗刷"0"的记录。**没有被选中的候选，它的估计永远不会被修正。**
 
 ### 39.1.3 两难
 
@@ -119,7 +119,7 @@
 
 ### 39.2.2 后悔
 
-**定义 39.2（后悔）** 策略在前 $T$ 轮的**后悔**是
+**定义 39.2（后悔）** 策略在前 $T$ 轮的**后悔**（regret，也有译作"遗憾"的）是
 
 $$
 \mathrm{Reg}_T=T\mu^*-\mathbb{E}\Big[\sum_{t=1}^T\mu_{I_t}\Big].
@@ -158,20 +158,21 @@ $$
 **命题 39.2（先探索后利用的后悔）** 设 $mK\le T$，探索结束时平均奖励相同则任选其一。则对每个差臂 $i$，
 
 $$
-\mathbb{E}\big[N_i(T)\big]\le m+(T-mK)\,e^{-m\Delta_i^2},
-\qquad
-\mathrm{Reg}_T\le\sum_{i:\Delta_i>0}\Delta_i\Big(m+(T-mK)\,e^{-m\Delta_i^2}\Big).
+\begin{aligned}
+\mathbb{E}\big[N_i(T)\big]&\le m+(T-mK)\,e^{-m\Delta_i^2},\\
+\mathrm{Reg}_T&\le\sum_{i:\Delta_i>0}\Delta_i\Big(m+(T-mK)\,e^{-m\Delta_i^2}\Big).
+\end{aligned}
 $$
 
 **怎么读**：第一项 $m$ 是探索期必然付出的次数；第二项是"探索完选错了，把剩下的 $T-mK$ 轮全押在臂 $i$ 上"的次数乘以选错的概率。$m$ 越大，选错的概率 $e^{-m\Delta_i^2}$ 越小，但探索本身越贵。**代入** $m=300$：B 的选错概率上界 $e^{-300\times0.01}=e^{-3}\approx0.050$，C 的上界 $e^{-12}$ 可以忽略，后悔上界 $0.1\times(300+9100\times0.050)+0.2\times300\approx135$。
 
 #### 证明（第一遍可以跳过）
 
-**思路**：探索期之后臂 $i$ 被一直使用，当且仅当它的样本平均不低于最好臂的样本平均；后者的概率用霍夫丁不等式控制。
+**思路**：探索期之后臂 $i$ 被一直使用，只有在它的样本平均不低于最好臂的样本平均时才会发生；后者的概率用霍夫丁不等式控制。
 
 1. 记臂 1 为最好的臂。探索期内臂 $i$ 恰被用 $m$ 次。探索期后，只有探索结束时 $\hat\mu_{i,m}\ge\hat\mu_{1,m}$，臂 $i$ 才可能被选中，选中后剩下的 $T-mK$ 轮都用它。所以 $\mathbb{E}[N_i(T)]\le m+(T-mK)\Pr(\hat\mu_{i,m}\ge\hat\mu_{1,m})$。
 2. $\hat\mu_{i,m}-\hat\mu_{1,m}=\sum_{j=1}^m\frac{X_{i,j}}m+\sum_{j=1}^m\frac{-X_{1,j}}m$，是 $2m$ 个独立变量之和，每个的取值区间长度为 $1/m$，期望之和为 $\mu_i-\mu_1=-\Delta_i$。
-3. 由霍夫丁不等式，取 $t=\Delta_i$：$\Pr(\hat\mu_{i,m}-\hat\mu_{1,m}\ge0)=\Pr\big(\text{和}-(-\Delta_i)\ge\Delta_i\big)\le\exp\!\big(-2\Delta_i^2/(2m\cdot m^{-2})\big)=e^{-m\Delta_i^2}$。
+3. 由霍夫丁不等式，取偏离量为 $\Delta_i$：$\Pr(\hat\mu_{i,m}-\hat\mu_{1,m}\ge0)=\Pr\big(\text{和}-(-\Delta_i)\ge\Delta_i\big)\le\exp\!\big(-2\Delta_i^2/(2m\cdot m^{-2})\big)=e^{-m\Delta_i^2}$。
 4. 代回第 1 步得第一个式子；由命题 39.1 得第二个。$\square$
 
 ### 39.3.2 选多大的 $m$
@@ -252,9 +253,10 @@ $$
 **定理 39.4（UCB1 的后悔，Auer、Cesa-Bianchi、Fischer 2002）** 奖励取值于 $[0,1]$，$T\ge2$。对每个差臂 $i$，
 
 $$
-\mathbb{E}\big[N_i(T)\big]\le\frac{8\ln T}{\Delta_i^2}+1+\frac{\pi^2}3,
-\qquad
-\mathrm{Reg}_T\le\sum_{i:\Delta_i>0}\frac{8\ln T}{\Delta_i}+\Big(1+\frac{\pi^2}3\Big)\sum_i\Delta_i .
+\begin{aligned}
+\mathbb{E}\big[N_i(T)\big]&\le\frac{8\ln T}{\Delta_i^2}+1+\frac{\pi^2}3,\\
+\mathrm{Reg}_T&\le\sum_{i:\Delta_i>0}\frac{8\ln T}{\Delta_i}+\Big(1+\frac{\pi^2}3\Big)\sum_i\Delta_i .
+\end{aligned}
 $$
 
 **怎么读**：差臂被用的次数只随 $\ln T$ 增长，差距越小，需要越多次才能把它和最好的臂分开（$1/\Delta_i^2$）。后悔里差距的方次降成了 $1/\Delta_i$，因为每次误用只损失 $\Delta_i$。这个界不需要知道差距，也不需要知道 $T$。**代入** $T=10000$：$\ln T\approx9.21$，B 的界 $\frac{8\times9.21}{0.01}+4.29\approx7373$，C 的界约 1846，后悔界约 $0.1\times7373+0.2\times1846\approx1107$。
@@ -274,7 +276,10 @@ $$
 2. **选中意味着指标不低于最好的臂。** 若 $I_{t+1}=i$，则 $\hat\mu_{1,N_1(t)}+c_{t,N_1(t)}\le\hat\mu_{i,N_i(t)}+c_{t,N_i(t)}$。$N_1(t)$ 和 $N_i(t)$ 是随机的，但它们分别取 $1,\dots,t$ 中的某个值，所以
 
 $$
-\mathbf{1}\big[I_{t+1}=i,\ N_i(t)\ge\ell\big]\le\sum_{s=1}^{t}\sum_{s'=\ell}^{t}\mathbf{1}\big[\hat\mu_{1,s}+c_{t,s}\le\hat\mu_{i,s'}+c_{t,s'}\big].
+\begin{aligned}
+&\mathbf{1}\big[I_{t+1}=i,\ N_i(t)\ge\ell\big]\\
+&\qquad\le\sum_{s=1}^{t}\sum_{s'=\ell}^{t}\mathbf{1}\big[\hat\mu_{1,s}+c_{t,s}\le\hat\mu_{i,s'}+c_{t,s'}\big].
+\end{aligned}
 $$
 
 这一步把"随机的使用次数"换成了对所有固定次数求和，从而绕开了"策略看着数据挑臂"带来的依赖。
@@ -282,9 +287,11 @@ $$
 3. **三选一。** 若 $\hat\mu_{1,s}+c_{t,s}\le\hat\mu_{i,s'}+c_{t,s'}$，则下面三者至少一个成立：
 
 $$
-\text{(a)}\ \hat\mu_{1,s}\le\mu_1-c_{t,s};\qquad
-\text{(b)}\ \hat\mu_{i,s'}\ge\mu_i+c_{t,s'};\qquad
-\text{(c)}\ \mu_1<\mu_i+2c_{t,s'} .
+\begin{aligned}
+&\text{(a)}\ \hat\mu_{1,s}\le\mu_1-c_{t,s};\\
+&\text{(b)}\ \hat\mu_{i,s'}\ge\mu_i+c_{t,s'};\\
+&\text{(c)}\ \mu_1<\mu_i+2c_{t,s'} .
+\end{aligned}
 $$
 
 理由：若三者都不成立，则 $\hat\mu_{1,s}+c_{t,s}>\mu_1\ge\mu_i+2c_{t,s'}>\hat\mu_{i,s'}+c_{t,s'}$，与假设矛盾。
@@ -351,7 +358,10 @@ UCB1 的后悔是对数的。能不能更好，比如后悔有界、不随 $T$ �
 **引理 39.5（KL 散度的分解）** 设两个问题 $\nu,\nu'$ 的奖励分布分别为 $\nu_j,\nu'_j$，同一个策略在两者上运行 $T$ 轮，记录 $H_T=(I_1,X_1,\dots,I_T,X_T)$ 的分布分别为 $P_\nu,P_{\nu'}$。则
 
 $$
-\mathrm{KL}(P_\nu\Vert P_{\nu'})=\sum_{j=1}^K\mathbb{E}_\nu\big[N_j(T)\big]\,\mathrm{KL}(\nu_j\Vert\nu'_j).
+\begin{aligned}
+&\mathrm{KL}(P_\nu\Vert P_{\nu'})\\
+&\qquad=\sum_{j=1}^K\mathbb{E}_\nu\big[N_j(T)\big]\,\mathrm{KL}(\nu_j\Vert\nu'_j).
+\end{aligned}
 $$
 
 **怎么读**：区分两个问题的总信息量，等于每个臂"被用的次数 × 每用一次能提供的区分度"之和。只有分布不同的那个臂才有贡献。**代入**：$\nu$ 中 B 的读对率 0.8，$\nu'$ 中把它改成 0.9，每用一次 B 提供 $\mathrm{kl}(0.8\Vert0.9)\approx0.0444$ 奈特的区分度；用 100 次，总共约 4.4 奈特。
@@ -388,9 +398,10 @@ $$
 **定理 39.7（Lai 与 Robbins 1985）** 在伯努利奖励、各臂均值在 $(0,1)$ 内的问题族上，任何一致策略在每个问题上、对每个差臂 $i$ 都满足
 
 $$
-\liminf_{T\to\infty}\frac{\mathbb{E}\big[N_i(T)\big]}{\ln T}\ge\frac1{\mathrm{kl}(\mu_i\Vert\mu^*)},
-\qquad
-\liminf_{T\to\infty}\frac{\mathrm{Reg}_T}{\ln T}\ge\sum_{i:\Delta_i>0}\frac{\Delta_i}{\mathrm{kl}(\mu_i\Vert\mu^*)} .
+\begin{aligned}
+\liminf_{T\to\infty}\frac{\mathbb{E}\big[N_i(T)\big]}{\ln T}&\ge\frac1{\mathrm{kl}(\mu_i\Vert\mu^*)},\\
+\liminf_{T\to\infty}\frac{\mathrm{Reg}_T}{\ln T}&\ge\sum_{i:\Delta_i>0}\frac{\Delta_i}{\mathrm{kl}(\mu_i\Vert\mu^*)} .
+\end{aligned}
 $$
 
 **怎么读**：差臂至少要被用 $\ln T/\mathrm{kl}(\mu_i\Vert\mu^*)$ 次。$\mathrm{kl}(\mu_i\Vert\mu^*)$ 是"把臂 $i$ 的读对率从 $\mu_i$ 改成 $\mu^*$"之后，每用一次能看出差别的程度；越难看出差别，越要多用。**代入**：
@@ -423,7 +434,11 @@ $$
 4. 取对数、移项：
 
 $$
-\mathbb{E}_\nu\big[N_i(T)\big]\ge\frac1{\mathrm{kl}(\mu_i\Vert\mu^*+\varepsilon)}\ln\frac{T\kappa}{4\big(\mathrm{Reg}_T(\nu)+\mathrm{Reg}_T(\nu')\big)} .
+\begin{aligned}
+\mathbb{E}_\nu\big[N_i(T)\big]
+&\ge\frac1{\mathrm{kl}(\mu_i\Vert\mu^*+\varepsilon)}\\
+&\qquad\times\ln\frac{T\kappa}{4\big(\mathrm{Reg}_T(\nu)+\mathrm{Reg}_T(\nu')\big)} .
+\end{aligned}
 $$
 
 5. 策略是一致的，所以对任意 $a>0$，$T$ 足够大时 $\mathrm{Reg}_T(\nu)+\mathrm{Reg}_T(\nu')\le T^a$，右边的对数不小于 $(1-a)\ln T+\ln(\kappa/4)$。除以 $\ln T$、令 $T\to\infty$，得 $\liminf\mathbb{E}_\nu[N_i(T)]/\ln T\ge(1-a)/\mathrm{kl}(\mu_i\Vert\mu^*+\varepsilon)$。
@@ -479,7 +494,7 @@ $$
 
 **怎么读**：与定理 39.7 对照，Thompson 采样的增长系数可以任意接近下界，所以它在伯努利问题上**渐近最优**。注意这是一个关于"频率意义"后悔的保证，对每个固定的真实读对率都成立，并不要求先验是对的。
 
-在同一组问题上比较各种方法（$T=10^4$ 与 $10^5$，各 1000 次模拟）：
+在同一组问题上比较各种方法（$T=10^4$ 与 $10^5$，各 1000 到 2000 次模拟）：
 
 | 方法 | 后悔（$T=10^4$） | 后悔（$T=10^5$） | B 被用的次数（$T=10^4$） |
 |---|---|---|---|
@@ -613,8 +628,10 @@ $$
 品类、商品价格、照片张数、描述长度组合起来，类别太多，每类单独学会没有数据。**线性上下文老虎机**假设每个臂的平均奖励是特征的线性函数：$\mu(x,a)=x^\top\theta_a$。LinUCB（Li、Chu、Langford、Schapire 2010）对每个臂维护一个岭回归：
 
 $$
-A_a=I+\sum_{t:I_t=a}x_tx_t^\top,\qquad
-\hat\theta_a=A_a^{-1}\sum_{t:I_t=a}X_tx_t,
+\begin{aligned}
+A_a&=I+\sum_{t:I_t=a}x_tx_t^\top,\\
+\hat\theta_a&=A_a^{-1}\sum_{t:I_t=a}X_tx_t,
+\end{aligned}
 $$
 
 每轮选 $x_t^\top\hat\theta_a+\alpha\sqrt{x_t^\top A_a^{-1}x_t}$ 最大的臂。
@@ -698,7 +715,7 @@ $$
 
 ### 39.10.3 目标是测量，不是结论
 
-奖励应当是"**事实读对了**"，而不是"**最后的结论被验证正确**"。规则甲遇到不在时限内的案例（$a=0$）时不看 $b$，这些案例上 $b$ 读错了结论也对；按结论给奖励，会把这些案例算作 B、C 的成功，并让算法偏向在"结论不依赖于 $b$"的案例上表现好的读法。对读取器做选择和优化时，目标应当是测量的效度（第 8 章命题 8.5、第 18 章）；后面讲提示优化时还会回到这一点。
+奖励应当是"**事实读对了**"，而不是"**最后的结论被验证正确**"。规则甲遇到不在时限内的案例（$a=0$）时不看 $b$，这些案例上 $b$ 读错了结论也对；按结论给奖励，会把这些案例算作 B、C 的成功，并让算法偏向在"结论不依赖于 $b$"的案例上表现好的读法。读错的两个方向代价也不同：第 18 章定义 18.3 的事实层遗憾算出，在时限内把腐烂读成不腐烂、把不腐烂读成腐烂，分别让判定平均多付 2.40 和 0.40，奖励可以取为负的这个代价，而不是一律"读对记 1"。对读取器做选择和优化时，目标应当是测量的效度（第 8 章命题 8.5、第 18 章）；后面讲提示优化时还会回到这一点。
 
 ### 39.10.4 成对比较
 
@@ -981,4 +998,4 @@ $b=1$ 落在 C–B 段：$p_{\mathrm B}=(1-0.5)/1.5=1/3$，$p_{\mathrm C}=2/3$�
 - Xinkun Nie, Xiaoying Tian, Jonathan Taylor, James Zou. Why Adaptively Collected Data Have Negative Bias and How to Correct for It. *AISTATS*, 2018. 老虎机下样本平均的负偏差及修正（命题 39.13 的一般化）。
 - Lihong Li, Wei Chu, John Langford, Xuanhui Wang. Unbiased Offline Evaluation of Contextual-bandit-based News Article Recommendation Algorithms. *WSDM*, 2011. 用随机化日志离线评估老虎机策略。
 - Sofía S. Villar, Jack Bowden, James Wason. Multi-armed Bandit Models for the Optimal Design of Clinical Trials: Benefits and Challenges. *Statistical Science*, 2015. 老虎机式分配在临床试验中的利弊，包括估计与检验的困难。
-- Lingjiao Chen, Matei Zaharia, James Zou. FrugalGPT: How to Use Large Language Models While Reducing Cost and Improving Performance. arXiv, 2023. 在多个语言模型之间级联与路由以降低费用。
+- Lingjiao Chen, Matei Zaharia, James Zou. FrugalGPT: How to Use Large Language Models While Reducing Cost and Improving Performance. *Transactions on Machine Learning Research*, 2024（预印本 2023）. 在多个语言模型之间级联与路由以降低费用。
