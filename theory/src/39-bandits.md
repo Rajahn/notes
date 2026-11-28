@@ -698,7 +698,7 @@ $$
 
 ### 39.10.3 目标是测量，不是结论
 
-奖励应当是"**事实读对了**"，而不是"**最后的结论被验证正确**"。规则甲在不在时限内（$a=0$）时不看 $b$，这些案例上 $b$ 读错了结论也对；按结论给奖励，会把这些案例算作 B、C 的成功，并让算法偏向在"结论不依赖于 $b$"的案例上表现好的读法。对读取器做选择和优化时，目标应当是测量的效度（第 8 章命题 8.5、第 18 章）；后面讲提示优化时还会回到这一点。
+奖励应当是"**事实读对了**"，而不是"**最后的结论被验证正确**"。规则甲遇到不在时限内的案例（$a=0$）时不看 $b$，这些案例上 $b$ 读错了结论也对；按结论给奖励，会把这些案例算作 B、C 的成功，并让算法偏向在"结论不依赖于 $b$"的案例上表现好的读法。对读取器做选择和优化时，目标应当是测量的效度（第 8 章命题 8.5、第 18 章）；后面讲提示优化时还会回到这一点。
 
 ### 39.10.4 成对比较
 
@@ -787,7 +787,7 @@ $$
 | 平均分配 | 76.6 | 10.2% |
 | A、B 各 480 次，C 40 次 | 22.4 | 7.4% |
 
-累积后悔最小的 Thompson 采样，推荐错误的概率反而最高：它把九成多的调用给了 A，B 只用了约 250 次，最后对 B 的估计不准，A、B 谁好看不清。要选对，应当把调用集中在**难分的几个**候选上，并在它们之间大致平分；明显差的 C 只需要少量调用就能排除。
+累积后悔最小的 Thompson 采样，推荐错误的概率反而最高：它把七成多的调用给了 A，B 只用了约 250 次，最后对 B 的估计不准，A、B 谁好看不清。要选对，应当把调用集中在**难分的几个**候选上，并在它们之间大致平分；明显差的 C 只需要少量调用就能排除。
 
 Bubeck、Munos、Stoltz（2009）把这个现象变成了定理：累积后悔越小的算法，简单后悔的下界就越大；两个目标不能同时做到最好。所以，先问清楚每次调用"算不算数"：
 
@@ -831,3 +831,154 @@ Bubeck、Munos、Stoltz（2009）把这个现象变成了定理：累积后悔�
 - 老虎机日志里的样本平均有偏（命题 39.13），同时有效的区间仍可用（命题 39.14）；简单后悔与累积后悔是不同的目标（定义 39.6）。
 
 ---
+
+## 练习
+
+难度标记：★ 检验理解，★★ 需要推导或计算，★★★ 开放思考。
+
+### 检验理解
+
+**练习 39.1** ★ 在 39.1 节的问题上（读对率 0.9、0.8、0.7），某次运行 1 万个案例，A、B、C 分别被用了 8822、870、309 次。用命题 39.1 算这次运行对应的后悔（把次数当作期望）。若 B、C 被用的次数各减半，后悔变成多少？
+
+**练习 39.2** ★ 判断对错并说明理由：（1）"定理 39.4 给出的后悔界在 $T=10^4$ 时是 1107，比平均分配的 1000 还大，所以 UCB1 在这个问题上不如平均分配。"（2）"Thompson 采样的对数后悔要求先验是正确的。"（3）"ε-贪心的 $\varepsilon$ 越小，后悔越小。"
+
+**练习 39.3** ★ 下面三件事，各自的目标是累积后悔、简单后悔，还是估计？各该用什么方法？（1）上线的一个月里，在三种读法之间分配真实案例；（2）在 300 个金标案例上挑出一个提示词，之后长期使用；（3）为季度报告给出每种读法读对率的可靠估计。
+
+### 推导
+
+**练习 39.4** ★★ 两个臂、差距 $\Delta=0.1$、$T=10^4$。命题 39.2 的上界是 $f(m)=\Delta\big(m+(T-2m)e^{-m\Delta^2}\big)$。（1）忽略 $2m$ 相对于 $T$，对 $m$ 求导，求近似最优的 $m$ 与对应的后悔；（2）数值上最优的 $m$ 是多少？
+
+**练习 39.5** ★★ 两个臂，读对率 0.9 与 0.85。（1）用定理 39.4 算 $T=10^4,10^5,10^6$ 时的后悔界，并与平均分配比较；（2）$T$ 至少多大时这个界才比平均分配好？这说明了什么？
+
+**练习 39.6** ★★ （1）算 $\mathrm{kl}(0.85\Vert0.9)$ 与 $\mathrm{kl}(0.5\Vert0.55)$，以及 Lai–Robbins 下界中的系数 $1/\mathrm{kl}$，并与 Pinsker 给出的 $1/(2\Delta^2)$ 比较。（2）为什么两种情形下差距都是 0.05，比较的结果却不同？
+
+**练习 39.7** ★★ 把命题 39.13 改成"最多用三次，第一次读错就停"。读对率 $\mu=0.8$ 时，样本平均的期望是多少？偏差比命题 39.13 大还是小？为什么？
+
+**练习 39.8** ★★ 用 39.9.1 节的费用（A 5 分、B 2 分、C 0.5 分）与读对率，求平均预算 $b=1$ 和 $b=4$ 时的最优静态混合及其读对率。
+
+**练习 39.9** ★★ 在命题 39.10 中设 $y_{t,i}=1$。（1）当 $P_t(i)=0.5$ 与 $0.05$ 时，$\hat y_{t,i}$ 的条件方差各是多少？（2）解释为什么 EXP3 的后悔界里出现了臂数 $K$。
+
+### 思考
+
+**练习 39.10** ★★★ 平台要在三种读"是否腐烂"的读法之间分配调用，验货结果平均 5 天后到达，只有 20% 的案例会退回仓库验货，模型服务商每季度更新一次模型，三种读法价格不同，运营还希望每季度知道各读法的读对率。设计一套方案：奖励从哪里来，用什么算法，怎样处理延迟、模型更新和预算，日志里要记什么，季度报告的数从哪里来。指出每一步对应本章和前面各章的哪个结论。
+
+---
+
+## 练习提示与答案
+
+<details>
+<summary>练习 39.1</summary>
+
+$0.1\times870+0.2\times309=87+61.8=148.8$。各减半后为 $74.4$。后悔只取决于差臂被用的次数，A 用多少次不直接出现在公式里。
+
+</details>
+
+<details>
+<summary>练习 39.2</summary>
+
+（1）错。定理 39.4 是上界，不是预测；模拟的平均后悔是 148.7。这个界在 $T=10^4$ 时太松而没有用，但不能反过来说算法差。（2）错。定理 39.9 对每一组固定的真实读对率成立，均匀先验只是算法的一部分，不需要"正确"。先验会影响有限时间的表现（例如先验过分自信时会迟迟不探索）。（3）错。$\varepsilon$ 太小时退回贪心的毛病：模拟中 $\varepsilon=0.01$ 的后悔 95.9，比 $\varepsilon=0.05$ 的 68.7 大，且有 4.7% 的情形长期锁死在差臂上；太大时命题 39.3 的线性项占主导。
+
+</details>
+
+<details>
+<summary>练习 39.3</summary>
+
+（1）累积后悔：每个案例都算数，用 Thompson 采样或 UCB 类方法，奖励来自验货或抽检。（2）简单后悔（或"以给定把握选对"）：评估期间读错不要紧，应把读取集中在难分的候选上并在它们之间平分（39.12 节），这是最优臂识别问题。（3）估计：老虎机下的样本平均有偏（命题 39.13），应另做随机化实验（第 35 章），或至少在老虎机里保留与结果无关的随机部分并用逆倾向加权。
+
+</details>
+
+<details>
+<summary>练习 39.4</summary>
+
+（1）近似 $f(m)\approx\Delta m+T\Delta e^{-m\Delta^2}$，求导 $\Delta-T\Delta^3e^{-m\Delta^2}=0$，得 $e^{-m\Delta^2}=1/(T\Delta^2)$，$m=\ln(T\Delta^2)/\Delta^2=\ln100/0.01\approx461$。此时 $f\approx\Delta m+1/\Delta=(\ln(T\Delta^2)+1)/\Delta\approx56.1$。（2）数值最优 $m=453$，上界约 55.10；$m=461$ 时约 55.13，几乎一样。关键在于公式里有 $\Delta$：不知道差距就定不出 $m$。
+
+</details>
+
+<details>
+<summary>练习 39.5</summary>
+
+（1）$\mathbb{E}[N_2(T)]\le8\ln T/0.0025+4.29$：$T=10^4$ 时约 29477（已经超过 $T$，没有意义），后悔界约 1474；$T=10^5$ 时约 1842；$T=10^6$ 时约 2211。平均分配的后悔是 $0.025T$，即 250、2500、25000。（2）$8\ln T/\Delta+4.29\Delta<T\Delta/2$ 首次成立约在 $T\approx7.2\times10^4$。差距小时，霍夫丁式的界要在很大的 $T$ 上才有意义；它说明的是增长速度，不是有限样本下的实际损失。
+
+</details>
+
+<details>
+<summary>练习 39.6</summary>
+
+（1）$\mathrm{kl}(0.85\Vert0.9)\approx0.01224$，$1/\mathrm{kl}\approx81.7$，Pinsker 给出 $1/(2\times0.05^2)=200$；$\mathrm{kl}(0.5\Vert0.55)\approx0.00503$，$1/\mathrm{kl}\approx199$，与 200 几乎相等。（2）伯努利变量在 0.5 附近方差最大（0.25），霍夫丁与 Pinsker 正是按这个最坏方差写的，所以在 0.5 附近几乎是紧的；在 0.9 附近方差只有约 0.1，同样的差距更容易看出，KL 比 $2\Delta^2$ 大一倍多。基于霍夫丁的 UCB1 看不到这一点，KL-UCB 与 Thompson 采样能。
+
+</details>
+
+<details>
+<summary>练习 39.7</summary>
+
+结果：第一次读错（0.2），平均 0；读对后第二次读错（$0.8\times0.2=0.16$），平均 0.5；前两次都读对（0.64），用第三次，平均 $(2+X_3)/3$，期望 $2.8/3\approx0.933$。总期望 $0.16\times0.5+0.64\times0.933\approx0.677$，偏差约 $-0.123$，比命题 39.13 的 $-0.08$ 大。"运气差就停"的机会更多，被定格在低值上的情形更多；模拟（100 万次）得 0.6774。
+
+</details>
+
+<details>
+<summary>练习 39.8</summary>
+
+$b=1$ 落在 C–B 段：$p_{\mathrm B}=(1-0.5)/1.5=1/3$，$p_{\mathrm C}=2/3$，读对率 $0.7+\tfrac13\times0.1\approx0.733$。$b=4$ 落在 B–A 段：$p_{\mathrm A}=(4-2)/3=2/3$，$p_{\mathrm B}=1/3$，读对率约 0.867。用线性规划求解得到同样的结果。
+
+</details>
+
+<details>
+<summary>练习 39.9</summary>
+
+（1）$\hat y$ 以概率 $P$ 取 $1/P$，否则取 0，期望 1，二阶矩 $1/P$，方差 $1/P-1$：$P=0.5$ 时为 1，$P=0.05$ 时为 19。（2）定理 39.11 的思路里出现 $\mathbb{E}\big[\sum_iP_t(i)\hat y_{t,i}^2\big]=\sum_iy_{t,i}^2$，每个臂贡献一份，最多 $K$ 份：每轮只看到一个臂，却要估计 $K$ 个臂的损失，信息被摊薄了 $K$ 倍。
+
+</details>
+
+<details>
+<summary>练习 39.10</summary>
+
+参考要点：（1）奖励是"事实 $b$ 读对"，来自验货；只有 20% 退回，且是否退回可能与案例难度相关（不是与臂无关的抽检），所以另加一个与臂无关的随机抽检或混入金标题，只用这部分更新，或者至少检查两者给出的读对率是否一致（39.10.1 节）。不要用读取器之间的一致率（39.10.2 节）。（2）算法用 Thompson 采样，批量地按到达的验货结果更新；按品类做上下文（39.8 节），分配规则要可读。（3）模型更新时把新版本当作新臂，从先验开始，固定仪器身份（第 18 章，39.7.4 节）。（4）预算：费用折进奖励，或者以命题 39.12 的混合为目标。（5）日志记录每个案例的选择概率（命题 39.8，用抽样估计），并给每个臂保留下限比例，使支撑条件成立（39.11.3 节，第 35 章命题 35.15）。（6）季度报告的读对率不用老虎机下的样本平均（命题 39.13），用抽检部分上的逆倾向加权估计，或单独做一次小的随机化实验；要报告区间时注意自适应性（命题 39.14）。
+
+</details>
+
+---
+
+## 延伸
+
+- 霍夫丁、伯恩斯坦与 KL 形式的集中不等式：0.2 节；KL 散度与 Pinsker 不等式：0.4 节；Beta–二项共轭：0.1 节、第 7 章。
+- 看着数据决定下一步的危险：第 5 章；重要性加权与有效样本量：第 6 章；标注者与读取器的相关、金标题与"再要一个标签"：第 16 章；读取器的仪器身份、LLM 当裁判的偏差、读取的价值：第 18 章；HypoGeniC：第 28 章；离线策略评估：第 35 章。
+- 实验设计与功效：第 37 章；多重检验：第 38 章；最优臂识别、竞速与序贯检验（置信序列）：第 40 章；信息价值与主动学习：第 41 章；搜索与多目标：第 42 章；提示优化（作为带噪声的最优臂识别）：第 43 章；自改进系统的评估陷阱：第 45 章。
+
+## 文献
+
+**教材**
+
+- Tor Lattimore, Csaba Szepesvári. *Bandit Algorithms*. Cambridge University Press, 2020. 本章大部分内容的标准参考：后悔分解、UCB、下界的证明方法（KL 分解与 Bretagnolle–Huber）、EXP3、线性老虎机都有完整推导。
+- Aleksandrs Slivkins. *Introduction to Multi-Armed Bandits*. Foundations and Trends in Machine Learning, 2019. 篇幅适中的入门讲义，带背包约束的老虎机一章与本章 39.9 节相关。
+- Sébastien Bubeck, Nicolò Cesa-Bianchi. Regret Analysis of Stochastic and Nonstochastic Multi-armed Bandit Problems. *Foundations and Trends in Machine Learning*, 5(1), 2012. 随机与对抗两种设定的后悔分析综述。
+- Nicolò Cesa-Bianchi, Gábor Lugosi. *Prediction, Learning, and Games*. Cambridge University Press, 2006. 对抗设定下在线学习与指数权重方法的系统处理。
+- Richard S. Sutton, Andrew G. Barto. *Reinforcement Learning: An Introduction*, 2nd ed. MIT Press, 2018. 第 2 章用老虎机引入探索与利用，讲法直观。
+- Daniel Russo, Benjamin Van Roy, Abbas Kazerouni, Ian Osband, Zheng Wen. A Tutorial on Thompson Sampling. *Foundations and Trends in Machine Learning*, 2018. Thompson 采样的教程，包括实践中的近似与失败情形。
+
+**论文**
+
+- William R. Thompson. On the Likelihood that One Unknown Probability Exceeds Another in View of the Evidence of Two Samples. *Biometrika*, 25(3/4), 1933. 按"它更好的概率"分配处理，Thompson 采样的来源。
+- Herbert Robbins. Some Aspects of the Sequential Design of Experiments. *Bulletin of the American Mathematical Society*, 58(5), 1952. 把序贯分配问题表述为今天的老虎机形式。
+- J. C. Gittins. Bandit Processes and Dynamic Allocation Indices. *Journal of the Royal Statistical Society, Series B*, 1979. 折扣贝叶斯目标下的指数最优策略。
+- T. L. Lai, Herbert Robbins. Asymptotically Efficient Adaptive Allocation Rules. *Advances in Applied Mathematics*, 6(1), 1985. 一致策略的渐近下界，以及达到它的置信上界方法。
+- Rajeev Agrawal. Sample Mean Based Index Policies with O(log n) Regret for the Multi-Armed Bandit Problem. *Advances in Applied Probability*, 1995. 只用样本平均构造的对数后悔指数策略。
+- Apostolos N. Burnetas, Michael N. Katehakis. Optimal Adaptive Policies for Sequential Allocation Problems. *Advances in Applied Mathematics*, 1996. 把 Lai–Robbins 下界推广到更一般的分布族。
+- Peter Auer, Nicolò Cesa-Bianchi, Paul Fischer. Finite-time Analysis of the Multiarmed Bandit Problem. *Machine Learning*, 47(2–3), 2002. UCB1 与递减 ε-贪心的有限时间对数后悔界（定理 39.4）。
+- Peter Auer, Nicolò Cesa-Bianchi, Yoav Freund, Robert E. Schapire. The Nonstochastic Multiarmed Bandit Problem. *SIAM Journal on Computing*, 32(1), 2002. EXP3 与对抗设定下的 $\sqrt{KT}$ 量级下界。
+- J. Bretagnolle, C. Huber. Estimation des densités: risque minimax. *Zeitschrift für Wahrscheinlichkeitstheorie und verwandte Gebiete*, 1979. 引理 39.6 的来源。
+- Aurélien Garivier, Olivier Cappé. The KL-UCB Algorithm for Bounded Stochastic Bandits and Beyond. *COLT*, 2011. 用 KL 置信界的 UCB，在伯努利奖励上达到 Lai–Robbins 下界。
+- Aurélien Garivier, Eric Moulines. On Upper-Confidence Bound Policies for Switching Bandit Problems. *ALT*, 2011. 折扣与滑动窗口的 UCB，应对奖励分布的突变。
+- Olivier Chapelle, Lihong Li. An Empirical Evaluation of Thompson Sampling. *NeurIPS*, 2011. 在模拟与广告数据上比较 Thompson 采样与 UCB 类方法，并考察延迟反馈。
+- Shipra Agrawal, Navin Goyal. Analysis of Thompson Sampling for the Multi-armed Bandit Problem. *COLT*, 2012. Thompson 采样的第一个有限时间对数后悔分析。
+- Emilie Kaufmann, Nathaniel Korda, Rémi Munos. Thompson Sampling: An Asymptotically Optimal Finite-Time Analysis. *ALT*, 2012. 伯努利奖励下 Thompson 采样达到 Lai–Robbins 常数（定理 39.9）。
+- Daniel Russo, Benjamin Van Roy. Learning to Optimize via Posterior Sampling. *Mathematics of Operations Research*, 2014. Thompson 采样的贝叶斯后悔分析，与置信上界方法建立联系。
+- Lihong Li, Wei Chu, John Langford, Robert E. Schapire. A Contextual-Bandit Approach to Personalized News Article Recommendation. *WWW*, 2010. LinUCB。
+- Yasin Abbasi-Yadkori, Dávid Pál, Csaba Szepesvári. Improved Algorithms for Linear Stochastic Bandits. *NeurIPS*, 2011. 线性老虎机的自归一化置信椭球与后悔界。
+- Alekh Agarwal, Daniel Hsu, Satyen Kale, John Langford, Lihong Li, Robert E. Schapire. Taming the Monster: A Fast and Simple Algorithm for Contextual Bandits. *ICML*, 2014. 在一般策略族上竞争、只调用分类子程序的上下文老虎机算法。
+- Ashwinkumar Badanidiyuru, Robert Kleinberg, Aleksandrs Slivkins. Bandits with Knapsacks. *FOCS*, 2013（期刊版 *Journal of the ACM*, 2018）. 带资源约束的老虎机，比较对象是最优混合。
+- Sébastien Bubeck, Rémi Munos, Gilles Stoltz. Pure Exploration in Multi-armed Bandits Problems. *ALT*, 2009. 简单后悔，以及它与累积后悔之间的此消彼长。
+- Yisong Yue, Josef Broder, Robert Kleinberg, Thorsten Joachims. The K-armed Dueling Bandits Problem. *Journal of Computer and System Sciences*, 2012. 只观察成对比较结果的老虎机。
+- Xinkun Nie, Xiaoying Tian, Jonathan Taylor, James Zou. Why Adaptively Collected Data Have Negative Bias and How to Correct for It. *AISTATS*, 2018. 老虎机下样本平均的负偏差及修正（命题 39.13 的一般化）。
+- Lihong Li, Wei Chu, John Langford, Xuanhui Wang. Unbiased Offline Evaluation of Contextual-bandit-based News Article Recommendation Algorithms. *WSDM*, 2011. 用随机化日志离线评估老虎机策略。
+- Sofía S. Villar, Jack Bowden, James Wason. Multi-armed Bandit Models for the Optimal Design of Clinical Trials: Benefits and Challenges. *Statistical Science*, 2015. 老虎机式分配在临床试验中的利弊，包括估计与检验的困难。
+- Lingjiao Chen, Matei Zaharia, James Zou. FrugalGPT: How to Use Large Language Models While Reducing Cost and Improving Performance. arXiv, 2023. 在多个语言模型之间级联与路由以降低费用。
