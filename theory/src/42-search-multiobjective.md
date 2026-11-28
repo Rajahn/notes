@@ -73,7 +73,7 @@
 **怎么读**：
 
 - 搜索策略只看得到 $\hat f$ 的值，看不到它怎样算出来，所以叫"黑盒"。
-- $\hat f$ 是选择集上的估计，不是真实风险 $f(\theta)=R(\theta)$。交出的 $\hat\theta$ 离真正最好的差多少，可以拆成两段：$\hat f(\hat\theta)-\min_\theta\hat f(\theta)$ 是**搜索缺口**，对应第 1 章 1.11 节的优化误差；$f(\hat\theta)-\hat f(\hat\theta)$ 是**选择偏差**，对应估计误差，42.13 节回来讨论。
+- $\hat f$ 是选择集上的估计，不是真实风险 $f(\theta)=R(\theta)$。交出的 $\hat\theta$ 离真正最好的差多少，主要有两种来源：$\hat f(\hat\theta)-\min_\theta\hat f(\theta)$ 是**搜索缺口**，对应第 1 章 1.11 节的优化误差；$f(\hat\theta)-\hat f(\hat\theta)$ 是**选择偏差**，对应估计误差，42.13 节回来讨论。
 - 代入提示词的例子：$\Theta$ 是所有写法，$\hat f$ 是 200 个案例上的读取错误率，$B=50$。
 
 0.5.9 节已经算过最朴素的策略：独立随机抽 $N$ 个候选，至少抽到一个"前 1%"的概率是 $1-0.99^N$，$N=300$ 时约 0.95。它与维数无关，但也只说"进了前 1%"，说不出离最好的差多少。下面几节的方法都想比随机抽样更有效地用掉预算。
@@ -134,7 +134,10 @@
 **定义 42.3（模拟退火）** 给定对称的邻域（$\theta'\in N(\theta)$ 当且仅当 $\theta\in N(\theta')$）和一列温度 $T_1\ge T_2\ge\cdots>0$。第 $k$ 步，在当前候选 $\theta$ 的邻域里均匀抽一个 $\theta'$，记 $\Delta=\hat f(\theta')-\hat f(\theta)$，以概率
 
 $$
-\alpha=\min\Big\{1,\ e^{-\Delta/T_k}\cdot\frac{\lvert N(\theta)\rvert}{\lvert N(\theta')\rvert}\Big\}
+\begin{aligned}
+\alpha&=\min\big\{1,\ e^{-\Delta/T_k}\cdot\rho\big\},\\
+\rho&=\frac{\lvert N(\theta)\rvert}{\lvert N(\theta')\rvert}
+\end{aligned}
 $$
 
 移到 $\theta'$，否则留在原地。
@@ -142,7 +145,7 @@ $$
 **怎么读**：
 
 - $\Delta\le0$（变好或不变）且两边邻居一样多时总是接受；变差时以 $e^{-\Delta/T}$ 接受。温度 $T$ 越高越宽容，$T\to0$ 时只接受不变差的移动，退化成局部搜索。
-- 比值 $\lvert N(\theta)\rvert/\lvert N(\theta')\rvert$ 是 Hastings 修正：邻居个数不同时，均匀抽邻居的提议不对称，要用它补偿。例子里各棵树的邻居数在 3 到 7 之间，所以需要它。
+- 比值 $\rho$ 是 Hastings 修正：邻居个数不同时，均匀抽邻居的提议不对称，要用它补偿。例子里各棵树的邻居数在 3 到 7 之间，所以需要它。
 - 代入数字：从规则乙走到 4.2 的邻居，$\Delta=0.4$，不计修正时 $T=1$ 的接受概率 $e^{-0.4}\approx0.670$，$T=0.3$ 时约 0.264，$T=0.1$ 时约 0.018。
 
 ### 42.3.3 固定温度下它在做什么
@@ -222,7 +225,7 @@ $$
 #### 证明（第一遍可以跳过）
 
 1. OneMax：令 $A_i$ 为恰有 $i$ 个 1 的串（$i=0,\dots,n$）。在 $A_i$ 中，只翻某一个 0、其余都不翻，就到了更高层。有 $n-i$ 个 0 可选，所以 $s_i\ge(n-i)\cdot\frac1n(1-\frac1n)^{n-1}\ge\frac{n-i}{en}$，最后一步用 $(1-\frac1n)^{n-1}\ge e^{-1}$。代入命题 42.5：$\sum_{i<n}\frac{en}{n-i}=en\sum_{j=1}^n\frac1j=en\,H(n)$。再用 $H(n)\le\ln n+1$。
-2. 任意 $g$：从任何 $x$ 到某个最优点 $x^*$，相差 $k$ 位，一步恰好翻这 $k$ 位的概率是 $(1/n)^k(1-1/n)^{n-k}\ge n^{-n}$。只分两层（非最优、最优），$s_1\ge n^{-n}$。$\square$
+2. 任意 $g$：从任何 $x$ 到某个最优点 $x^*$，相差 $k$ 位，一步恰好翻这 $k$ 位的概率是 $(1/n)^k(1-1/n)^{n-k}\ge n^{-n}$（$n\ge2$ 时 $1-1/n\ge1/n$）。只分两层（非最优、最优），$s_1\ge n^{-n}$。$\square$
 
 **代入数字**：$n=20$ 时，$e\,n\,H(n)\approx195.6$；固定种子模拟 2000 次，平均约 128 步，在界之内。第 (2) 条的 $n^n$ 是天文数字，它只说明"最终一定能到"，没有实用意义。
 
@@ -316,7 +319,7 @@ $$
 ### 42.5.5 适合什么、不适合什么
 
 - **适合**：评估很贵、参数不多（几个到十几个连续或有序参数）、目标比较光滑。超参数调优是它最成功的场合（Snoek、Larochelle、Adams 2012）。
-- **离散与文本空间**：提示词、程序没有天然的"距离"，要先把候选嵌入成向量或设计专门的核，代理模型的质量取决于这一步。树结构的 Parzen 估计（Bergstra 等 2011）是另一类常用的代理，后面讲程序级优化时会看到它被用来联合挑选指令和示例。
+- **离散与文本空间**：提示词、程序没有天然的"距离"，要先把候选嵌入成向量或设计专门的核，代理模型的质量取决于这一步。树结构的 Parzen 估计（Bergstra 等 2011）是另一类常用的代理。后面讲程序级优化时会看到，贝叶斯优化被用来联合挑选指令和示例。
 - **噪声**：选择集上的分数有抽样噪声，同一个提示词重评一次分数会变。这时"已评估的最好值"本身偏乐观，常用后验均值代替 $\hat f_{\mathrm{best}}$。
 - **保证**：把采集函数换成"置信下界最小"（$\mu_t-\beta_t\sigma_t$）的 GP-UCB，Srinivas 等（2010）在函数确实来自高斯过程等假设下证明了累积后悔的次线性上界。这类保证依赖核选得对，对提示词空间很难核实。
 
@@ -502,7 +505,8 @@ $$
 $$
 \begin{aligned}
 \mathcal F(s,d)=\operatorname{ND}\Big(&\{\mathbf v_{\mathrm{leaf}}(s)\}\ \cup\\
-&\bigcup_j\big\{\mathbf u+\mathbf w+\mathbf c_j(s):\ \mathbf u\in\mathcal F(s_j^0,d-1),\ \mathbf w\in\mathcal F(s_j^1,d-1)\big\}\Big).
+&\bigcup_j\big\{\mathbf u+\mathbf w+\mathbf c_j(s):\\
+&\qquad\mathbf u\in\mathcal F(s_j^0,d-1),\ \mathbf w\in\mathcal F(s_j^1,d-1)\big\}\Big).
 \end{aligned}
 $$
 
@@ -546,7 +550,10 @@ NSGA-II 每一代从当前种群产生同样多的子代（变异、交叉），
 **定义 42.11（超体积）** 给定参考点 $\mathbf r$（每个目标上都不比任何关心的候选更好），一组目标向量 $P$ 的**超体积**是
 
 $$
-\mathrm{HV}(P;\mathbf r)=\operatorname{vol}\Big(\bigcup_{\mathbf p\in P,\ \mathbf p\le\mathbf r}[\mathbf p,\mathbf r]\Big),
+\begin{aligned}
+\mathrm{HV}(P;\mathbf r)&=\operatorname{vol}(U_P),\\
+U_P&=\bigcup_{\mathbf p\in P,\ \mathbf p\le\mathbf r}[\mathbf p,\mathbf r],
+\end{aligned}
 $$
 
 其中 $[\mathbf p,\mathbf r]$ 是以 $\mathbf p$ 和 $\mathbf r$ 为对角的长方体，$\operatorname{vol}$ 是面积（两个目标）或体积。
@@ -615,7 +622,10 @@ $h_2$ 支配 $h_1$，是因为读 $q$ 免费。可是第 13 章 13.7 节说过�
 **命题 42.14（经验与真实 ε-帕累托集互相包含）** 设在某个事件上，所有候选、所有目标同时满足 $\lvert\hat f_k(\theta)-f_k(\theta)\rvert\le\gamma_k$。记 $\boldsymbol\gamma=(\gamma_1,\dots,\gamma_m)$。则在这个事件上，对所有 $\boldsymbol\varepsilon\ge\mathbf 0$：
 
 $$
-\mathcal P(\boldsymbol\varepsilon)\subseteq\hat{\mathcal P}(\boldsymbol\varepsilon+2\boldsymbol\gamma),\qquad\hat{\mathcal P}(\boldsymbol\varepsilon)\subseteq\mathcal P(\boldsymbol\varepsilon+2\boldsymbol\gamma).
+\begin{aligned}
+\mathcal P(\boldsymbol\varepsilon)&\subseteq\hat{\mathcal P}(\boldsymbol\varepsilon+2\boldsymbol\gamma),\\
+\hat{\mathcal P}(\boldsymbol\varepsilon)&\subseteq\mathcal P(\boldsymbol\varepsilon+2\boldsymbol\gamma).
+\end{aligned}
 $$
 
 特别地，每个真正帕累托最优的候选都在 $\hat{\mathcal P}(2\boldsymbol\gamma)$ 里。
@@ -654,7 +664,7 @@ $$
 
 ### 42.12.1 单目标搜索
 
-0.5.11 节和 0.6.12 节的立场不变：**预算内精确，否则报告未完成。**黑盒方法（42.2–42.5 节）永远没有下界，所以它们的报告只能是"当前最好、用了多少评估、没有最优性保证"。模拟退火和进化算法都应交出途中见过的最好候选，而不是最后停在的那个（42.3.4 节的模拟里，两者在 200 步时差 0.49 对 0.82）。
+0.5.11 节和 0.6.12 节的立场不变：**预算内精确，否则报告未完成。**黑盒方法（42.2–42.5 节）永远没有下界，作为随时算法（Dean 与 Boddy 1988），它们的报告只能是"当前最好、用了多少评估、没有最优性保证"。模拟退火和进化算法都应交出途中见过的最好候选，而不是最后停在的那个（42.3.4 节的模拟里，两者在 200 步时差 0.49 对 0.82）。
 
 ### 42.12.2 多目标搜索
 
@@ -862,6 +872,7 @@ $(4,6)$ 不被支配：$E$ 比 4 小的点 $A$ 都不小于 8，$A$ 比 6 小的
 - Kalyanmoy Deb. *Multi-Objective Optimization Using Evolutionary Algorithms*. Wiley, 2001. 进化多目标优化的入门教材。
 - Holger H. Hoos, Thomas Stützle. *Stochastic Local Search: Foundations and Applications*. Morgan Kaufmann, 2004. 局部搜索、模拟退火、禁忌搜索的统一介绍。
 - John H. Holland. *Adaptation in Natural and Artificial Systems*. University of Michigan Press, 1975. 遗传算法的奠基著作。
+- Ingo Rechenberg. *Evolutionsstrategie: Optimierung technischer Systeme nach Prinzipien der biologischen Evolution*. Frommann-Holzboog, 1973. 进化策略的奠基著作。
 - Frank Neumann, Carsten Witt. *Bioinspired Computation in Combinatorial Optimization: Algorithms and Their Computational Complexity*. Springer, 2010. 进化算法运行时间分析，含适应度分层方法。
 - Carl Edward Rasmussen, Christopher K. I. Williams. *Gaussian Processes for Machine Learning*. MIT Press, 2006. 高斯过程回归的标准参考，第 2 章给出后验公式。
 - Roman Garnett. *Bayesian Optimization*. Cambridge University Press, 2023. 贝叶斯优化的系统教材。
@@ -873,6 +884,7 @@ $(4,6)$ 不被支配：$E$ 比 4 小的点 $A$ 都不小于 8，$A$ 比 6 小的
 - Bruce Hajek. Cooling Schedules for Optimal Annealing. *Mathematics of Operations Research*, 13(2), 1988. 对数降温收敛的充要条件（定理 42.4）。
 - Fred Glover. Future Paths for Integer Programming and Links to Artificial Intelligence. *Computers & Operations Research*, 13(5), 1986. 禁忌搜索的提出。
 - Stefan Droste, Thomas Jansen, Ingo Wegener. On the Analysis of the (1+1) Evolutionary Algorithm. *Theoretical Computer Science*, 276(1–2), 2002. (1+1) 进化算法运行时间的经典分析。
+- Jonas Mockus. On Bayesian Methods for Seeking the Extremum. In *Optimization Techniques: IFIP Technical Conference*, Springer, 1975. 以贝叶斯方法选下一个评估点的早期工作。
 - Donald R. Jones, Matthias Schonlau, William J. Welch. Efficient Global Optimization of Expensive Black-Box Functions. *Journal of Global Optimization*, 13(4), 1998. 以期望改进为准则的贝叶斯优化（EGO）。
 - Jasper Snoek, Hugo Larochelle, Ryan P. Adams. Practical Bayesian Optimization of Machine Learning Algorithms. *NeurIPS*, 2012. 贝叶斯优化用于超参数调优。
 - Niranjan Srinivas, Andreas Krause, Sham M. Kakade, Matthias Seeger. Gaussian Process Optimization in the Bandit Setting: No Regret and Experimental Design. *ICML*, 2010. GP-UCB 及其后悔界。
