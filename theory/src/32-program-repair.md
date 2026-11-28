@@ -126,13 +126,12 @@ $h_0$ 错 7 个，都在第三种模式上。
 **定义 32.2（可疑度公式）** **可疑度公式**是一个把频谱映射为实数的函数 $\rho$，分数高表示可疑。常用的四个是
 
 $$
-\mathrm{Tarantula}(s)=\frac{a_{\mathrm{ef}}/F}{a_{\mathrm{ef}}/F+a_{\mathrm{ep}}/P},\qquad
-\mathrm{Ochiai}(s)=\frac{a_{\mathrm{ef}}}{\sqrt{F\,(a_{\mathrm{ef}}+a_{\mathrm{ep}})}},
-$$
-
-$$
-\mathrm{DStar}(s)=\frac{a_{\mathrm{ef}}^{2}}{a_{\mathrm{ep}}+a_{\mathrm{nf}}},\qquad
-\mathrm{Naish1}(s)=\begin{cases}-1,&a_{\mathrm{ef}}<F,\\ P-a_{\mathrm{ep}},&a_{\mathrm{ef}}=F.\end{cases}
+\begin{aligned}
+\mathrm{Tarantula}(s)&=\frac{a_{\mathrm{ef}}/F}{a_{\mathrm{ef}}/F+a_{\mathrm{ep}}/P},\\
+\mathrm{Ochiai}(s)&=\frac{a_{\mathrm{ef}}}{\sqrt{F\,(a_{\mathrm{ef}}+a_{\mathrm{ep}})}},\\
+\mathrm{DStar}(s)&=\frac{a_{\mathrm{ef}}^{2}}{a_{\mathrm{ep}}+a_{\mathrm{nf}}},\\
+\mathrm{Naish1}(s)&=\begin{cases}-1,&a_{\mathrm{ef}}<F,\\ P-a_{\mathrm{ep}},&a_{\mathrm{ef}}=F.\end{cases}
+\end{aligned}
 $$
 
 约定：分母为 0 时 Tarantula、Ochiai 记 0（此时 $a_{\mathrm{ef}}=0$），DStar 记 $+\infty$（此时 $a_{\mathrm{ep}}=0$ 且所有失败都经过 $s$）。
@@ -140,7 +139,7 @@ $$
 **怎么读**：
 
 - **Tarantula**（Jones、Harrold 与 Stasko 2002）比较"失败测试中经过 $s$ 的比例"和"通过测试中经过 $s$ 的比例"，前者占两者之和的份额就是分数。
-- **Ochiai**（Abreu 等 2007 从分子生物学借来的相似系数）是"经过 $s$"与"失败"两个集合的余弦相似度：交集大小除以两个集合大小的几何平均。
+- **Ochiai**（Abreu 等 2007 从生物学借来的相似系数）是"经过 $s$"与"失败"两个集合的余弦相似度：交集大小除以两个集合大小的几何平均。
 - **DStar**（Wong 等 2014）分子是经过 $s$ 的失败数的平方，分母是"经过但通过"加"失败却没经过"，两种都是反对 $s$ 有错的证据。指数可以换，2 最常用。
 - **Naish1**（Naish、Lee 与 Ramamohanarao 2011）最极端：只要有一个失败测试没经过 $s$，就把 $s$ 打到最低；否则按没经过 $s$ 的通过测试数排。
 
@@ -185,7 +184,11 @@ L1 的四个分数是 0.5、0.342、0.925、0；L3 到 L5 经过的失败数为 
 **定义 32.3（排序的三个集合与"不劣于"）** 给定公式 $\rho$ 和错误位置 $f$，令
 
 $$
-S_B^\rho=\{s:\rho(s)>\rho(f)\},\quad S_F^\rho=\{s\ne f:\rho(s)=\rho(f)\},\quad S_A^\rho=\{s:\rho(s)<\rho(f)\}.
+\begin{aligned}
+S_B^\rho&=\{s:\rho(s)>\rho(f)\},\\
+S_F^\rho&=\{s\ne f:\rho(s)=\rho(f)\},\\
+S_A^\rho&=\{s:\rho(s)<\rho(f)\}.
+\end{aligned}
 $$
 
 称公式 $\rho_1$ 在某一类情形上**不劣于** $\rho_2$，如果在这类情形的每一个程序和测试套件上，都有 $S_B^{\rho_1}\subseteq S_B^{\rho_2}$ 且 $S_A^{\rho_1}\supseteq S_A^{\rho_2}$。
@@ -234,7 +237,7 @@ $$
 
 ### 小结
 
-这一节说的是：按"排在错误前面的集合"和"排在后面的集合"可以比较两个公式（定义 32.3）；在"所有失败都经过错误位置"的假设下，Naish1 不劣于任何对通过次数严格递减的公式（命题 32.2）；但这个假设被标签噪声、读错、多处错误和遗漏轻易破坏，那时 Naish1 最差。
+这一节说的是：按"排在错误前面的集合"和"排在后面的集合"可以比较两个公式（定义 32.3）；在"所有失败都经过错误位置"的假设下，Naish1 不劣于任何对通过次数严格递减的公式（命题 32.2）；但这个假设被标签噪声、读错、多处错误和遗漏轻易破坏，那时 Naish1 可能最差。
 
 ---
 
@@ -250,7 +253,7 @@ $$
 
 ### 32.4.2 百分比好看不等于有用
 
-Parnin 与 Orso（2011）请程序员借助排序去找错误，发现两件事：程序员并不按排序逐行检查，看了前几名没有收获就会放弃；"只需检查 5% 的代码"在一万行的程序里仍然是 500 行。所以更有意义的是**绝对名次**和前 $N$ 命中率，而不是 EXAM 这样的比例。规则只有几行到几十行，EXAM 和绝对名次差别不大，但"前几名有没有命中"仍然是最该报告的量。
+Parnin 与 Orso（2011）请程序员借助排序去找错误，发现程序员并不按排序逐行检查，排序靠前的位置有没有用比整体比例重要得多。比例本身也会误导："只需检查 5% 的代码"在一万行的程序里仍然是 500 行。所以更有意义的是**绝对名次**和前 $N$ 命中率，而不是 EXAM 这样的比例。规则只有几行到几十行，EXAM 和绝对名次差别不大，但"前几名有没有命中"仍然是最该报告的量。
 
 ### 32.4.3 基于变异的定位
 
@@ -357,7 +360,7 @@ ddmin 的结果是**一条可以写进回执的证据**："读数 $b=1$ 由第 3
 - **在哪里改**：按一个简单的频谱加权，只被失败测试经过的语句权重高，也被通过测试经过的权重低；
 - **怎么改**：删除一条语句、在某处插入一条语句、或者替换一条语句，插入和替换用的语句**从同一程序的别处复制**（假设正确的代码往往在程序里别的地方已经写过）；
 - **好不好**：适应度是通过的测试个数的加权和，失败测试（暴露错误的那几个）权重更高；
-- 找到通过全部测试的补丁就停止，再做一次最小化，去掉不必要的改动。
+- 找到通过全部测试的补丁就停止，再用 delta 调试（32.5 节）把补丁里不必要的改动删掉。
 
 Le Goues 等（2012）在 105 个真实错误上做了系统实验，报告修复了其中 55 个。这个结果引发了一个问题：**"通过全部测试"的补丁，真的修好了吗？**
 
@@ -475,7 +478,7 @@ $$
 
 1. 回答甲：$\lvert\Pi\rvert\le k+1$，余量 $\ln\big((k+1)/\delta\big)/n$。
 2. 回答乙：$\lvert\Pi\rvert\le(n+1)^k$，余量 $\big(k\ln(n+1)+\ln(1/\delta)\big)/n$。
-3. 回答丙：$\lvert\Pi\rvert$ 可达 $2^{nk}$ 以上，余量至少 $k\ln2$，对 $k\ge2$ 超过 1，没有任何保证。
+3. 回答丙：仅"哪些测试失败"一项，交互记录就可达 $2^{nk}$ 种，定理给出的余量至少 $k\ln2$，$k\ge2$ 时超过 1，什么也保证不了。
 
 **证明.** 回答甲：交互记录只能是"前 $j-1$ 次不过、第 $j$ 次通过"（$j=1,\dots,k$）或"$k$ 次都不过"，共 $k+1$ 种。回答乙：每次回答是 $0$ 到 $n$ 的整数，$k$ 次至多 $(n+1)^k$ 种。回答丙：仅"哪些失败"一项每次就有 $2^n$ 种，代入定理得余量至少 $nk\ln2/n=k\ln2$。$\square$
 
@@ -539,3 +542,302 @@ $c$ 单独值得报告：它就是**回归**。把受保护案例（定义 12.8�
 这一节说的是：补丁定下来后在留出案例上评估，全对时上界约为 $3/m$，但小的残余错误要很多案例才看得出；"比原来好"用符号检验，"是否正确"看风险上界，两者是不同的问题；回归要单独报告；评估修复方法时，正确率本身要给区间，人工判断要报一致性。
 
 ---
+
+## 32.10 语言模型时代的修复与评测
+
+这一节只写我们核对过、比较可靠的事实；具体的解决率随模型版本变化很快，这里不引用。
+
+### 32.10.1 语言模型当补丁生成器
+
+预训练的代码语言模型出现以后，研究者直接用它生成补丁，再放进生成—验证的循环（Xia、Wei 与 Zhang 2023 系统比较了几种模型在多个修复基准上的表现）。ChatRepair（Xia 与 Zhang 2024）把失败测试的信息以对话的方式反馈给模型，让它继续改，用推论 32.6 的话说就是回答丙。"大量采样、再用测试过滤"的做法和它的计数方法（pass@k），本卷讲程序综合的那一章已经分析过；对修复来说，要紧的是**过滤用的测试和评估用的测试是否是同一套**。
+
+### 32.10.2 仓库级修复：SWE-bench
+
+**SWE-bench**（Jimenez 等 2024）从 12 个流行的 Python 仓库收集了 2294 个任务，每个任务是一个 GitHub 问题和解决它的合并请求。模型拿到问题描述和代码库快照，输出补丁。评测时打上补丁，运行两类测试：参考合并请求中由失败变为通过的测试，以及原来就通过、要求继续通过的测试；两类都通过才算"解决"。常用的子集有 300 个任务的 Lite，以及 500 个任务的 Verified：后者由 OpenAI 在 2024 年组织人工标注者筛选，去掉问题描述不清或测试对合理解法不公平的任务。
+
+在这个基准上出现了几类系统。SWE-agent（Yang 等 2024）为模型设计了专门的命令接口，让它浏览、编辑代码和运行测试。AutoCodeRover（Zhang 等 2024）在程序结构上做代码搜索，并可以结合频谱定位。Agentless（Xia 等 2024）不让模型自主行动，而是固定成三步：分层定位（先文件，再类和函数，再具体编辑位置），采样生成多个补丁，再用复现测试和回归测试挑一个。**定位重新成了第一步。**
+
+### 32.10.3 怎样读这些评测
+
+本章的结论逐条适用：
+
+1. **评测测试不给模型看**，这是 32.9 节留出测试的设计，方向正确。但这些测试是原开发者为自己的修复写的，可能太弱（错误的补丁也能通过），也可能太窄（只认原作者的实现方式）。"通过"仍然只是合理（定义 32.6）。Verified 的筛选主要针对后一种问题。
+2. **智能体自己写复现测试、运行、读报错、再改**。对它自写的测试，这是回答丙，自写测试相当于训练集。只要评测测试不泄露，官方评测仍然有效；但如果系统的设计者按评测成绩反复调整系统，再报告同一套上的成绩，就回到了第 5 章的排行榜问题。
+3. **污染**。仓库和修复都是公开的，可能出现在模型的训练数据里。用模型训练截止之后才出现的问题构造评测，可以缓解。
+4. **挑选**。只生成一次就提交，与生成多个再挑一个，要分开报告；挑选若用到了评测测试，就是在测试集上做选择（第 1 章命题 1.2）。
+
+### 32.10.4 对规则修复的含义
+
+第 28 章 28.10.4 节的"模型修补、约束把关"就是一个语言模型驱动的修复循环。本章给它补上记账：设计集上的错例可以给模型看（回答丙，设计集本来就是给它看的）；选择集只返回采纳与否（回答甲），按定理 32.5 记账；测试集封存，只用一次。
+
+### 小结
+
+这一节说的是：语言模型既可以当生成—验证循环里的补丁生成器，也可以当仓库级修复的智能体；SWE-bench 用不给模型看的测试评测，方向正确，但"通过"仍是合理而非正确；读这类结果要问测试强不强、有没有污染、挑选用了什么。
+
+---
+
+## 32.11 迁移到规则：判错时怎样修规则
+
+### 32.11.1 流程
+
+把数据分成**设计集**（定位、读案例、提补丁）、**选择集**（验证补丁，只回答过或不过）、**测试集**（封存），另外指定受保护案例。
+
+1. **定位**：在设计集上算每一行的频谱，用 Ochiai 或 DStar 排序（32.3.4 节）。
+2. **分诊**：把可疑行的错误分成三份（命题 32.7）。
+3. **最小化**：改规则修不了的部分，用 ddmin 找最小的冲突案例（命题 32.8）；疑似读错的案例，用 ddmin 缩句子（32.5 节）。
+4. **修复**：生成候选（单处编辑、按天使值综合条件，或语言模型提议），检查零伤害约束，在选择集上按回答甲验证。
+5. **验证**：在测试集上报告 32.9 节的量：全对时的上界或精确区间、与原规则的符号检验、回归列表。
+
+### 32.11.2 分支的错误三分
+
+为了看清第 2 步，在 32.1 节的 60 个案例里再加一点真实感：13 个"在时限内、保存得当、腐烂、未渗汁"的案例中，有 2 个当时判了 B，原因没有被任何事实记录下来（就像第 1 章的案例 3）。$h_0$ 现在错 9 个。频谱是 L1 $(9,51)$、L2 $(9,35)$、L3 $(2,27)$，Ochiai 依次为 0.387、0.452、0.124，L2 排第一。
+
+记 $C_j$ 为设计集中在第 $j$ 行**得出结论**的案例，$\ell_j$ 为第 $j$ 行的结论，并令
+
+$$
+\begin{aligned}
+e_j&=\sum_{i\in C_j}c(y_i,\ell_j),\\
+m_j&=\min_{\ell\in\mathcal{Y}}\sum_{i\in C_j}c(y_i,\ell),\\
+L_j&=\sum_{G}\min_{\ell\in\mathcal{Y}}\sum_{i\in G}c(y_i,\ell),
+\end{aligned}
+$$
+
+其中 $G$ 取遍把 $C_j$ 按事实 $\phi$ 分成的组。
+
+**怎么读**：$e_j$ 是这一行现在的代价；$m_j$ 是"这一行换一个结论"最好能做到的代价；$L_j$ 是这一行的案例上的碰撞下界（命题 1.9 用在 $C_j$ 上）。
+
+**命题 32.7（分支错误的三分）** $e_j\ge m_j\ge L_j$，并且：
+
+1. 只改第 $j$ 行的结论，可以把 $C_j$ 上的代价降到 $m_j$，不改变其他任何案例的结论；
+2. 在第 $j$ 行之前插入若干行例外，条件为"第 $j$ 行的条件，且事实取某组的值"，可以把 $C_j$ 上的代价降到 $L_j$，同样不改变其他案例的结论；
+3. 任何只看 $\phi$ 的规则，在 $C_j$ 上的代价都不低于 $L_j$。
+
+因此第 $j$ 行的错误分成三份：$e_j-m_j$ 改结论能修，$m_j-L_j$ 用已有事实拆分能修，$L_j$ 改规则修不了。
+
+#### 证明（第一遍可以跳过）
+
+1. $e_j\ge m_j$：$\ell_j$ 是 $\mathcal{Y}$ 中的一个结论。$m_j\ge L_j$：整组用同一个结论是"每组各选结论"的特例。
+2. 第 1 条：落到第 $j$ 行的案例恰好是 $C_j$，改这一行的结论只影响它们；取达到 $m_j$ 的结论即可。
+3. 第 2 条：插入的例外紧挨在第 $j$ 行之前，能走到它们的案例与能走到第 $j$ 行的相同；条件里含"第 $j$ 行的条件"，所以只有 $C_j$ 中的案例会触发它们，再按事实取值分到各组。每组的例外给出组内代价最小的结论，$C_j$ 上的代价就是 $L_j$；$C_j$ 以外的案例与原来走同样的路。
+4. 第 3 条：命题 1.9 用在样本 $C_j$ 上。$\square$
+
+**在例子上**：
+
+| 行 | 在此得出结论的案例 | $e_j$ | $m_j$ | $L_j$ | 三分 |
+|---|---|---|---|---|---|
+| L2 | 15（8 个 B，7 个 S） | 7 | 7 | 0 | 0 / 7 / 0 |
+| L3 | 13（11 个 S，2 个 B） | 2 | 2 | 2 | 0 / 0 / 2 |
+
+**怎么读**：L2 的 7 个错误改结论修不了（改成 S 会错 8 个），但用已有事实拆分能全部修好，这正是"删去或 $p=1$"所做的。L3 的 2 个错误改规则修不了：13 个案例的事实完全相同。修好 L2 以后，频谱会把 L3 排第一（剩下的 2 个失败都在 L3），而三分告诉我们**不要再改规则**：要么缺了一个事实，要么这 2 个标签需要复核。频谱只说"在哪里"，三分说"改规则有没有用"。
+
+### 32.11.3 最小冲突案例
+
+第 3 步要回答"最少哪几个案例放在一起，就没有规则能全部判对"。把 ddmin 的测试换成：**在假设空间 $\mathcal{H}$ 里，没有一条规则在这组案例上代价为 0**（代价只在判错时为正）。
+
+**命题 32.8（全函数空间上的最小冲突）** 取 $\mathcal{H}$ 为所有只看 $\phi$ 的规则。则一组案例"不可满足"当且仅当其中有两个案例事实相同、标签不同；每个 1-极小的不可满足案例集都恰好是这样一对。因此 ddmin 返回一对碰撞的案例。
+
+**证明.** 若有这样一对，任何只看 $\phi$ 的规则对两者给出同一个结论，至少错一个。若没有，每组标签都相同，碰撞下界为 0，由命题 1.9 可以达到，即可满足。设 $C$ 是 1-极小的不可满足集，它含一对碰撞 $\{i,i'\}$；若 $C$ 还有第三个案例 $k$，$C\setminus\{k\}$ 仍含这一对，仍不可满足，与 1-极小矛盾。$\square$
+
+**在例子上**：对 60 个案例跑 ddmin，用 10 次测试返回一对事实同为 $(a,b,p,u)=(1,1,0,0)$、标签一个 S 一个 B 的案例。这一对就是送去复核标签、或者交给第 28 章的概念发现循环去找新事实的最小材料。
+
+$\mathcal{H}$ 更小时（例如只允许三行以内的规则），1-极小的不可满足集可以更大，它说明"这几个案例放在一起，任何短规则都兜不住"，指向的是假设空间不够（第 1 章 1.11 节的近似误差）。这些最小冲突集与"最少改掉哪些才能恢复可满足"之间有碰集式的对偶，本卷讲诊断的那一章会讲。
+
+### 32.11.4 规则错了、缺了事实，还是读错了
+
+导读里问过：规则判错了，是事实读错了、缺了一个事实，还是规则本身不对？本章的工具能回答其中一部分：
+
+- **频谱分不开三者。** 一个读错的案例被错误的事实送进某一行，那一行就显得可疑，和规则写错一模一样；标签记错也一样（32.2.4 节）。
+- **三分能分开"改规则有用"和"改规则没用"。** $m_j-L_j$ 和 $e_j-m_j$ 指向规则；$L_j$ 指向事实或标签。
+- **剩下的要靠别的观察。** 读错要用独立核实过的事实（第 15 章的金标）来判断，ddmin 可以把读错缩到触发它的几句话；缺事实还是标签错，要复核标签，或者提出能拆开碰撞对的新观察，并在没参与提议的数据上检验（第 1 章 1.10.6 节）。
+
+把读取器、事实集和规则三类部件放在一起做一致性诊断，是本卷讲诊断的那一章的内容。
+
+### 小结
+
+这一节说的是：修规则的流程是定位、分诊、最小化、修复、验证，数据分成设计集、选择集、测试集；每一行的错误可以精确地分成改结论能修、拆分能修、改规则修不了三份（命题 32.7）；在全函数空间上，最小的冲突案例集就是一对碰撞的案例（命题 32.8）；频谱分不开读错、缺事实和规则错误，三分和金标能分开一部分。
+
+---
+
+## 32.12 这一章在全书中的位置
+
+| 本章结论 | 在"语言模型读事实、规则做判定"的系统里意味着什么 |
+|---|---|
+| 频谱与可疑度公式（定义 32.1、32.2） | 按判错案例经过了哪些行，给规则的每一行打分，先看分数高的 |
+| Naish1 的最优性及其脆弱（命题 32.2） | 标签有噪声、读数会错时，不要用依赖"所有失败都经过错误位置"的公式 |
+| EXAM 与名次（定义 32.4） | 报告绝对名次和前几名命中，说明并列怎么处理 |
+| ddmin（命题 32.3、32.4） | 把读错缩到触发它的几句话，写进回执和锚定集 |
+| 合理与正确（定义 32.6） | 在修复集上全对的规则补丁可能带着回归，需要受保护案例和留出案例 |
+| 天使值（定义 32.7） | 综合一行的条件就是从天使值学一个布尔函数，可行性由碰撞决定 |
+| 修复验证界（定理 32.5、推论 32.6） | 选择集只回答"过或不过"并在第一次通过时停下；给模型看选择集上的错例，保证就没了 |
+| 32.9 节 | "比原来好"和"是否正确"分开检验，回归单独报告 |
+| 分支三分与最小冲突（命题 32.7、32.8） | 改规则之前先问改规则有没有用；改不了的部分交给复核或概念发现 |
+
+---
+
+## 32.13 本章小结
+
+- 规则是程序，案例是测试；频谱记录每一行被多少失败、通过的案例经过（定义 32.1），Tarantula、Ochiai、DStar、Naish1 把频谱变成可疑度（定义 32.2）。
+- 按"排在错误前面"和"排在后面"的集合比较公式（定义 32.3、推论 32.1）。所有失败都经过错误位置时，Naish1 不劣于任何对通过次数严格递减的公式（命题 32.2）；一个记错的标签就让它把入口行排第一。
+- 评价用名次、EXAM 和前 $N$ 命中（定义 32.4），绝对名次比比例更有意义。
+- ddmin 输出 1-极小的失败子集（命题 32.3），单个罪魁时至多 $2\lceil\log_2N\rceil$ 次测试，一般情形平方量级（命题 32.4）；在例子里 17 次测试把 8 句话缩成触发读错的 2 句。
+- 生成—验证式修复只保证合理；合理补丁里正确的常是少数（定义 32.6，Kali、Smith 等人）；12 个案例的修复集上 5 个合理补丁有 3 个错，且带回归。语义修复求天使值再综合（定义 32.7），天使值就是修复见证。
+- 修复的过拟合是自适应过拟合：全对补丁的风险不超过（$\ln\lvert\Pi\rvert+\ln(1/\delta)$）$/n$（定理 32.5）；只回答过或不过时代价是 $\ln k$，回答失败个数或失败的是哪些时保证失效（推论 32.6）。
+- 补丁在留出案例上评估：全对时上界约 $3/m$；"比原来好"用符号检验；回归单独报告。SWE-bench 类评测用留出测试，但通过仍只是合理。
+- 修规则：定位、分诊（命题 32.7）、最小化（命题 32.8）、修复、验证。
+
+---
+
+## 练习
+
+难度标记：★ 检验理解，★★ 需要推导或计算，★★★ 开放思考。
+
+### 检验理解
+
+**练习 32.1** ★ $F=4$、$P=20$，某一行 $a_{\mathrm{ef}}=3$、$a_{\mathrm{ep}}=5$。算它的 Tarantula、Ochiai、DStar 和 Naish1。
+
+**练习 32.2** ★ 判断对错并说明理由："命题 32.2 证明了 Naish1 是最好的可疑度公式，所以规则系统应当用 Naish1。"
+
+**练习 32.3** ★ 一个补丁是修复程序在 60 个案例上试了 200 个候选后找到的第一个全对的补丁。能不能说"由三法则，它的风险以 95% 的把握不超过约 3/60"？如果不能，正确的说法是什么？
+
+### 推导
+
+**练习 32.4** ★★ 设假设 A 成立，$F=2$、$P=20$。错误位置 $f$ 的 $(a_{\mathrm{ef}},a_{\mathrm{ep}})=(2,10)$，另一位置 $s$ 为 $(1,0)$。分别用 Ochiai、Tarantula、DStar、Naish1 比较两者。为什么 $s$ 不可能是错误？这说明了命题 32.2 证明中的哪一步？
+
+**练习 32.5** ★★ 设假设 A 成立。记 $A=\{s\ne f:a_{\mathrm{ef}}(s)=F\}$，按 $a_{\mathrm{ep}}(s)$ 小于、等于、大于 $a_{\mathrm{ep}}(f)$ 分成 $A_<,A_=,A_>$。（1）求 Naish1 和 $\mathrm{Wong1}=a_{\mathrm{ef}}$ 下 $f$ 的平均名次。（2）证明 Naish1 的平均名次更小当且仅当 $\lvert A_<\rvert<\lvert A_>\rvert$。（3）举一个 Wong1 更好的情形，并解释"通过测试的信息"为什么会帮倒忙。
+
+**练习 32.6** ★★ 8 句话中只有第 5 句会让读取器读错。写出 ddmin 的全部测试，数一数（不计开头一次），与命题 32.4 的上下界比较。
+
+**练习 32.7** ★★ 把候选扩大到"两处编辑"，$k=203^2=41\,209$。（1）$n=60$、$\delta=0.05$，回答甲的余量是多少？要压到 0.05 需要多少个验证案例？（2）若修复程序共提交 2000 个补丁、每次得到失败个数，$n=60$ 时余量是多少？
+
+**练习 32.8** ★★ 一个补丁的真实风险是 0.01。（1）它在 300 个留出案例上全对的概率是多少？（2）要以 90% 的概率至少抓到它一次，需要多少留出案例？（3）在留出案例上，它修好了 12 个、改坏了 3 个，单侧符号检验的 p 值是多少？这个结果说明了什么，没说明什么？
+
+**练习 32.9** ★★ 在 32.11.2 节的数据上，修好 L2（删去"或 $p=1$"）以后，L3 有 15 个案例在此得出结论。求 $e_3$、$m_3$、$L_3$，并说明为什么插入任何只用 $a,b,p,u$ 的例外都无济于事。如果复核发现这 2 个 B 是记错的，频谱会怎样变化？
+
+### 思考
+
+**练习 32.10** ★★★ 为"语言模型修补定责规则"设计一套协议：模型能看到哪些案例和哪些反馈，选择集返回什么，怎样执行零伤害约束和比特预算，在什么时候换选择集，最终报告哪些量。说明每个设计对应本章和第 5 章的哪个结论。
+
+---
+
+## 练习提示与答案
+
+<details>
+<summary>练习 32.1</summary>
+
+Tarantula $=(3/4)/(3/4+5/20)=0.75$；Ochiai $=3/\sqrt{4\times8}\approx0.530$；DStar $=9/(5+1)=1.5$；Naish1：$a_{\mathrm{ef}}=3<4$，记 $-1$。
+
+</details>
+
+<details>
+<summary>练习 32.2</summary>
+
+错。命题 32.2 的前提是假设 A：每个失败都经过错误位置。规则系统里标签记错、事实读错、多处错误和遗漏都常见，任何一种都会破坏假设 A，这时 Naish1 把错误位置打到最低（32.2.4 节）。命题说的是"在假设 A 成立的情形上不劣于"，不是"总是最好"；而且它与 Wong1 不可比（练习 32.5）。
+
+</details>
+
+<details>
+<summary>练习 32.3</summary>
+
+不能。三法则要求规则不依赖于这 60 个案例，而这个补丁是看着它们挑出来的。若修复程序只得到"过/不过"并在第一次全对时停下（回答甲），由推论 32.6，余量是 $\ln(201\times20)/60\approx0.138$，不是 0.05；若它看到了失败个数或失败的案例，几乎没有保证。要得到 3/60 这样的结论，需要另外 60 个没参与修复的案例。
+
+</details>
+
+<details>
+<summary>练习 32.4</summary>
+
+Ochiai：$f$ 为 $2/\sqrt{24}\approx0.408$，$s$ 为 $1/\sqrt2\approx0.707$。Tarantula：$f$ 为 $1/(1+0.5)\approx0.667$，$s$ 为 1。DStar：$f$ 为 $4/10=0.4$，$s$ 为 $1/1=1$。三者都把 $s$ 排在 $f$ 前面。Naish1：$f$ 为 $20-10=10$，$s$ 为 $-1$。假设 A 下错误位置被每个失败经过，而 $s$ 只被一个失败经过，所以不是错误。这对应证明第 2 步中"$a_{\mathrm{ef}}(s)<F$ 的位置在 Naish1 下一律排在后面"：Naish1 用上了假设 A 排除不可能的位置，其他公式没有。
+
+</details>
+
+<details>
+<summary>练习 32.5</summary>
+
+（1）假设 A 下没有位置的 $a_{\mathrm{ef}}$ 超过 $F$。Wong1：$S_B=\varnothing$，$S_F=A$，平均名次 $\lvert A\rvert/2+1$。Naish1：$S_B=A_<$，$S_F=A_=$，平均名次 $\lvert A_<\rvert+\lvert A_=\rvert/2+1$。（2）两者之差为 $\lvert A_<\rvert+\lvert A_=\rvert/2-(\lvert A_<\rvert+\lvert A_=\rvert+\lvert A_>\rvert)/2=(\lvert A_<\rvert-\lvert A_>\rvert)/2$。（3）例如错误位置被很多通过测试经过（它在常用路径上），而同样被所有失败经过的其他位置大多很少被通过测试经过：$\lvert A_<\rvert=4$、$\lvert A_>\rvert=0$ 时 Naish1 平均名次比 Wong1 差 2。"被通过测试经过得多就不可疑"只是一个统计倾向，对一个具体的错误可能恰好相反。
+
+</details>
+
+<details>
+<summary>练习 32.6</summary>
+
+$\{1,2,3,4\}$ 不失败，$\{5,6,7,8\}$ 失败；$\{5,6\}$ 失败；$\{5\}$ 失败，停止。共 4 次，上界 $2\lceil\log_28\rceil=6$，下界 3。这次比上界少，是因为每轮先测的那一份恰好含第 5 句。
+
+</details>
+
+<details>
+<summary>练习 32.7</summary>
+
+（1）$\ln(41\,210\times20)/60\approx13.62/60\approx0.227$；要 0.05 需要 $n\ge273$。候选数平方，$\ln k$ 只翻倍。（2）$(2000\ln61+\ln20)/60\approx137$，没有任何保证。
+
+</details>
+
+<details>
+<summary>练习 32.8</summary>
+
+（1）$0.99^{300}\approx0.049$。（2）$m\ge\ln0.1/\ln0.99\approx229.1$，即 230 个。（3）$\Pr(\mathrm{Bin}(15,\tfrac12)\ge12)=(455+105+15+1)/32\,768\approx0.018$。它说明补丁很可能比原规则好；没有说明补丁正确，3 个改坏的案例就是回归，要逐个列出，并检查是否触及受保护案例。
+
+</details>
+
+<details>
+<summary>练习 32.9</summary>
+
+修好 L2 以后，渗汁且腐烂的 2 个案例也在 L3 得出结论。15 个案例中 13 个 S、2 个 B，$e_3=2$；全判 B 错 13 个，所以 $m_3=2$；这 2 个 B 与 11 个 S 的事实同为 $(1,1,0,0)$，$L_3=2$。任何只看 $a,b,p,u$ 的规则对这 13 个案例给出同一个结论（命题 1.9），至少错 2 个。若 2 个 B 是记错的，改回 S 以后 $F=0$，频谱里所有 $a_{\mathrm{ef}}$ 都是 0，没有可疑的行，这才是"规则没问题、标签有问题"的样子。
+
+</details>
+
+<details>
+<summary>练习 32.10</summary>
+
+参考要点：（1）三份数据加受保护案例，测试集封存。（2）模型看设计集上的规则、频谱排序、三分表和错例原文，可以是回答丙，因为设计集不用于评估。（3）每个候选先在设计集和受保护案例上检查零伤害约束（定义 12.8），再交给选择集；选择集只返回"采纳或不采纳"，第一次采纳就结束这一轮（回答甲，推论 32.6）。（4）按定理 32.5 累计 $\ln\lvert\Pi\rvert$，超过预算（例如让余量超过 0.05）就把选择集并入设计集、换新的（第 5 章 5.10 节）。（5）三分显示 $L_j>0$ 的部分不交给模型修，送标签复核或概念发现。（6）最终报告：每轮模型看到的内容、候选数、选择集的比特数和余量；测试集上的错误数与精确区间、与原规则的符号检验、回归列表、受保护案例上的变化。
+
+</details>
+
+---
+
+## 延伸
+
+- 碰撞下界、标签是什么：第 1 章；联合界与可实现情形：第 2 章；选择集与测试集、精确区间、符号检验：第 4 章；交互记录界与迭代设计：第 5 章。
+- 零伤害约束与支持度门槛：第 12 章；概念发现循环与"模型修补、约束把关"：第 28 章。
+- 测量、金标与 κ：第 15 章；读数回执与信度：第 18 章；修复见证与冲突集：第 26 章。
+- 程序综合（采样—过滤与 pass@k、CEGIS）：第 29 章；抽象与精化：第 30 章；基于模型的诊断（一致性诊断、最小冲突集与最小修正集的对偶、算法调试）：第 31 章。
+- 多重检验：第 38 章；自改进系统的评估陷阱：第 45 章。
+
+## 文献
+
+**教材与综述**
+
+- Andreas Zeller. *Why Programs Fail: A Guide to Systematic Debugging*. Morgan Kaufmann, 2005（第 2 版 2009）. 系统调试的教材，delta 调试的作者本人所写。
+- W. Eric Wong, Ruizhi Gao, Yihao Li, Rui Abreu, Franz Wotawa. A Survey on Software Fault Localization. *IEEE Transactions on Software Engineering*, 42(8), 2016. 故障定位的综述，频谱、变异等各类方法与评价指标。
+- Martin Monperrus. Automatic Software Repair: A Bibliography. *ACM Computing Surveys*, 51(1), 2018. 自动修复的文献综述。
+- Claire Le Goues, Michael Pradel, Abhik Roychoudhury. Automated Program Repair. *Communications of the ACM*, 62(12), 2019. 面向一般读者的修复综述，包括生成—验证与语义修复。
+
+**论文**
+
+- James A. Jones, Mary Jean Harrold, John Stasko. Visualization of Test Information to Assist Fault Localization. *ICSE*, 2002. Tarantula。
+- Rui Abreu, Peter Zoeteweij, Arjan J. C. van Gemund. On the Accuracy of Spectrum-based Fault Localization. *TAICPART-MUTATION*, 2007. Ochiai 系数用于故障定位。
+- Lee Naish, Hua Jie Lee, Kotagiri Ramamohanarao. A Model for Spectra-based Software Diagnosis. *ACM Transactions on Software Engineering and Methodology*, 20(3), 2011. 单错误模型下的最优公式。
+- W. Eric Wong, Vidroha Debroy, Ruizhi Gao, Yihao Li. The DStar Method for Effective Software Fault Localization. *IEEE Transactions on Reliability*, 63(1), 2014. DStar。
+- Xiaoyuan Xie, Tsong Yueh Chen, Fei-Ching Kuo, Baowen Xu. A Theoretical Analysis of the Risk Evaluation Formulas for Spectrum-Based Fault Localization. *ACM Transactions on Software Engineering and Methodology*, 22(4), 2013. 用"排在前面/后面的集合"比较公式，找出两组极大公式。
+- Chris Parnin, Alessandro Orso. Are Automated Debugging Techniques Actually Helping Programmers? *ISSTA*, 2011. 用户研究：绝对名次比百分比重要。
+- Seokhyeon Moon, Yunho Kim, Moonzoo Kim, Shin Yoo. Ask the Mutants: Mutating Faulty Programs for Fault Localization. *ICST*, 2014. MUSE，基于变异的定位。
+- Mike Papadakis, Yves Le Traon. Metallaxis-FL: Mutation-based Fault Localization. *Software Testing, Verification and Reliability*, 2015. 基于变异的定位。
+- Andreas Zeller. Yesterday, My Program Worked. Today, It Does Not. Why? *ESEC/FSE*, 1999. delta 调试的最初形式（隔离导致失败的改动）。
+- Andreas Zeller, Ralf Hildebrandt. Simplifying and Isolating Failure-Inducing Input. *IEEE Transactions on Software Engineering*, 28(2), 2002. ddmin 与 1-极小性。
+- Westley Weimer, ThanhVu Nguyen, Claire Le Goues, Stephanie Forrest. Automatically Finding Patches Using Genetic Programming. *ICSE*, 2009. GenProg 的最初论文。
+- Claire Le Goues, ThanhVu Nguyen, Stephanie Forrest, Westley Weimer. GenProg: A Generic Method for Automatic Software Repair. *IEEE Transactions on Software Engineering*, 38(1), 2012. GenProg 的完整描述。
+- Claire Le Goues, Michael Dewey-Vogt, Stephanie Forrest, Westley Weimer. A Systematic Study of Automated Program Repair: Fixing 55 out of 105 Bugs for &#36;8 Each. *ICSE*, 2012. 大规模实验。
+- Zichao Qi, Fan Long, Sara Achour, Martin Rinard. An Analysis of Patch Plausibility and Correctness for Generate-and-Validate Patch Generation Systems. *ISSTA*, 2015. 合理与正确的区分，Kali。
+- Edward K. Smith, Earl T. Barr, Claire Le Goues, Yuriy Brun. Is the Cure Worse Than the Disease? Overfitting in Automated Program Repair. *ESEC/FSE*, 2015. 用独立测试套件度量修复的过拟合。
+- Fan Long, Martin Rinard. An Analysis of the Search Spaces for Generate and Validate Patch Generation Systems. *ICSE*, 2016. 搜索空间中合理补丁远多于正确补丁。
+- Yingfei Xiong, Xinyuan Liu, Muhan Zeng, Lu Zhang, Gang Huang. Identifying Patch Correctness in Test-Based Program Repair. *ICSE*, 2018. 用生成的测试与行为相似性判断补丁是否正确。
+- Satish Chandra, Emina Torlak, Shaon Barman, Rastislav Bodik. Angelic Debugging. *ICSE*, 2011. 天使值。
+- Hoang Duong Thien Nguyen, Dawei Qi, Abhik Roychoudhury, Satish Chandra. SemFix: Program Repair via Semantic Analysis. *ICSE*, 2013. 符号执行求约束、组件综合求表达式。
+- Sergey Mechtaev, Jooyong Yi, Abhik Roychoudhury. DirectFix: Looking for Simple Program Repairs. *ICSE*, 2015. 偏好最简单补丁的一体化求解。
+- Sergey Mechtaev, Jooyong Yi, Abhik Roychoudhury. Angelix: Scalable Multiline Program Patch Synthesis via Symbolic Analysis. *ICSE*, 2016. 天使森林与多行补丁。
+- René Just, Darioush Jalali, Michael D. Ernst. Defects4J: A Database of Existing Faults to Enable Controlled Testing Studies for Java Programs. *ISSTA*, 2014. 定位与修复最常用的真实错误基准之一。
+- Chunqiu Steven Xia, Yuxiang Wei, Lingming Zhang. Automated Program Repair in the Era of Large Pre-trained Language Models. *ICSE*, 2023. 直接用预训练模型做修复的系统比较。
+- Chunqiu Steven Xia, Lingming Zhang. Keep the Conversation Going: Fixing 162 out of 337 Bugs for &#36;0.42 Each Using ChatGPT. *ISSTA*, 2024. ChatRepair，把测试失败信息以对话方式反馈。
+- Carlos E. Jimenez, John Yang, Alexander Wettig, Shunyu Yao, Kexin Pei, Ofir Press, Karthik Narasimhan. SWE-bench: Can Language Models Resolve Real-World GitHub Issues? *ICLR*, 2024. 仓库级修复基准。
+- John Yang, Carlos E. Jimenez, Alexander Wettig, Kilian Lieret, Shunyu Yao, Karthik Narasimhan, Ofir Press. SWE-agent: Agent-Computer Interfaces Enable Automated Software Engineering. *NeurIPS*, 2024. 为模型设计的命令接口。
+- Yuntong Zhang, Haifeng Ruan, Zhiyu Fan, Abhik Roychoudhury. AutoCodeRover: Autonomous Program Improvement. *ISSTA*, 2024. 结构化代码搜索与频谱定位结合。
+- Chunqiu Steven Xia, Yinlin Deng, Soren Dunn, Lingming Zhang. Agentless: Demystifying LLM-based Software Engineering Agents. arXiv 预印本, 2024. 定位—修复—验证的固定流程。
+- OpenAI. Introducing SWE-bench Verified. 技术报告与博客, 2024. 人工筛选的 500 个任务子集。
