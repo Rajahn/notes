@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Finite checks of selected mathematical claims in chapters 3–5, 34 and 37.
+"""Finite checks of selected mathematical claims in chapters 3–5 and 34–37.
 
 These computations supplement the proofs in the text. They verify only the
 finite instances described below, not the corresponding general theorems.
@@ -9,6 +9,7 @@ from itertools import product
 from fractions import Fraction
 import cmath
 import json
+import math
 
 
 def has_infinite_path(x, transition, actions, safe, visited):
@@ -117,11 +118,72 @@ def main():
     assert 10 + 100 * .15 + .01 * 500 + 5 == 35
     assert 10 + 100 * .8 + .03 * 1000 + 5 == 125
     assert Fraction(120) * Fraction(2, 5) == 48
+
+    # Compare the analytical inspection choice with a separately enumerated
+    # cost grid, including zero avoidable loss and both endpoint optima.
+    inspection_cases = 0
+    for wage, alpha, p0, same_floor, damage, maximum in product(
+        [.25, 1, 3], [.5, 2], [.1, .5], [False, True], [0, 1, 50], [.1, 3]
+    ):
+        floor = p0 if same_floor else 0
+        marginal = alpha * damage * (p0 - floor)
+        choice = 0 if marginal <= wage else min(
+            maximum, math.log(marginal / wage) / alpha
+        )
+        def cost(hours):
+            return wage * hours + damage * (
+                floor + (p0 - floor) * math.exp(-alpha * hours)
+            )
+        grid_best = min(cost(maximum * j / 200) for j in range(201))
+        assert cost(choice) <= grid_best + 1e-9
+        inspection_cases += 1
+
+    # Enumerate the outcome distribution, rather than assuming variances add.
+    error_distribution_cases = 0
+    for count, probability in product(
+        range(1, 6), [Fraction(0), Fraction(1, 10), Fraction(1, 2), Fraction(1)]
+    ):
+        expectation = Fraction(0)
+        second_moment = Fraction(0)
+        for errors in product([0, 1], repeat=count):
+            total = sum(errors)
+            weight = probability ** total * (1 - probability) ** (count - total)
+            expectation += total * weight
+            second_moment += total ** 2 * weight
+        assert expectation == count * probability
+        assert second_moment - expectation ** 2 == (
+            count * probability * (1 - probability)
+        )
+        common_second_moment = count ** 2 * probability
+        assert common_second_moment - expectation ** 2 == (
+            count ** 2 * probability * (1 - probability)
+        )
+        error_distribution_cases += 1
+
+    training_cases = 0
+    for depreciation, conversion, entrants, initial in product(
+        [Fraction(1, 10), Fraction(1, 2), Fraction(1)],
+        [Fraction(1, 2), Fraction(2)], [0, 10], [0, 50]
+    ):
+        actual = Fraction(initial)
+        for period in range(1, 13):
+            actual = (1 - depreciation) * actual + conversion * entrants
+            closed = (
+                (1 - depreciation) ** period * initial
+                + conversion * entrants / depreciation
+                * (1 - (1 - depreciation) ** period)
+            )
+            assert actual == closed
+            training_cases += 1
+
     print(json.dumps({
         "observation_cases": observation_cases,
         "closure_cases": closure_cases,
         "viability_cases": viability_cases,
         "delayed_control_parameter_points": 71,
+        "inspection_cost_cases": inspection_cases,
+        "error_distribution_cases": error_distribution_cases,
+        "training_recurrence_cases": training_cases,
         "numeric_examples": "passed",
         "scope": "Finite instance checks; the general proofs are in the manuscript."
     }, ensure_ascii=False, indent=2))

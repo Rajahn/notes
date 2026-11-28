@@ -1,95 +1,95 @@
 {
-  "version": "1.0",
+  "version": "2.0",
   "research_cutoff": "2026-11-28",
-  "body_han_characters": 86168,
+  "body_han_characters": 172555,
   "numbered_chapters": 37,
   "introduction_and_conclusion": 2,
-  "reference_entries": 71,
-  "cited_reference_entries": 71,
-  "research_han_characters": 17083,
+  "reference_entries": 158,
+  "cited_reference_entries": 158,
+  "research_han_characters": 42295,
   "parts": [
     {
       "part": 1,
       "title": "过程、计算与组织的数学基础",
       "chapters": 8,
-      "han_characters": 11199
+      "han_characters": 27276
     },
     {
       "part": 2,
       "title": "组织、意义与主体的生成",
       "chapters": 5,
-      "han_characters": 10419
+      "han_characters": 21055
     },
     {
       "part": 3,
       "title": "语言、技术与历史的生成",
       "chapters": 5,
-      "han_characters": 12525
+      "han_characters": 24378
     },
     {
       "part": 4,
       "title": "经济的一般理论",
       "chapters": 5,
-      "han_characters": 11820
+      "han_characters": 24686
     },
     {
       "part": 5,
       "title": "政治的一般理论",
       "chapters": 5,
-      "han_characters": 11505
+      "han_characters": 23927
     },
     {
       "part": 6,
       "title": "自由、价值与共同生活",
       "chapters": 4,
-      "han_characters": 10175
+      "han_characters": 20350
     },
     {
       "part": 7,
       "title": "AI 时代的变化、判断与制度实践",
       "chapters": 5,
-      "han_characters": 13476
+      "han_characters": 22899
     }
   ],
   "chapter_sha256": {
-    "src/00-introduction.md": "581a161eef87b95314e858ffa5eb92062e2b07108faebb5f2488019bea2962b8",
-    "src/01-process-and-realization.md": "59cc47fe1f51a8ce5cffbf6e2ca91491c19d83abf38949ac20a2d944e7d682bb",
-    "src/02-computation-and-finitude.md": "596dfc1581affbdddb927d553dda170fb87b94589f778693843217b6e7cd1b44",
-    "src/03-observation-and-representation.md": "0c46a04f0ec0140f55907e277d9fe105b1edce6fa75a58c78241f2b3b325f367",
-    "src/04-scale-and-structure.md": "8b61ac4969b58f4e78f5ed9544e98849323e90135ffe9ecd045b87f3f89693f1",
-    "src/05-action-and-viability.md": "8b549b4858c044ecd67b1663767c0c552b2ae9f54e79f6ca4669b5f40e6f5231",
-    "src/06-interdependence-and-feasibility.md": "c3101fa4a6c9655fa47dbd836a739d7cc7847f013edb037997d7d1cec8e01aa0",
-    "src/07-records-and-rule-change.md": "b694239bc687ba082d42ef590bd60f1fa787e697d7d7a3e712fbc36adb725de9",
-    "src/08-models-and-possibility.md": "845635307e952505887bcafef650e3221d17aa5e743445618260172d6355b8bc",
-    "src/09-boundaries-and-persistence.md": "aaa44414ea11f42baf974aa3e8a2c9d84cd162f939ce53bcedd188bc2057d6e8",
-    "src/10-records-and-memory.md": "f5b4337c381061dc5fc514377f57e6b28355273951c7815e3b019125a1a987c8",
-    "src/11-information-and-meaning.md": "b95eb36ad4cdeff6779094708d1937c1859e936821196c1d2dc6d6f43c6c97f8",
-    "src/12-action-and-purpose.md": "717269d9f47d3085589930675b23aed57d89e7ae7ccdebab98a26ec17704df69",
-    "src/13-self-description-and-observer.md": "c37c75456c536052bc13365c4bcbfae9b2ce14b69befa7d83e1c0371793d4987",
-    "src/14-communication-and-language.md": "728e679074c10c3344f0c9777e3589ed1b97a5e3e7218d70ca5324ad9b1c5ee9",
-    "src/15-technology-and-external-memory.md": "c676ab2f7c45fe21798f397d0a6888f22ef10c407aa6b3362aafffab838fcf73",
-    "src/16-norms-and-values.md": "285edca28369036fbd1f3fb34e193babc0e95f61fbf5587308a5b85eb44bc267",
-    "src/17-institutions-and-reproduction.md": "ac8914fdfd7915a212c084d7c9b13291cd319661bde3ffd5578c50fc02aecce1",
-    "src/18-historical-change.md": "5861d589d9035c8905953fa1ba9975bee56317ab3588fc8be74ccd3ba744a8e4",
-    "src/19-needs-and-production.md": "187ad661fea5f88166c9bfe9feb05aaedd3beaf435492740df5f15f659dc4dac",
-    "src/20-division-and-exchange.md": "87c83f338a04d8792a4724c355f435340647e681ce231a3fe555a33c67113df5",
-    "src/21-money-prices-and-expectations.md": "97f5538c54f85dad2e3e327781df78bb84079bed466749325fbc65a09eb1bf8f",
-    "src/22-property-capital-and-distribution.md": "a9102cde0b3fe41279a4f9f41ea6da0e97c34537baccf34f2c54097a0ca6cec6",
-    "src/23-accumulation-and-crisis.md": "ff54c0ecbb2b42964ed3e2f31e3460e4229669f1044c54cd46efa750d85326ca",
-    "src/24-power-and-interdependence.md": "26d8bf2d8209f21ad3e08ccca2cadc78c751eeb4adfcb7468b22de9ec781a6b3",
-    "src/25-authority-rules-and-coercion.md": "ad266bcce2843d2e77d241a3058ebfee6194249c5632a2bbbac2697ecfb99e87",
-    "src/26-state-and-public-organization.md": "9267b72da4be3a992fa5b6669803dcb87c6b37f0948de447f63f804fdd885ab9",
-    "src/27-representation-and-legitimacy.md": "a5383007fb0656900721323f0fad9ca17a0961385b80848a9b891f9c899e0b48",
-    "src/28-conflict-and-institutional-change.md": "9d431381c0b5ec708e226edd7d45ba56a59bddedbfc38d2be3056dc8b84d32bf",
-    "src/29-capabilities-and-standing.md": "b0c3576cba480a581a4ea1149bae215e2d080466b164dea6717a54553d3110b3",
-    "src/30-formation-and-revision-of-purposes.md": "76620ab54086d8803f60a9851439d96f2cb6c9a566875414c077774cb98430e9",
-    "src/31-common-freedom-and-recognition.md": "e6a5297fe971370e2a24c09e55c75d2c1860d62ac625de0aaf0e52524c8eb741",
-    "src/32-historicity-and-self-reference.md": "b6a9d547439aeed60ad8ee86cd77b816859e982ee270ab5f928b9d5f16e44fc6",
-    "src/33-ai-and-technical-externalization.md": "ff3ddfebd31cc9a7bb7d567dd11d4066b2154f4d5dd2878f8e51843a2e978eed",
-    "src/34-automation-labor-and-income.md": "50d54d3572a651c504679eb234457254731e71131d9d3ca6242909c74356088d",
-    "src/35-employment-and-social-institutions.md": "aaa25292200441b409a28ec253b858dfc110e9f55162d82029afe255a0b6958c",
-    "src/36-judgments-and-tests.md": "37c9b9af775c0a2f944c24dae7e5758bfb24014e0051e4732d102f28c80637da",
-    "src/37-institutions-of-common-freedom.md": "34addf2c72379a2e0c3db40b7ad3b4c5728936876689b83f83e8e5799aa57312",
-    "src/38-conclusion.md": "8a31cbf42b4a8fea5a052b636242579875879556037d4061077914f9df668cc9"
+    "src/00-introduction.md": "4c727dcc3f1fde9fb519d0767966cd0d455fdb5eb5f8dcb763d5fe30b94d557a",
+    "src/01-process-and-realization.md": "0f24f724bdd86d0349f2a526215891eb7a71f8befdc078fb54117d1f1d1106eb",
+    "src/02-computation-and-finitude.md": "874b99a60c1f563fc2a18336bcc29c452b7eac01a8f56cb69d2e3d21951f58fa",
+    "src/03-observation-and-representation.md": "cc1479c8dcc05c6309b61c645cd913f24170d4ce0a0bb316ea958b8ffccb0aae",
+    "src/04-scale-and-structure.md": "321f1e175cebab13c6e60591a9e5723ced947ea8111f18412c20c71a47e74cdc",
+    "src/05-action-and-viability.md": "790d954859af22679c6252a4acaf994b934a6b87440c5b0dd8233af827212731",
+    "src/06-interdependence-and-feasibility.md": "a151fa4d046513b6887d7da4ac0a3fcf3c6f5eb7059687b4700ada219d769fe1",
+    "src/07-records-and-rule-change.md": "13bd308c92a3f5aa949670b2f4297294a7a48b20d433164aaa791e9e368f4c76",
+    "src/08-models-and-possibility.md": "ed72182d71dc7e312a9ddbe7ddf3e96c8664b73b50a8e417fc6bb787400c8287",
+    "src/09-boundaries-and-persistence.md": "99ec1fba001cff54737410daa8034302c065c3e3b844caeea3b3da10b08ee2ec",
+    "src/10-records-and-memory.md": "25d22486a86acd254df00bcdec76a4fb446c02eb386303cebcb53562c48e7eb5",
+    "src/11-information-and-meaning.md": "9bb964b89a7963bbd6aebd8c63ec334c460802e7599b8ef382d018d02f96d077",
+    "src/12-action-and-purpose.md": "4b57970842882ad702b6298a82099cf257464a4e0464ed568bf4c1e99e8de3cb",
+    "src/13-self-description-and-observer.md": "0e6342ae2213707902c8ae222c9eda536ca1e4b570078eafe1e124ac26be42a6",
+    "src/14-communication-and-language.md": "d9051878f2675c38ab626a98cb557fef21b6650d9c31fb59100bf1c583d1feb6",
+    "src/15-technology-and-external-memory.md": "09cea09c4ecda0c3b8fed7d7a31207040b61674fb572d4e3585aa308e3bd3af5",
+    "src/16-norms-and-values.md": "20b8bae7ad9e6dff191d99c7aaf78a85ee9dae69f881a25fc59333e1eded5ac0",
+    "src/17-institutions-and-reproduction.md": "42a7e3e6a9c714ffadeb9a60cca7b540af79eae8a08a9d2ab029fc3598080cdb",
+    "src/18-historical-change.md": "3961d06605939e2acef3d7bbca1f3dfc114a03469724e93f5144baec6b566561",
+    "src/19-needs-and-production.md": "868f9b5bb82e21057a677916cf230527218c02495fd7790f7cc887fc80e143e8",
+    "src/20-division-and-exchange.md": "9e8a058347b8145ac6bcaecf52251e5ea35509c8c89a3b7c712be20ef7d44107",
+    "src/21-money-prices-and-expectations.md": "00aa66c555a28d7c622dda591d02899f5dabdcbdef0a5c5a5c9b459325c915f7",
+    "src/22-property-capital-and-distribution.md": "72176df0e6fc61ad999398f457a333ab3278f2b345acecb3facb08617565e49a",
+    "src/23-accumulation-and-crisis.md": "2abf80ba7a561ca2d130ed40d5aa0042cb3f431fb8a54ba477fbb8e352a16966",
+    "src/24-power-and-interdependence.md": "1d72ee7dd1ec79445dda98373e030f60b33c5260dfd760de7f76ec5e4009e1c0",
+    "src/25-authority-rules-and-coercion.md": "f614d9fc2b231929044d7eb06fb330e13fad6524647372f90f10debee660302d",
+    "src/26-state-and-public-organization.md": "1a4db55d51a614fa70af439a4af5567507550d179121d40dd254c24d0ca133c2",
+    "src/27-representation-and-legitimacy.md": "37f466fcdee0ae9eb56e4de055ca27568cdd6b36d6c4e2b66b9332069900d6e2",
+    "src/28-conflict-and-institutional-change.md": "3e8899f5f6b77662780ad1fa6180572638e2b5963b6b67bb320869f1f7960b9d",
+    "src/29-capabilities-and-standing.md": "ca9e63f0b32a6d9177a24f96358f4d36e32b93004b563fa99f46923cfbb79aee",
+    "src/30-formation-and-revision-of-purposes.md": "75b87338792db5e6719e64c69649f3b4fce47a283def857eea7fc245c30091c4",
+    "src/31-common-freedom-and-recognition.md": "781e6ff789657acc5fe46f0abf480faa62473e1109f8d94e9fd22bc843d95424",
+    "src/32-historicity-and-self-reference.md": "0a5776c2d93141340d14233b579fa69ff6e35d3f63e0ec4b7d191fa17c9c5df9",
+    "src/33-ai-and-technical-externalization.md": "46fdaf62deb3c7c88b37e9312b4407d0c403ff5f07f68c7ca38a9bca0ed30696",
+    "src/34-automation-labor-and-income.md": "d401d12d27cde3b04b975fbd166078b2bb6b680de0139aa59e96c56aad64f860",
+    "src/35-employment-and-social-institutions.md": "058e2d001a24afbf57e126999fed33835815aaceb4efc90625027bd087107da0",
+    "src/36-judgments-and-tests.md": "c627bc107ba382df6877d615c442a69917f7bde1cd6e845bef31bd5dcbc719be",
+    "src/37-institutions-of-common-freedom.md": "acdba1efc4762c9b30ce4afe436e263a6a0ace3e4e49c3f2e0947c05d6a4b069",
+    "src/38-conclusion.md": "950e173aa3390369f0df8ca0e99e3fa2fa1dda62a90eb07c30ea44e66bf9f8c7"
   }
 }

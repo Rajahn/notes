@@ -6,7 +6,7 @@
 
 | 书 | 阅读入口 | 内容 |
 | --- | --- | --- |
-| 《生成与自由：计算、主体与社会的理论》 | [书稿首页](books/generation-and-freedom/README.md) · [逐章目录](books/generation-and-freedom/src/SUMMARY.md) · [完整合订稿](books/generation-and-freedom/MANUSCRIPT.md) | 七部、37 章，另含导论与结语。从数学与计算基础，推进到主体、历史、经济、政治和自由，第七部独立讨论 AI 时代。各部附文献调研，保留论证、预测与核查记录 |
+| 《生成与自由：计算、主体与社会的理论》 | [书稿首页](books/generation-and-freedom/README.md) · [逐章目录](books/generation-and-freedom/src/SUMMARY.md) · [完整合订稿](books/generation-and-freedom/MANUSCRIPT.md) | 第二版修订稿：七部、37 章，另含导论与结语。从数学与计算基础，推进到主体、历史、经济、政治和自由，第七部独立讨论 AI 时代。各部附文献调研，保留论证、预测与核查记录 |
 
 ## 电子书
 

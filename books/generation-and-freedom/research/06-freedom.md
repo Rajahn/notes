@@ -93,6 +93,106 @@
 - 支持：理论活动应说明自身的时代条件。
 - 使用：第32章理论自身的历史位置。本书关于概念参与改变现实、接受持续修订的程序是当下的综合，不冒称为黑格尔原文已经包含的完整方案。
 
+## 第二版增加的原始文献与实际读取范围
+
+第二版围绕四项困难重新组织论证：有效能力与地位为何需要同时评价；真诚认同何以仍可能受到操纵；共同自由的平等要求怎样得到辩护并包括不能互惠的人；自由的历史方向何以既有机制内容又保持价值的多样性。下列文献分别进入这些争议，不被写成按作者顺序排列的概念史。
+
+### 〔VI-13〕Baruch Spinoza，1677，*Ethics*
+
+- 原文：[第一部](https://en.wikisource.org/wiki/Ethics_(Spinoza)/Part_1)、[第三部](https://en.wikisource.org/wiki/Ethics_(Spinoza)/Part_3)、[第四部](https://en.wikisource.org/wiki/Ethics_(Spinoza)/Part_4)，R. H. M. Elwes英译。
+- 读取：第一部定义7；第三部序言、定义1–3及命题1–2；第四部命题2–4、14–18及附释。
+- 支持：人的活动属于自然，不能把自由解释为完全没有原因；理解、情感和行动能力之间存在实际关系，有限者不可能取消全部外部依赖。
+- 使用：第29章自由的自然条件、第30章知道理由与能够改变生活的区别。
+- 分歧：本书不采用实体一元论作为自由论的必需前提，也不把Spinoza对理性共同利益的推演直接当作平等权利的证明；“人的有效能力与地位”是本稿的社会规范重构。
+
+### 〔VI-14〕Immanuel Kant，1785，*Groundwork of the Metaphysics of Morals*
+
+- 原文：[2011年德英对照版](https://platypus1917.org/wp-content/uploads/2011/07/kant_groundworkmetaphysicsmorals_german-english.pdf)，Mary Gregor、Jens Timmermann英译，Cambridge University Press。
+- 读取：序言关于经验知识与道德根据的区分；第二节学院版4:427–440，重点人作为目的、普遍立法、自律及尊严。
+- 支持：当下欲望满足不能独自决定行动的正当性；把人同时当作目的，限制以其作为任意目的的纯粹工具。
+- 使用：第29、31章区分能力强弱与地位，讨论共同规则的辩护。
+- 分歧：本书不给人预设脱离自然过程的本体位置；同时把不能独立论证、不能履行对等义务者纳入规范地位。此扩展不能冒称已由该书以当代照护理论的形式完成。
+
+### 〔VI-15〕Isaiah Berlin，1958，“Two Concepts of Liberty”
+
+- 原文：[Oxford存档与版本说明](https://berlin.wolf.ox.ac.uk/published_works/tcl/index.html)；[送交Clarendon Press的E稿](https://berlin.wolf.ox.ac.uk/published_works/tcl/tcl-e.pdf)。
+- 读取：E稿第一、第二节及结尾49–53页；另读存档页所载1962年对两种自由问题的简明说明。E稿是存档修订稿，不与1969年收入*Four Essays on Liberty*的文字逐字混同。
+- 支持：免于干涉与谁作主回答不同问题；以“真实自我”替换实际行动者，可能把强制重新命名为自由；多种重要价值可能产生不可消除的冲突。
+- 使用：第29、30、32章检验本书的综合概念。Berlin没有把所有积极自由追求都等同暴政，也没有否认为平等和正义限制某些自由的理由。
+- 推进：以可争议、受支持的主体地位约束自由的积极条件，保留干涉事实及真实损失，拒绝用总体自由抹平个人的负担。
+
+### 〔VI-16〕John Rawls，1981年讲演、1982年出版，“The Basic Liberties and Their Priority”
+
+- 原文：[Tanner Lectures全文](https://tannerlectures.org/documents/the-tanner-lectures-on-human-values-3/)。
+- 读取：第一至第七节中基本自由、两种道德能力、社会基本善及自由之价值的讨论；特别核对正常且能全面合作的公民这一建模假定。
+- 支持：自由不能按任意行为选项总数最大化；基本自由的协调依赖人格和公平合作观；基本善包含自由、机会、权力以及自尊的社会基础，并非仅指收入。
+- 使用：第29章能力与资源比较。本文对转换差异和照护的强调，不把Rawls误写成只分配钱或完全不承认社会依赖。
+- 推进：把长期不能独立合作的处境放在起点，并联合考察一项权利的可使用性及其被任意撤回的可能。
+
+### 〔VI-17〕Nancy Fraser，1996年讲演、1998年出版，“Social Justice in the Age of Identity Politics: Redistribution, Recognition, and Participation”
+
+- 原文：[Tanner Lectures全文](https://tannerlectures.org/documents/fraser98/)；[扫描PDF](https://tannerlectures.org/wp-content/uploads/sites/105/2024/06/Fraser98.pdf)。
+- 读取：第一、第二部分关于再分配与承认、参与平等的客观和主体间条件；第三部分照护与性别分工的比较。
+- 支持：经济负担和地位贬抑不能互相取代；是否能作为同等参与者，是判断制度安排的重要尺度。
+- 使用：第31章分析照护者、接受照护者和其他成员的冲突。
+- 版本边界：本文脚注提及政治排除这一额外维度，但没有展开Fraser后来成熟的三维正义理论；正文不作逆年代归属。参与平等本身包含规范前提，不能当成纯经验事实。
+
+### 〔VI-18〕John Christman，1991，“Autonomy and Personal History”
+
+- 刊载：*Canadian Journal of Philosophy* 21(1): 1–24。
+- DOI：[10.1080/00455091.1991.10717234](https://doi.org/10.1080/00455091.1991.10717234)；[作者机构书目](https://pure.psu.edu/en/publications/autonomy-and-personal-history/)；[原文转录](https://www.scribd.com/document/767516066/autonomy-and-personal-history)。
+- 读取：论文对静态认同的批评，11–13页的历史条件，19–22页关于压制反思因素、自愿接受影响及内容中立的讨论。
+- 支持：判断一个愿望是否自主，应考察其形成过程及主体在适当反思条件下是否会抵抗该过程。
+- 使用：第30章操纵反例。本文承认其内容中立模型可允许自愿屈从的愿望，不把该模型误写成凡内容不合旁观者评价就不自主。
+- 推进：将反事实反思条件落实为可接触其他经验、获得安全支持、试验和修订的现实关系，避免由专家独占“她本来会愿意什么”的判断。
+
+### 〔VI-19〕John Stuart Mill，1859，*On Liberty*
+
+- 原文：[第三章“Of Individuality”](https://www.econlib.org/library/Mill/mlLbty.html?chapter_num=3)；[第四章](https://www.econlib.org/library/Mill/mlLbty.html?chapter_num=4)。网页采用1869年第四版。
+- 读取：第三章关于生活试验、选择能力和习俗；第四章关于自涉行为、劝告和他人利益的界限。
+- 支持：允许生活试验具有发展判断与个性的价值；传统可以提供经验，但机械遵从不等于实际判断。
+- 使用：第30章区分教育支持与代替决定。正文不采用其对某些社会和儿童的历史性排除作为今日规范门槛；共同影响不等于所有行为都可被无限干预。
+
+### 〔VI-20〕Rainer Forst，2007；Jeffrey Flynn英译2012，*The Right to Justification*
+
+- 原文：[英文全书扫描](https://eltalondeaquiles.pucp.edu.pe/wp-content/uploads/2016/05/Rainer_Forst_Jeffrey_Flynn_The_Right_to_JustifiBookFi-org_.pdf)，Columbia University Press。
+- 读取：导论3–8页；第九章“The Basic Right to Justification”，203–214页，关于文化内部异议、互惠、普遍性及道德建构与政治建构的区分。
+- 支持：共同规则的辩护对象包括被它实质影响的人；文化不能由掌权者单方面代表；互惠不是把自己的价值投射给别人。
+- 使用：第31、32章展开地位的理由。正文不把这些标准说成价值中立的计算定理；也不把所有具体权利说成从单一权利形式演绎出来。
+- 推进：在理由关系之外进一步检查表达所需支持和无法充分参与理由交换者的地位，避免将论证能力作为纳入共同自由的门票。
+
+### 〔VI-21〕B. R. Ambedkar，1936，*Annihilation of Caste*
+
+- 原文：[以Columbia转录为底本的全文](https://sa.theanarchistlibrary.org/library/ambedkar-annihilation-of-caste)；[另一全文镜像](https://anotherworldarchives.org/br-ambedkar/annihilation)。
+- 读取：第四节劳动分工与劳动者等级的区分；第十四节自由、平等、友爱及社会继承的讨论。前言用于核对该演讲未实际发表、随后自印出版的背景。
+- 支持：能够保有财产或生命，并不穷尽自由；被迫接受他人规定的生活目的和职业仍构成支配。能力差异也涉及教育、照护和社会积累。
+- 使用：第32章说明自由概念如何在具体历史冲突中被重新组织。不是把南亚经验安排为欧洲阶段论的迟到版本，也不是用一个作者代表全部印度思想。
+
+### 〔VI-22〕Amartya Sen，1999，“Democracy as a Universal Value”
+
+- 刊载：*Journal of Democracy* 10(3): 3–17。
+- 原文：[期刊全文](https://www.journalofdemocracy.org/articles/democracy-as-a-universal-value/)。
+- 读取：公共讨论的内在、工具及建构作用；普遍价值与实际一致赞同的区别；文化差异论证。
+- 支持：公共讨论参与形成需要的理解；普遍性主张可以诉诸不同处境的人有理由接受，而非声称所有人历来都已接受。
+- 使用：第32章说明历史解释与规范重构的不同任务。1999年的经验判断不作为当代政治状况的数据；本文不据此证明历史必然民主化。
+
+### 〔VI-23〕Frederick Douglass，1845，*Narrative of the Life of Frederick Douglass, an American Slave, Written by Himself*
+
+- 原文：[据1845年文本制作的全文PDF](https://www.ibiblio.org/ebooks/Douglass/Narrative/Douglass_Narrative.pdf)。
+- 读取：第六、第七章，印刷28–38页，识字教育被禁止、街头学习、阅读和痛苦、对逃离的计划。
+- 支持：第一人称历史材料显示，学习会改变一个人可表达的目的及对自身处境的理解，能力增加不必立即带来满意度增加。
+- 使用：第30章目的形成的历史主案例。自传有具体叙述立场与写作目的，不是关于所有受压迫者心理的统计样本；本书从案例提出机制问题，不推定无法反抗者自愿接受处境。
+
+## 竞争理论的比较与第二版推进
+
+| 核心问题 | 应当保留的强解释 | 尚需处理的困难 | 本书的推进 |
+| --- | --- | --- | --- |
+| 自由与因果条件 | Spinoza说明有限行动者处于自然中；Kant坚持人的地位不能由偏好满足取代 | 自然必然性不直接给出平等规范，纯粹形式也不提供有效行动条件 | 从既受形成又能改变条件的主体出发，分别论证能力与地位并考察其相互作用 |
+| 自由与资源、干涉 | Berlin保留被干涉者的真实损失；Rawls组织基本自由与公共资源；Sen检查资源转换 | 任一单一尺度都可能漏掉依赖中的任意权力或实际不可使用性 | 同时比较能够实行什么、为何能够实行、谁能改变这些条件 |
+| 自己的目的 | Frankfurt揭示反思认同；Christman加入形成史；Dewey与Mill解释试验和发展 | 高阶认同也会受塑造；不断反思可能消耗自由 | 将形成、维持、修订分开，建立有支持的修订机会而非持续自证义务 |
+| 共同自由 | 承认说明自我关系的社会条件；Fraser区分资源与地位；Forst要求对受影响者给理由 | 不能互惠者、沉默者和照护者容易被排除；异议不能无限否决共同活动 | 由可受损的具体生命及持续受规则作用的关系确认地位，以代表、责任与有限判断实现回应 |
+| 自由的历史方向 | 规范冲突、能力积累和公共讨论能够推动要求扩展 | 倒退、排除和多种终极价值都真实存在 | 提出有条件的非随机机制；自由组织价值实现的关系，但不吞并各价值的独特内容 |
+
 ## 规范论证的独立环节
 
 人的有限性和相互依赖说明了为什么支持关系不可避免，却没有独自决定哪些支持关系公正。本部以三项可辩护要求推进：共同规则必须回应受影响者；人的地位不以当下的能力或贡献为门槛；任何代替他人行使的权力都需要理由、限制和修订可能。这些要求将在正文中面对紧急处境、无法直接表达、共同承诺、稀缺资源与反思成本的反驳，不被当作未经讨论的系统公理。

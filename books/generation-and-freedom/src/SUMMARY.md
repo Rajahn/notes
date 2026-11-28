@@ -70,7 +70,7 @@
 - [第三十四章　替代、劳动与收入](34-automation-labor-and-income.md)
 - [第三十五章　就业制度承担的功能怎样分离](35-employment-and-social-institutions.md)
 - [第三十六章　未来判断与修订信号](36-judgments-and-tests.md)
-- [第三十七章　共同自由的制度实践](37-institutions-of-common-freedom.md)
+- [第三十七章　共同自由的制度构造](37-institutions-of-common-freedom.md)
 
 [本部文献调研](../research/07-ai-era.md)
 
@@ -87,6 +87,7 @@
 - [第六部研究札记：自由、目的与共同生活](../research/06-freedom.md)
 - [第七部文献调研：AI 时代的变化、判断与制度实践](../research/07-ai-era.md)
 - [论证与思想对话总表](../research/08-argument-map.md)
-- [第一版校订与核查记录](../research/09-editorial-review.md)
+- [第二版校订与核查记录](../research/09-editorial-review.md)
+- [第二版逐章修订说明](../research/10-v2-revision.md)
 
 [返回书稿首页](../README.md)
